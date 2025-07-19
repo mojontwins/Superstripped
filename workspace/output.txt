@@ -1,0 +1,820 @@
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+WorldInfo: Level Name:World 1, RandomSeed: 8254704792375338054, Terrain: WorldType alpha, sizeOnDisk: 0, player: 25 entries
+164 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+WorldInfo: Level Name:World 1, RandomSeed: 8254704792375338054, Terrain: WorldType alpha, sizeOnDisk: 0, player: 25 entries
+164 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Connecting to localhost, 25565
+163 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Connecting to localhost, 25565
+163 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Connecting to localhost, 25565
+163 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Connecting to localhost, 25565
+163 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Connecting to localhost, 25565
+163 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+163 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+163 recipes
+Time for the next thundering time change 7444
+Time for the next thundering time change 5235
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+163 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+161 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+161 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+161 recipes
+java.lang.NullPointerException
+	at net.minecraft.src.ItemStack.<init>(ItemStack.java:31)
+	at net.minecraft.src.GuiContainerCreative.func_74233_a(GuiContainerCreative.java:571)
+	at net.minecraft.src.GuiContainerCreative.drawGuiContainerBackgroundLayer(GuiContainerCreative.java:462)
+	at net.minecraft.src.GuiContainer.drawScreen(GuiContainer.java:65)
+	at net.minecraft.src.GuiContainerCreative.drawScreen(GuiContainerCreative.java:427)
+	at net.minecraft.src.EntityRenderer.updateCameraAndRender(EntityRenderer.java:603)
+	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:614)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:536)
+	at java.lang.Thread.run(Thread.java:750)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+161 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+161 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Deleting .\saves\World3\data
+Deleting .\saves\World3\region
+161 recipes
+Time for the next thundering time change 5614
+Time for the next thundering time change 7955
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Deleting .\saves\World3\data
+Deleting .\saves\World3\region
+161 recipes
+Time for the next thundering time change 3170
+Time for the next thundering time change 9594
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Deleting .\saves\World3\data
+Deleting .\saves\World3\region
+161 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+161 recipes
+Time for the next thundering time change 3141
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+167 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+167 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+167 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+167 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+167 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Texture not found: /title/mojang.png
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+171 recipes
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Texture not found: /title/mojang.png
+edibleChicken
+enableSquids
+noiseTreeDensity
+smarterMobs
+colouredWater
+oldFences
+generateLapislazuli
+canBreedAnimals
+connectFences
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Texture not found: /title/mojang.png
+edibleChicken of class class net.minecraft.src.NBTTagByte
+enableSquids of class class net.minecraft.src.NBTTagByte
+noiseTreeDensity of class class net.minecraft.src.NBTTagByte
+smarterMobs of class class net.minecraft.src.NBTTagByte
+colouredWater of class class net.minecraft.src.NBTTagByte
+oldFences of class class net.minecraft.src.NBTTagByte
+generateLapislazuli of class class net.minecraft.src.NBTTagByte
+canBreedAnimals of class class net.minecraft.src.NBTTagByte
+connectFences of class class net.minecraft.src.NBTTagByte
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Texture not found: /title/mojang.png
+edibleChicken: true
+edibleChicken of class class net.minecraft.src.NBTTagByte
+enableSquids: true
+enableSquids of class class net.minecraft.src.NBTTagByte
+noiseTreeDensity: true
+noiseTreeDensity of class class net.minecraft.src.NBTTagByte
+smarterMobs: true
+smarterMobs of class class net.minecraft.src.NBTTagByte
+colouredWater: false
+colouredWater of class class net.minecraft.src.NBTTagByte
+oldFences: false
+oldFences of class class net.minecraft.src.NBTTagByte
+generateLapislazuli: true
+generateLapislazuli of class class net.minecraft.src.NBTTagByte
+canBreedAnimals: true
+canBreedAnimals of class class net.minecraft.src.NBTTagByte
+connectFences: false
+connectFences of class class net.minecraft.src.NBTTagByte
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Texture not found: /title/mojang.png
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Gamerules file .\options.txt
+Texture not found: /title/mojang.png
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Gamerules file .\rules.txt
+Texture not found: /title/mojang.png
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Gamerules file .\rules.txt
+Texture not found: /title/mojang.png
+k: canBreedAnimals v: class java.lang.String
+k: connectFences v: class java.lang.String
+k: enableSquids v: class java.lang.String
+k: smarterMobs v: class java.lang.String
+k: noiseTreeDensity v: class java.lang.String
+k: oldFences v: class java.lang.String
+k: edibleChicken v: class java.lang.String
+k: colouredWater v: class java.lang.String
+k: generateLapislazuli v: class java.lang.String
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Gamerules file .\rules.txt
+Texture not found: /title/mojang.png
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Gamerules file .\rules.txt
+Texture not found: /title/mojang.png
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Gamerules file .\rules.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Gamerules file .\rules.txt
+Generating default Gamerules file
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Gamerules file .\rules.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+
+LWJGL Version: 2.9.3
+Options file .\options.txt
+Gamerules file .\rules.txt
+
+Starting up SoundSystem...
+Initializing LWJGL OpenAL
+    (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+OpenAL initialized.
+
+TextureAnimatedFX 203, 0, textureAtlasURI = /animated/block_seaweed.png (20 frames)
+Stopping!
+
+SoundSystem shutting down...
+    Author: Paul Lamb, www.paulscode.com
+

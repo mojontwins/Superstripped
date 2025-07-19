@@ -1,0 +1,9 @@
+bin/*
+temp/*
+workspace/*/bin/*
+jars/saves/*
+jars/world/*
+reobf/*
+.metadata/*
+workspace/.metadata/.plugins/
+

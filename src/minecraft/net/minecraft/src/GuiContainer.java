@@ -270,59 +270,60 @@ public abstract class GuiContainer extends GuiScreen {
 
 	protected abstract void drawGuiContainerBackgroundLayer(float f1, int i2, int i3);
 
-	private void drawSlotInventory(Slot var1) {
-		int var2 = var1.xDisplayPosition;
-		int var3 = var1.yDisplayPosition;
-		ItemStack var4 = var1.getStack();
-		boolean var5 = false;
-		boolean var6 = var1 == this.clickedSlot && this.draggedStack != null && !this.isRightMouseClick;
-		ItemStack var7 = this.mc.thePlayer.inventory.getItemStack();
-		if(var1 == this.clickedSlot && this.draggedStack != null && this.isRightMouseClick && var4 != null) {
-			var4 = var4.copy();
-			var4.stackSize /= 2;
-		} else if(this.isDraggingStack && this.draggedOverSlots.contains(var1) && var7 != null) {
+	private void drawSlotInventory(Slot slot) {
+		int x = slot.xDisplayPosition;
+		int y = slot.yDisplayPosition;
+		ItemStack theStack = slot.getStack();
+		boolean hover = false;
+		boolean var6 = slot == this.clickedSlot && this.draggedStack != null && !this.isRightMouseClick;
+		ItemStack inventoryStack = this.mc.thePlayer.inventory.getItemStack();
+		
+		if(slot == this.clickedSlot && this.draggedStack != null && this.isRightMouseClick && theStack != null) {
+			theStack = theStack.copy();
+			theStack.stackSize /= 2;
+		} else if(this.isDraggingStack && this.draggedOverSlots.contains(slot) && inventoryStack != null) {
 			if(this.draggedOverSlots.size() == 1) {
 				return;
 			}
 
-			if(Container.validDrag(var1, var7, true) && this.inventorySlots.func_94531_b(var1)) {
-				var4 = var7.copy();
-				var5 = true;
-				Container.divideStackInSlots(this.draggedOverSlots, this.initialButton, var4, var1.getStack() == null ? 0 : var1.getStack().stackSize);
-				if(var4.stackSize > var4.getMaxStackSize()) {
-					var4.stackSize = var4.getMaxStackSize();
+			if(Container.validDrag(slot, inventoryStack, true) && this.inventorySlots.func_94531_b(slot)) {
+				theStack = inventoryStack.copy();
+				hover = true;
+				Container.divideStackInSlots(this.draggedOverSlots, this.initialButton, theStack, slot.getStack() == null ? 0 : slot.getStack().stackSize);
+				if(theStack.stackSize > theStack.getMaxStackSize()) {
+					theStack.stackSize = theStack.getMaxStackSize();
 				}
 
-				if(var4.stackSize > var1.getSlotStackLimit()) {
-					var4.stackSize = var1.getSlotStackLimit();
+				if(theStack.stackSize > slot.getSlotStackLimit()) {
+					theStack.stackSize = slot.getSlotStackLimit();
 				}
 			} else {
-				this.draggedOverSlots.remove(var1);
+				this.draggedOverSlots.remove(slot);
 				this.func_94066_g();
 			}
 		}
 		
 		this.zLevel = 100.0F;
 		itemRenderer.zLevel = 100.0F;
-		if(var4 == null) {
-			int i8 = var1.getBackgroundIconIndex();
+		if(theStack == null) {
+			int i8 = slot.getBackgroundIconIndex();
 			if (i8 >= 0) {
 				GL11.glDisable(GL11.GL_LIGHTING);
 				this.mc.renderEngine.bindTexture(this.mc.renderEngine.getTexture("/gui/items.png"));
-				itemRenderer.renderTexturedQuad(var2, var3, i8 % 16 * 16, i8 / 16 * 16, 16, 16);
+				itemRenderer.renderTexturedQuad(x, y, i8 % 16 * 16, i8 / 16 * 16, 16, 16);
 				GL11.glEnable(GL11.GL_LIGHTING);
 				var6 = true;
 			}
 		}
 
 		if(!var6) {
-			if(var5) {
-				drawRect(var2, var3, var2 + 16, var3 + 16, -2130706433);
+			if(hover) {
+				drawRect(x, y, x + 16, y + 16, -2130706433);
 			}
 
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
-			itemRenderer.renderItemIntoGUI(this.fontRenderer, this.mc.renderEngine, var4, var2, var3);
-			itemRenderer.renderItemOverlayIntoGUI(this.fontRenderer, this.mc.renderEngine, var4, var2, var3);
+			itemRenderer.renderItemIntoGUI(this.fontRenderer, this.mc.renderEngine, theStack, x, y);
+			itemRenderer.renderItemOverlayIntoGUI(this.fontRenderer, this.mc.renderEngine, theStack, x, y);
 		}
 		
 		itemRenderer.zLevel = 0.0F;

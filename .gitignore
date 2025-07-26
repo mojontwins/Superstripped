@@ -6,4 +6,4 @@ jars/world/*
 reobf/*
 .metadata/*
 workspace/.metadata/.plugins/
-
+workspace/output.txt

@@ -116,6 +116,7 @@
 * [X] Air hud wrong place (too low, overwriting hearts).
 * [X] Armor hud reversed icons.
 * [ ] Recipe book breaks on one of the recipes involving cloth? with an out of bounds meta/damage when trying to find tint color?
+	[ ] Crarfting recipe for painting shows whool as "black whool"  and needs meta = -1, this is the cause! I think I introduced this meaning "any meta" for crafting? Check and fix at recipe book.
 
 ### Morning fog design
 

@@ -815,32 +815,32 @@ public abstract class Entity {
 		return null;
 	}
 
-	public boolean addEntityID(NBTTagCompound nBTTagCompound1) {
+	public boolean addEntityID(NBTTagCompound compoundTag) {
 		String string2 = this.getEntityString();
 		if(!this.isDead && string2 != null) {
-			nBTTagCompound1.setString("id", string2);
-			this.writeToNBT(nBTTagCompound1);
+			compoundTag.setString("id", string2);
+			this.writeToNBT(compoundTag);
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public void writeToNBT(NBTTagCompound nBTTagCompound1) {
-		nBTTagCompound1.setTag("Pos", this.newDoubleNBTList(new double[]{this.posX, this.posY + (double)this.ySize, this.posZ}));
-		nBTTagCompound1.setTag("Motion", this.newDoubleNBTList(new double[]{this.motionX, this.motionY, this.motionZ}));
-		nBTTagCompound1.setTag("Rotation", this.newFloatNBTList(new float[]{this.rotationYaw, this.rotationPitch}));
-		nBTTagCompound1.setFloat("FallDistance", this.fallDistance);
-		nBTTagCompound1.setShort("Fire", (short)this.fire);
-		nBTTagCompound1.setShort("Air", (short)this.getAir());
-		nBTTagCompound1.setBoolean("OnGround", this.onGround);
-		this.writeEntityToNBT(nBTTagCompound1);
+	public void writeToNBT(NBTTagCompound compoundTag) {
+		compoundTag.setTag("Pos", this.newDoubleNBTList(new double[]{this.posX, this.posY + (double)this.ySize, this.posZ}));
+		compoundTag.setTag("Motion", this.newDoubleNBTList(new double[]{this.motionX, this.motionY, this.motionZ}));
+		compoundTag.setTag("Rotation", this.newFloatNBTList(new float[]{this.rotationYaw, this.rotationPitch}));
+		compoundTag.setFloat("FallDistance", this.fallDistance);
+		compoundTag.setShort("Fire", (short)this.fire);
+		compoundTag.setShort("Air", (short)this.getAir());
+		compoundTag.setBoolean("OnGround", this.onGround);
+		this.writeEntityToNBT(compoundTag);
 	}
 
-	public void readFromNBT(NBTTagCompound nBTTagCompound1) {
-		NBTTagList nBTTagList2 = nBTTagCompound1.getTagList("Pos");
-		NBTTagList nBTTagList3 = nBTTagCompound1.getTagList("Motion");
-		NBTTagList nBTTagList4 = nBTTagCompound1.getTagList("Rotation");
+	public void readFromNBT(NBTTagCompound compoundTag) {
+		NBTTagList nBTTagList2 = compoundTag.getTagList("Pos");
+		NBTTagList nBTTagList3 = compoundTag.getTagList("Motion");
+		NBTTagList nBTTagList4 = compoundTag.getTagList("Rotation");
 		this.motionX = ((NBTTagDouble)nBTTagList3.tagAt(0)).data;
 		this.motionY = ((NBTTagDouble)nBTTagList3.tagAt(1)).data;
 		this.motionZ = ((NBTTagDouble)nBTTagList3.tagAt(2)).data;
@@ -861,22 +861,22 @@ public abstract class Entity {
 		this.prevPosZ = this.lastTickPosZ = this.posZ = ((NBTTagDouble)nBTTagList2.tagAt(2)).data;
 		this.prevRotationYaw = this.rotationYaw = ((NBTTagFloat)nBTTagList4.tagAt(0)).data;
 		this.prevRotationPitch = this.rotationPitch = ((NBTTagFloat)nBTTagList4.tagAt(1)).data;
-		this.fallDistance = nBTTagCompound1.getFloat("FallDistance");
-		this.fire = nBTTagCompound1.getShort("Fire");
-		this.setAir(nBTTagCompound1.getShort("Air"));
-		this.onGround = nBTTagCompound1.getBoolean("OnGround");
+		this.fallDistance = compoundTag.getFloat("FallDistance");
+		this.fire = compoundTag.getShort("Fire");
+		this.setAir(compoundTag.getShort("Air"));
+		this.onGround = compoundTag.getBoolean("OnGround");
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.setRotation(this.rotationYaw, this.rotationPitch);
-		this.readEntityFromNBT(nBTTagCompound1);
+		this.readEntityFromNBT(compoundTag);
 	}
 
 	protected final String getEntityString() {
 		return EntityList.getEntityString(this);
 	}
 
-	protected abstract void readEntityFromNBT(NBTTagCompound nBTTagCompound1);
+	protected abstract void readEntityFromNBT(NBTTagCompound compoundTag);
 
-	protected abstract void writeEntityToNBT(NBTTagCompound nBTTagCompound1);
+	protected abstract void writeEntityToNBT(NBTTagCompound compoundTag);
 
 	protected NBTTagList newDoubleNBTList(double... d1) {
 		NBTTagList nBTTagList2 = new NBTTagList();

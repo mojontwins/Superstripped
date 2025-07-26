@@ -20,7 +20,7 @@ public abstract class Block3Axes extends Block {
 	}
 	
 	public int getBlockTextureFromSideAndMetadata(int face, int metadata) {
-		int orientation = metadata & 12; 
+		int orientation = GameRules.boolRule("renderAllBlocksStraight") ? 0 : (metadata & 12); 	
 		
 		if(
 			(orientation == 0 && (face == 1 || face == 0)) ||

@@ -9,7 +9,7 @@ public class ItemPorkCooked extends ItemFood {
 
 	@Override
 	public Item fixForAlphaBeta() {
-		if(!GameRules.edibleCows) this.iconIndex = 6*16+10;
+		if(!GameRules.boolRule("edibleCows")) this.iconIndex = 6*16+10;
 		return this;
 	}
 }

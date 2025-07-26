@@ -207,20 +207,20 @@ public class EntityPainting extends Entity {
 		return true;
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		nBTTagCompound1.setByte("Dir", (byte)this.direction);
-		nBTTagCompound1.setString("Motive", this.art.title);
-		nBTTagCompound1.setInteger("TileX", this.xPosition);
-		nBTTagCompound1.setInteger("TileY", this.yPosition);
-		nBTTagCompound1.setInteger("TileZ", this.zPosition);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		compoundTag.setByte("Dir", (byte)this.direction);
+		compoundTag.setString("Motive", this.art.title);
+		compoundTag.setInteger("TileX", this.xPosition);
+		compoundTag.setInteger("TileY", this.yPosition);
+		compoundTag.setInteger("TileZ", this.zPosition);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		this.direction = nBTTagCompound1.getByte("Dir");
-		this.xPosition = nBTTagCompound1.getInteger("TileX");
-		this.yPosition = nBTTagCompound1.getInteger("TileY");
-		this.zPosition = nBTTagCompound1.getInteger("TileZ");
-		String string2 = nBTTagCompound1.getString("Motive");
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		this.direction = compoundTag.getByte("Dir");
+		this.xPosition = compoundTag.getInteger("TileX");
+		this.yPosition = compoundTag.getInteger("TileY");
+		this.zPosition = compoundTag.getInteger("TileZ");
+		String string2 = compoundTag.getString("Motive");
 		EnumArt[] enumArt3 = EnumArt.values();
 		int i4 = enumArt3.length;
 

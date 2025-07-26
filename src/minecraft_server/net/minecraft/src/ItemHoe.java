@@ -32,4 +32,9 @@ public class ItemHoe extends Item {
 	public boolean isFull3D() {
 		return true;
 	}
+	
+	@Override
+	public boolean canHarvestBlock(Block block) {
+		return block == Block.leaves;
+	}
 }

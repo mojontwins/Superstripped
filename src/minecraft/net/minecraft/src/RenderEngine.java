@@ -243,27 +243,13 @@ public class RenderEngine {
 		byte[] imageByte = new byte[width * height * 4];
 		bufferedImage1.getRGB(0, 0, width, height, imageInts, 0, width);
 
-		int i;
-		int a;
-		int r;
-		int g;
-		int b;
-		int ra;
-		int ga;
-		int ba;
+		int i, a, r, g, b;
+		
 		for(i = 0; i < imageInts.length; ++i) {
 			a = imageInts[i] >> 24 & 255;
 			r = imageInts[i] >> 16 & 255;
 			g = imageInts[i] >> 8 & 255;
 			b = imageInts[i] & 255;
-			if(GameSettingsValues.anaglyph) {
-				ra = (r * 30 + g * 59 + b * 11) / 100;
-				ga = (r * 30 + g * 70) / 100;
-				ba = (r * 30 + b * 70) / 100;
-				r = ra;
-				g = ga;
-				b = ba;
-			}
 
 			if(a == 0) { r = g = b = 255; }
 			
@@ -282,7 +268,7 @@ public class RenderEngine {
 			this.generateMipMaps(this.imageData, width, height);
 		}
 
-					}
+	}
 	
 
 	private void generateMipMaps(ByteBuffer data, int width, int height) {
@@ -346,14 +332,6 @@ public class RenderEngine {
 			int i8 = i1[i6] >> 16 & 255;
 			int i9 = i1[i6] >> 8 & 255;
 			int i10 = i1[i6] & 255;
-			if(GameSettingsValues.anaglyph) {
-				int i11 = (i8 * 30 + i9 * 59 + i10 * 11) / 100;
-				int i12 = (i8 * 30 + i9 * 70) / 100;
-				int i13 = (i8 * 30 + i10 * 70) / 100;
-				i8 = i11;
-				i9 = i12;
-				i10 = i13;
-			}
 
 			b5[i6 * 4 + 0] = (byte)i8;
 			b5[i6 * 4 + 1] = (byte)i9;
@@ -488,7 +466,6 @@ public class RenderEngine {
 		TextureFX texturefx1;
 		for(i = 0; i < this.textureList.size(); ++i) {
 			texturefx1 = (TextureFX)this.textureList.get(i);
-			texturefx1.anaglyphEnabled = GameSettingsValues.anaglyph;
 		
 			int i13;
 			if(texturefx1.tileImage == 0) {

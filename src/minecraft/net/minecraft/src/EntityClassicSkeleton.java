@@ -4,7 +4,7 @@ public class EntityClassicSkeleton extends EntityArmoredMob {
 	public EntityClassicSkeleton(World world1) {
 		super(world1);
 		this.texture = "/mob/skeleton.png";
-		if(GameRules.skeletonsWithBows) this.inventory.setInventorySlotContents(0, new ItemStack(Item.bow));
+		if(GameRules.boolRule("skeletonsWithBows")) this.inventory.setInventorySlotContents(0, new ItemStack(Item.bow));
 		this.health = this.getMaxHealth();
 	}
 
@@ -52,12 +52,12 @@ public class EntityClassicSkeleton extends EntityArmoredMob {
 
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
 	}
 
 	protected int getDropItemId() {

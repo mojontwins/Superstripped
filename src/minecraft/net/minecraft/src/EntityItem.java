@@ -96,16 +96,16 @@ public class EntityItem extends Entity {
 		return false;
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		nBTTagCompound1.setShort("Health", (short)((byte)this.health));
-		nBTTagCompound1.setShort("Age", (short)this.age);
-		nBTTagCompound1.setCompoundTag("Item", this.item.writeToNBT(new NBTTagCompound()));
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		compoundTag.setShort("Health", (short)((byte)this.health));
+		compoundTag.setShort("Age", (short)this.age);
+		compoundTag.setCompoundTag("Item", this.item.writeToNBT(new NBTTagCompound()));
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		this.health = nBTTagCompound1.getShort("Health") & 255;
-		this.age = nBTTagCompound1.getShort("Age");
-		NBTTagCompound nBTTagCompound2 = nBTTagCompound1.getCompoundTag("Item");
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		this.health = compoundTag.getShort("Health") & 255;
+		this.age = compoundTag.getShort("Age");
+		NBTTagCompound nBTTagCompound2 = compoundTag.getCompoundTag("Item");
 		this.item = ItemStack.loadItemStackFromNBT(nBTTagCompound2);
 		if(this.item == null) {
 			this.setDead();

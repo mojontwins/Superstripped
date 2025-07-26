@@ -14,4 +14,9 @@ public class ItemAxe extends ItemTool {
 	public float getStrVsBlock(ItemStack itemStack1, Block block2) {
 		return block2 != null && block2.blockMaterial == Material.wood ? this.efficiencyOnProperMaterial : super.getStrVsBlock(itemStack1, block2);
 	}
+	
+	@Override
+	public boolean canHarvestBlock(Block block) {
+		return block == Block.leaves;
+	}
 }

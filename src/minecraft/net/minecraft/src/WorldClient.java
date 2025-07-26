@@ -14,15 +14,19 @@ public class WorldClient extends World {
 	private Set<Entity> entitySpawnQueue = new HashSet<Entity>();
 
 	public WorldClient(NetClientHandler netClientHandler1, WorldSettings worldSettings2, int i3, int i4) {
-		super(new SaveHandlerMP(), "MpServer", (WorldProvider)WorldProvider.getProviderForDimension(i3), (WorldSettings)worldSettings2);
+		super(new SaveHandlerMP(), "MpServer", (WorldProvider)WorldProvider.getProviderForDimension(i3, worldSettings2.getTerrainType()), (WorldSettings)worldSettings2);
 		this.sendQueue = netClientHandler1;
 		this.difficultySetting = i4;
 		this.setSpawnPoint(new ChunkCoordinates(8, 64, 8));
 	}
 
 	public void tick() {
-		this.setWorldTime(this.getWorldTime() + 1L);
+		long worldTime = this.getWorldTime();
+		int hourOfTheDay = (int)(worldTime % 24000L);
+		this.setWorldTime(worldTime + 1L);
 
+		this.updateDailyTasks(worldTime, hourOfTheDay);
+		
 		int i1;
 		for(i1 = 0; i1 < 10 && !this.entitySpawnQueue.isEmpty(); ++i1) {
 			Entity entity2 = (Entity)this.entitySpawnQueue.iterator().next();
@@ -44,7 +48,7 @@ public class WorldClient extends World {
 		}
 
 		this.chunkProviderClient.unload100OldestChunks();
-		this.tickBlocksAndAmbiance();
+		this.tickBlocksAndPlayCaveSounds();
 	}
 
 	public void invalidateBlockReceiveRegion(int i1, int i2, int i3, int i4, int i5, int i6) {
@@ -66,7 +70,7 @@ public class WorldClient extends World {
 		this.setSpawnPoint(new ChunkCoordinates(8, 64, 8));
 	}
 
-	protected void tickBlocksAndAmbiance() {
+	protected void tickBlocksAndPlayCaveSounds() {
 		this.buildPlayerListAndCheckLight();
 		Iterator<?> iterator1 = this.activeChunkSet.iterator();
 
@@ -174,6 +178,48 @@ public class WorldClient extends World {
 	public void sendQuittingDisconnectingPacket() {
 		this.sendQueue.quitWithPacket(new Packet255KickDisconnect("Quitting"));
 	}
+	
+	protected void updateDailyTasks(long worldTime, int hourOfTheDay) {
+		
+	}
+	
+	public void performDayOfTheYearUpdate(int dayOfTheYear) {
+		int oldCurrentSeason = Seasons.currentSeason;
+		
+		Seasons.dayOfTheYear = dayOfTheYear;
+		Seasons.updateSeasonCounters();
+		
+		if (this.worldInfo.isEnableSeasons()) {
+			// Leaves change colours so
+			for(int i5 = 0; i5 < this.worldAccesses.size(); ++i5) {
+				((IWorldAccess)this.worldAccesses.get(i5)).updateAllRenderers();
+			}
+			
+			if(Seasons.currentSeason != oldCurrentSeason) {
+				if(Seasons.currentSeason == Seasons.WINTER) {
+					if(!this.worldInfo.isSnowing()) {
+						int newSnowingTime = Weather.getTimeForNextSnow(this.rand);
+						if(newSnowingTime < this.worldInfo.getSnowingTime()) {
+							this.worldInfo.setSnowingTime(newSnowingTime);
+						}
+					}
+					if(this.worldInfo.isRaining()) {
+						int newRainingTime = 3000 + this.rand.nextInt(3000);
+						if(this.worldInfo.getRainTime() > newRainingTime) this.worldInfo.setRainTime(newRainingTime);
+					}
+				}
+				
+				if(!this.worldInfo.isRaining() && (Seasons.currentSeason == Seasons.SPRING || Seasons.currentSeason == Seasons.AUTUMN)) {
+					int newRainingTime = Weather.getTimeForNextRain(this.rand);
+					if(newRainingTime < this.worldInfo.getRainTime()) {
+						this.worldInfo.setRainTime(newRainingTime);
+					}
+				}
+				
+				this.getWorldAccess(0).showString(Seasons.seasonNames[Seasons.currentSeason]);
+			}
+		}
+	}
 
 	protected void updateWeather() {
 		if(!this.worldProvider.hasNoSky) {
@@ -211,24 +257,6 @@ public class WorldClient extends World {
 				this.thunderingStrength = 1.0F;
 			}
 
-			/*
-			if(this.worldProvider instanceof WorldProviderDesertDimension) {
-				this.prevSandstormingStrength = this.sandstormingStrength;
-				if(this.worldInfo.isSandstorming()) {
-					this.sandstormingStrength = (float)((double)this.sandstormingStrength + 0.01D);
-				} else {
-					this.sandstormingStrength = (float)((double)this.sandstormingStrength - 0.01D);
-				}
-
-				if(this.sandstormingStrength < 0.0F) {
-					this.sandstormingStrength = 0.0F;
-				}
-
-				if(this.sandstormingStrength > 1.0F) {
-					this.sandstormingStrength = 1.0F;
-				}
-			}
-			*/
 		}
 	}
 }

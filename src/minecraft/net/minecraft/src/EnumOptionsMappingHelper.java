@@ -15,11 +15,6 @@ class EnumOptionsMappingHelper {
 		}
 
 		try {
-			enumOptionsMappingHelperArray[EnumOptions.ANAGLYPH.ordinal()] = 3;
-		} catch (NoSuchFieldError noSuchFieldError4) {
-		}
-
-		try {
 			enumOptionsMappingHelperArray[EnumOptions.ADVANCED_OPENGL.ordinal()] = 4;
 		} catch (NoSuchFieldError noSuchFieldError3) {
 		}

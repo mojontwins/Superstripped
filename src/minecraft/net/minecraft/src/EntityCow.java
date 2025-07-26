@@ -8,7 +8,7 @@ public class EntityCow extends EntityAnimal {
 		this.getNavigator().setAvoidsWater(true);
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 0.38F));
-		if (GameRules.canBreedAnimals) {
+		if (GameRules.boolRule("canBreedAnimals")) {
 			this.tasks.addTask(2, new EntityAIMate(this, 0.2F));
 		}
 		this.tasks.addTask(3, new EntityAITempt(this, 0.25F, Item.wheat.shiftedIndex, false));
@@ -26,12 +26,12 @@ public class EntityCow extends EntityAnimal {
 		return 10;
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
 	}
 
 	protected String getLivingSound() {
@@ -54,26 +54,25 @@ public class EntityCow extends EntityAnimal {
 		return Item.leather.shiftedIndex;
 	}
 
-	protected void dropFewItems(boolean z1, int i2) {
-		if(!GameRules.edibleCows) {
-			super.dropFewItems(z1, i2);
+	protected void dropFewItems(boolean justHit, int looting) {
+		if(!GameRules.boolRule("edibleCows")) {
+			super.dropFewItems(justHit, looting);
 		} else {
-			int i3 = this.rand.nextInt(3) + this.rand.nextInt(1 + i2);
+			int amount = this.rand.nextInt(3) + this.rand.nextInt(1 + looting);
 	
-			int i4;
-			for(i4 = 0; i4 < i3; ++i4) {
-				this.dropItem(Item.leather.shiftedIndex, 1);
-			}
-	
-			i3 = this.rand.nextInt(3) + 1 + this.rand.nextInt(1 + i2);
-	
-			for(i4 = 0; i4 < i3; ++i4) {
-				if(this.isBurning()) {
-					this.dropItem(Item.beefCooked.shiftedIndex, 1);
+			int i;
+			for(i = 0; i < amount; ++i) {
+				if(this.rand.nextInt(3) != 0) {
+					this.dropItem(Item.leather.shiftedIndex, 1);
 				} else {
-					this.dropItem(Item.beefRaw.shiftedIndex, 1);
+					if(this.isBurning()) {
+						this.dropItem(Item.beefCooked.shiftedIndex, 1);
+					} else {
+						this.dropItem(Item.beefRaw.shiftedIndex, 1);
+					}
 				}
 			}
+	
 		}
 	}
 

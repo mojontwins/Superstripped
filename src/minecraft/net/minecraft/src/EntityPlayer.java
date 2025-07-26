@@ -466,51 +466,51 @@ public abstract class EntityPlayer extends EntityLiving {
 		return this.inventory.canHarvestBlock(block1, metadata);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		NBTTagList nBTTagList2 = nBTTagCompound1.getTagList("Inventory");
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		NBTTagList nBTTagList2 = compoundTag.getTagList("Inventory");
 		this.inventory.readFromNBT(nBTTagList2);
-		this.dimension = nBTTagCompound1.getInteger("Dimension");
-		this.sleeping = nBTTagCompound1.getBoolean("Sleeping");
-		this.sleepTimer = nBTTagCompound1.getShort("SleepTimer");
-		this.experience = nBTTagCompound1.getFloat("XpP");
-		this.experienceLevel = nBTTagCompound1.getInteger("XpLevel");
-		this.experienceTotal = nBTTagCompound1.getInteger("XpTotal");
+		this.dimension = compoundTag.getInteger("Dimension");
+		this.sleeping = compoundTag.getBoolean("Sleeping");
+		this.sleepTimer = compoundTag.getShort("SleepTimer");
+		this.experience = compoundTag.getFloat("XpP");
+		this.experienceLevel = compoundTag.getInteger("XpLevel");
+		this.experienceTotal = compoundTag.getInteger("XpTotal");
 		if(this.sleeping) {
 			this.playerLocation = new ChunkCoordinates(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
 			//this.wakeUpPlayer(true, true, false);
 		}
 
-		if(nBTTagCompound1.hasKey("SpawnX") && nBTTagCompound1.hasKey("SpawnY") && nBTTagCompound1.hasKey("SpawnZ")) {
-			this.spawnChunk = new ChunkCoordinates(nBTTagCompound1.getInteger("SpawnX"), nBTTagCompound1.getInteger("SpawnY"), nBTTagCompound1.getInteger("SpawnZ"));
-			this.dontCheckSpawnCoordinates = nBTTagCompound1.getBoolean("DontVerifySpawn");
+		if(compoundTag.hasKey("SpawnX") && compoundTag.hasKey("SpawnY") && compoundTag.hasKey("SpawnZ")) {
+			this.spawnChunk = new ChunkCoordinates(compoundTag.getInteger("SpawnX"), compoundTag.getInteger("SpawnY"), compoundTag.getInteger("SpawnZ"));
+			this.dontCheckSpawnCoordinates = compoundTag.getBoolean("DontVerifySpawn");
 		}
-		this.spawnDimension = nBTTagCompound1.getInteger("SpawnDimension");
+		this.spawnDimension = compoundTag.getInteger("SpawnDimension");
 
-		this.foodStats.readNBT(nBTTagCompound1);
-		this.capabilities.readCapabilitiesFromNBT(nBTTagCompound1);
+		this.foodStats.readNBT(compoundTag);
+		this.capabilities.readCapabilitiesFromNBT(compoundTag);
 		
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setTag("Inventory", this.inventory.writeToNBT(new NBTTagList()));
-		nBTTagCompound1.setInteger("Dimension", this.dimension);
-		nBTTagCompound1.setBoolean("Sleeping", this.sleeping);
-		nBTTagCompound1.setShort("SleepTimer", (short)this.sleepTimer);
-		nBTTagCompound1.setFloat("XpP", this.experience);
-		nBTTagCompound1.setInteger("XpLevel", this.experienceLevel);
-		nBTTagCompound1.setInteger("XpTotal", this.experienceTotal);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setTag("Inventory", this.inventory.writeToNBT(new NBTTagList()));
+		compoundTag.setInteger("Dimension", this.dimension);
+		compoundTag.setBoolean("Sleeping", this.sleeping);
+		compoundTag.setShort("SleepTimer", (short)this.sleepTimer);
+		compoundTag.setFloat("XpP", this.experience);
+		compoundTag.setInteger("XpLevel", this.experienceLevel);
+		compoundTag.setInteger("XpTotal", this.experienceTotal);
 		if(this.spawnChunk != null) {
-			nBTTagCompound1.setInteger("SpawnX", this.spawnChunk.posX);
-			nBTTagCompound1.setInteger("SpawnY", this.spawnChunk.posY);
-			nBTTagCompound1.setInteger("SpawnZ", this.spawnChunk.posZ);	
-			nBTTagCompound1.setBoolean("DontVerifySpawn", this.dontCheckSpawnCoordinates);
+			compoundTag.setInteger("SpawnX", this.spawnChunk.posX);
+			compoundTag.setInteger("SpawnY", this.spawnChunk.posY);
+			compoundTag.setInteger("SpawnZ", this.spawnChunk.posZ);	
+			compoundTag.setBoolean("DontVerifySpawn", this.dontCheckSpawnCoordinates);
 		}
-		nBTTagCompound1.setInteger("SpawnDimension", this.spawnDimension);
+		compoundTag.setInteger("SpawnDimension", this.spawnDimension);
 
-		this.foodStats.writeNBT(nBTTagCompound1);
-		this.capabilities.writeCapabilitiesToNBT(nBTTagCompound1);
+		this.foodStats.writeNBT(compoundTag);
+		this.capabilities.writeCapabilitiesToNBT(compoundTag);
 	}
 
 	public void displayGUIChest(IInventory iInventory1) {
@@ -1097,7 +1097,7 @@ public abstract class EntityPlayer extends EntityLiving {
 	}
 
 	public boolean canEat(boolean z1) {
-		if (GameRules.enableHunger) {
+		if (GameRules.boolRule("enableHunger")) {
 			return (z1 || this.foodStats.needFood()) && !this.capabilities.disableDamage;
 		} else {
 			return (z1 || this.health < this.getMaxHealth()) && !this.capabilities.disableDamage;
@@ -1186,5 +1186,9 @@ public abstract class EntityPlayer extends EntityLiving {
 	
 	public void setDontCheckSpawnCoordinates(boolean dontCheckSpawnCoordinates) {
 		this.dontCheckSpawnCoordinates = dontCheckSpawnCoordinates;
+	}
+	
+	public ChunkCoordinates getPlayerCoordinates() {
+		return new ChunkCoordinates((int)this.posX, (int)this.posY, (int)this.posZ);
 	}
 }

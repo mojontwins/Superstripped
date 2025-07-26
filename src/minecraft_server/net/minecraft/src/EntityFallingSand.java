@@ -41,17 +41,22 @@ public class EntityFallingSand extends Entity {
 			this.prevPosX = this.posX;
 			this.prevPosY = this.posY;
 			this.prevPosZ = this.posZ;
+
 			++this.fallTime;
+
 			this.motionY -= (double)0.04F;
 			this.moveEntity(this.motionX, this.motionY, this.motionZ);
+
 			this.motionX *= (double)0.98F;
 			this.motionY *= (double)0.98F;
 			this.motionZ *= (double)0.98F;
-			int i1 = MathHelper.floor_double(this.posX);
-			int i2 = MathHelper.floor_double(this.posY);
-			int i3 = MathHelper.floor_double(this.posZ);
-			if(this.fallTime == 1 && this.worldObj.getBlockId(i1, i2, i3) == this.blockID) {
-				this.worldObj.setBlockWithNotify(i1, i2, i3, 0);
+
+			int x = MathHelper.floor_double(this.posX);
+			int y = MathHelper.floor_double(this.posY);
+			int z = MathHelper.floor_double(this.posZ);
+
+			if(this.fallTime == 1 && this.worldObj.getBlockId(x, y, z) == this.blockID) {
+				this.worldObj.setBlockWithNotify(x, y, z, 0);
 			} else if(!this.worldObj.isRemote && this.fallTime == 1) {
 				this.setDead();
 			}
@@ -60,8 +65,19 @@ public class EntityFallingSand extends Entity {
 				this.motionX *= (double)0.7F;
 				this.motionZ *= (double)0.7F;
 				this.motionY *= -0.5D;
+
+				this.setDead();
 				
-			} else if(this.fallTime > 100 && !this.worldObj.isRemote && (i2 < 1 || i2 > 256) || this.fallTime > 600) {
+				if(
+					(
+						!this.worldObj.canBlockBePlacedAt(this.blockID, x, y, z, true, 1) || 
+						BlockSand.canFallBelow(this.worldObj, x, y - 1, z) || 
+						!this.worldObj.setBlockWithNotify(x, y, z, this.blockID)
+					) && !this.worldObj.isRemote
+				) {
+					this.dropItem(this.blockID, 1);
+				}
+			} else if(this.fallTime > 100 && !this.worldObj.isRemote && (y < 1 || y > 256) || this.fallTime > 600) {
 				this.dropItem(this.blockID, 1);
 				this.setDead();
 			}
@@ -69,12 +85,12 @@ public class EntityFallingSand extends Entity {
 		}
 	}
 
-	protected void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		nBTTagCompound1.setShort("Tile", (short)this.blockID);
+	protected void writeEntityToNBT(NBTTagCompound compoundTag) {
+		compoundTag.setShort("Tile", (short)this.blockID);
 	}
 
-	protected void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		this.blockID = nBTTagCompound1.getShort("Tile") & 4095;
+	protected void readEntityFromNBT(NBTTagCompound compoundTag) {
+		this.blockID = compoundTag.getShort("Tile") & 4095;
 	}
 
 	public float getShadowSize() {

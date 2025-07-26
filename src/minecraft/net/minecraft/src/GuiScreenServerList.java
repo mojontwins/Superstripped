@@ -23,7 +23,7 @@ public class GuiScreenServerList extends GuiScreen {
 		this.controlList.clear();
 		this.controlList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + 12, stringTranslate1.translateKey("selectServer.select")));
 		this.controlList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + 12, stringTranslate1.translateKey("gui.cancel")));
-		this.serverTextField = new GuiTextField(this.fontRenderer, this.width / 2 - 100, 116, 200, 20);
+		this.serverTextField = new GuiTextField(this, this.fontRenderer, this.width / 2 - 100, 116, 200, 20);
 		this.serverTextField.setMaxStringLength(128);
 		this.serverTextField.setFocused(true);
 		this.serverTextField.setText(field_52009_d);

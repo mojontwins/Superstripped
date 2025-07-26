@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-public class EntitySkeleton extends EntityMob implements IMob {
+public class EntitySkeleton extends EntityArmoredMob implements IMob {
 	private static final ItemStack defaultHeldItem = new ItemStack(Item.bow, 1);
 
 	public EntitySkeleton(World world1) {

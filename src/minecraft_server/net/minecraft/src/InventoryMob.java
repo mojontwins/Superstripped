@@ -227,6 +227,10 @@ public class InventoryMob implements IInventory {
 		return this.mainInventory[0];
 	}
 	
+	public void setHeldItem(ItemStack itemStack) {
+		this.mainInventory[0] = itemStack;
+	}
+	
 	public boolean canInteractWith(EntityPlayer entityPlayer1) {
 		return false;
 	}

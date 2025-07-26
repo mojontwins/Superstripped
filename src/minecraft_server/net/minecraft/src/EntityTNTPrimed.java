@@ -68,12 +68,12 @@ public class EntityTNTPrimed extends Entity {
 		this.worldObj.createExplosion((Entity)null, this.posX, this.posY, this.posZ, f1);
 	}
 
-	protected void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		nBTTagCompound1.setByte("Fuse", (byte)this.fuse);
+	protected void writeEntityToNBT(NBTTagCompound compoundTag) {
+		compoundTag.setByte("Fuse", (byte)this.fuse);
 	}
 
-	protected void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		this.fuse = nBTTagCompound1.getByte("Fuse");
+	protected void readEntityFromNBT(NBTTagCompound compoundTag) {
+		this.fuse = compoundTag.getByte("Fuse");
 	}
 
 	public float getShadowSize() {

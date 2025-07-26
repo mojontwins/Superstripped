@@ -432,7 +432,7 @@ public class RenderGlobal implements IWorldAccess {
 		RenderHelper.disableStandardItemLighting();
 		byte b17 = 0;
 		int i34;
-		if(this.occlusionEnabled && GameSettingsValues.advancedOpengl && !GameSettingsValues.anaglyph && i2 == 0) {
+		if(this.occlusionEnabled && GameSettingsValues.advancedOpengl && i2 == 0) {
 			byte b18 = 0;
 			int i19 = 16;
 			this.checkOcclusionQueryResult(b18, i19);
@@ -466,19 +466,19 @@ public class RenderGlobal implements IWorldAccess {
 				float f21 = 0.0F;
 				float f22 = 0.0F;
 
-				for(int i23 = i35; i23 < i19; ++i23) {
-					if(this.sortedWorldRenderers[i23].skipAllRenderPasses()) {
-						this.sortedWorldRenderers[i23].isInFrustum = false;
+				for(int armorValue = i35; armorValue < i19; ++armorValue) {
+					if(this.sortedWorldRenderers[armorValue].skipAllRenderPasses()) {
+						this.sortedWorldRenderers[armorValue].isInFrustum = false;
 					} else {
-						if(!this.sortedWorldRenderers[i23].isInFrustum) {
-							this.sortedWorldRenderers[i23].isVisible = true;
+						if(!this.sortedWorldRenderers[armorValue].isInFrustum) {
+							this.sortedWorldRenderers[armorValue].isVisible = true;
 						}
 
-						if(this.sortedWorldRenderers[i23].isInFrustum && !this.sortedWorldRenderers[i23].isWaitingOnOcclusionQuery) {
-							float f24 = MathHelper.sqrt_float(this.sortedWorldRenderers[i23].distanceToEntitySquared(entityLiving1));
+						if(this.sortedWorldRenderers[armorValue].isInFrustum && !this.sortedWorldRenderers[armorValue].isWaitingOnOcclusionQuery) {
+							float f24 = MathHelper.sqrt_float(this.sortedWorldRenderers[armorValue].distanceToEntitySquared(entityLiving1));
 							int i25 = (int)(1.0F + f24 / 128.0F);
-							if(this.cloudOffsetX % i25 == i23 % i25) {
-								WorldRenderer worldRenderer26 = this.sortedWorldRenderers[i23];
+							if(this.cloudOffsetX % i25 == armorValue % i25) {
+								WorldRenderer worldRenderer26 = this.sortedWorldRenderers[armorValue];
 								float f27 = (float)((double)worldRenderer26.posXMinus - d33);
 								float f28 = (float)((double)worldRenderer26.posYMinus - d7);
 								float f29 = (float)((double)worldRenderer26.posZMinus - d9);
@@ -493,26 +493,17 @@ public class RenderGlobal implements IWorldAccess {
 								}
 
 								//Profiler.startSection("bb");
-								ARBOcclusionQuery.glBeginQueryARB(GL15.GL_SAMPLES_PASSED, this.sortedWorldRenderers[i23].glOcclusionQuery);
-								this.sortedWorldRenderers[i23].callOcclusionQueryList();
+								ARBOcclusionQuery.glBeginQueryARB(GL15.GL_SAMPLES_PASSED, this.sortedWorldRenderers[armorValue].glOcclusionQuery);
+								this.sortedWorldRenderers[armorValue].callOcclusionQueryList();
 								ARBOcclusionQuery.glEndQueryARB(GL15.GL_SAMPLES_PASSED);
 								//Profiler.endSection();
-								this.sortedWorldRenderers[i23].isWaitingOnOcclusionQuery = true;
+								this.sortedWorldRenderers[armorValue].isWaitingOnOcclusionQuery = true;
 							}
 						}
 					}
 				}
 
 				GL11.glPopMatrix();
-				if(GameSettingsValues.anaglyph) {
-					if(EntityRenderer.anaglyphField == 0) {
-						GL11.glColorMask(false, true, true, true);
-					} else {
-						GL11.glColorMask(true, false, false, true);
-					}
-				} else {
-					GL11.glColorMask(true, true, true, true);
-				}
 
 				GL11.glDepthMask(true);
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -674,14 +665,6 @@ public class RenderGlobal implements IWorldAccess {
 			float f5 = (float)vec3D2.zCoord;
 			float f7;
 			float f8;
-			if(GameSettingsValues.anaglyph) {
-				float f6 = (f3 * 30.0F + f4 * 59.0F + f5 * 11.0F) / 100.0F;
-				f7 = (f3 * 30.0F + f4 * 70.0F) / 100.0F;
-				f8 = (f3 * 30.0F + f5 * 70.0F) / 100.0F;
-				f3 = f6;
-				f4 = f7;
-				f5 = f8;
-			}
 
 			GL11.glColor3f(f3, f4, f5);
 			Tessellator tessellator21 = Tessellator.instance;
@@ -703,7 +686,7 @@ public class RenderGlobal implements IWorldAccess {
 			float f15;
 			int i25;
 			
-			if(GameRules.hasSunriseSunset) {
+			if(GameRules.boolRule("hasSunriseSunset")) {
 				float[] f22 = this.worldObj.worldProvider.calcSunriseSunsetColors(this.worldObj.getCelestialAngle(f1), f1);
 				if(f22 != null) {
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -716,14 +699,6 @@ public class RenderGlobal implements IWorldAccess {
 					f9 = f22[1];
 					f10 = f22[2];
 					float f13;
-					if(GameSettingsValues.anaglyph) {
-						f11 = (f8 * 30.0F + f9 * 59.0F + f10 * 11.0F) / 100.0F;
-						f12 = (f8 * 30.0F + f9 * 70.0F) / 100.0F;
-						f13 = (f8 * 30.0F + f10 * 70.0F) / 100.0F;
-						f8 = f11;
-						f9 = f12;
-						f10 = f13;
-					}
 	
 					tessellator21.startDrawing(6);
 					tessellator21.setColorRGBA_F(f8, f9, f10, f22[3]);
@@ -792,13 +767,13 @@ public class RenderGlobal implements IWorldAccess {
 			GL11.glPopMatrix();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			
-			if (GameRules.colouredWater) {
+			if (GameRules.boolRule("colouredWater")) {
 				this.setBottomOfTheWorldColours(f3, f4, f5, f1);
 			} else {
 				GL11.glColor3f(0.0F, 0.0F, 0.0F);
 			}
 						
-			double d23 = this.mc.thePlayer.getCurrentNodeVec3d(f1).yCoord - this.worldObj.getSeaLevel();
+			double d23 = this.mc.thePlayer.getCurrentNodeVec3d(f1).yCoord - this.worldObj.getSeaLevelForRendering();
 			if(d23 < 0.0D) {
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.0F, 12.0F, 0.0F);
@@ -847,7 +822,7 @@ public class RenderGlobal implements IWorldAccess {
 		if(this.worldObj.worldProvider.isSkyColored()) {
 			//GL11.glColor3f(f3 * 0.2F + 0.04F, f4 * 0.2F + 0.04F, f5 * 0.6F + 0.1F);
 
-			Vec3D vec3D = this.worldObj.getSkyColor2(this.mc.renderViewEntity, f1);
+			Vec3D vec3D = this.worldObj.getSkyColorBottom(this.mc.renderViewEntity, f1);
 			
 			GL11.glColor3d(vec3D.xCoord, vec3D.yCoord, vec3D.zCoord);
 		} else {
@@ -868,19 +843,11 @@ public class RenderGlobal implements IWorldAccess {
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.renderEngine.getTexture("/environment/clouds.png"));
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				Vec3D vec3D6 = this.worldObj.drawClouds(f1);
+				Vec3D vec3D6 = this.worldObj.getCloudColor(f1);
 				float f7 = (float)vec3D6.xCoord;
 				float f8 = (float)vec3D6.yCoord;
 				float f9 = (float)vec3D6.zCoord;
 				float f10;
-				if(GameSettingsValues.anaglyph) {
-					f10 = (f7 * 30.0F + f8 * 59.0F + f9 * 11.0F) / 100.0F;
-					float f11 = (f7 * 30.0F + f8 * 70.0F) / 100.0F;
-					float f12 = (f7 * 30.0F + f9 * 70.0F) / 100.0F;
-					f7 = f10;
-					f8 = f11;
-					f9 = f12;
-				}
 
 				f10 = 4.8828125E-4F;
 				double d24 = (double)((float)this.cloudOffsetX + f1);
@@ -897,11 +864,11 @@ public class RenderGlobal implements IWorldAccess {
 				tessellator5.setColorRGBA_F(f7, f8, f9, 0.8F);
 
 				for(int i22 = -b3 * i4; i22 < b3 * i4; i22 += b3) {
-					for(int i23 = -b3 * i4; i23 < b3 * i4; i23 += b3) {
-						tessellator5.addVertexWithUV((double)(i22 + 0), (double)f19, (double)(i23 + b3), (double)((float)(i22 + 0) * f10 + f20), (double)((float)(i23 + b3) * f10 + f21));
-						tessellator5.addVertexWithUV((double)(i22 + b3), (double)f19, (double)(i23 + b3), (double)((float)(i22 + b3) * f10 + f20), (double)((float)(i23 + b3) * f10 + f21));
-						tessellator5.addVertexWithUV((double)(i22 + b3), (double)f19, (double)(i23 + 0), (double)((float)(i22 + b3) * f10 + f20), (double)((float)(i23 + 0) * f10 + f21));
-						tessellator5.addVertexWithUV((double)(i22 + 0), (double)f19, (double)(i23 + 0), (double)((float)(i22 + 0) * f10 + f20), (double)((float)(i23 + 0) * f10 + f21));
+					for(int armorValue = -b3 * i4; armorValue < b3 * i4; armorValue += b3) {
+						tessellator5.addVertexWithUV((double)(i22 + 0), (double)f19, (double)(armorValue + b3), (double)((float)(i22 + 0) * f10 + f20), (double)((float)(armorValue + b3) * f10 + f21));
+						tessellator5.addVertexWithUV((double)(i22 + b3), (double)f19, (double)(armorValue + b3), (double)((float)(i22 + b3) * f10 + f20), (double)((float)(armorValue + b3) * f10 + f21));
+						tessellator5.addVertexWithUV((double)(i22 + b3), (double)f19, (double)(armorValue + 0), (double)((float)(i22 + b3) * f10 + f20), (double)((float)(armorValue + 0) * f10 + f21));
+						tessellator5.addVertexWithUV((double)(i22 + 0), (double)f19, (double)(armorValue + 0), (double)((float)(i22 + 0) * f10 + f20), (double)((float)(armorValue + 0) * f10 + f21));
 					}
 				}
 
@@ -924,32 +891,25 @@ public class RenderGlobal implements IWorldAccess {
 		Tessellator tessellator3 = Tessellator.instance;
 		float f4 = 12.0F;
 		float f5 = 4.0F;
+		
 		double d6 = (double)((float)this.cloudOffsetX + f1);
 		double d8 = (this.mc.renderViewEntity.prevPosX + (this.mc.renderViewEntity.posX - this.mc.renderViewEntity.prevPosX) * (double)f1 + d6 * (double)0.03F) / (double)f4;
 		double d10 = (this.mc.renderViewEntity.prevPosZ + (this.mc.renderViewEntity.posZ - this.mc.renderViewEntity.prevPosZ) * (double)f1) / (double)f4 + (double)0.33F;
 		float f12 = this.worldObj.worldProvider.getCloudHeight() - f2 + 0.33F;
-		int i13 = MathHelper.floor_double(d8 / 2048.0D);
-		int i14 = MathHelper.floor_double(d10 / 2048.0D);
-		d8 -= (double)(i13 * 2048);
-		d10 -= (double)(i14 * 2048);
+		int i = MathHelper.floor_double(d8 / 2048.0D);
+		int j = MathHelper.floor_double(d10 / 2048.0D);
+		d8 -= (double)(i * 2048);
+		d10 -= (double)(j * 2048);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.renderEngine.getTexture("/environment/clouds.png"));
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		Vec3D vec3D15 = this.worldObj.drawClouds(f1);
-		float f16 = (float)vec3D15.xCoord;
-		float f17 = (float)vec3D15.yCoord;
-		float f18 = (float)vec3D15.zCoord;
+		Vec3D vec3D15 = this.worldObj.getCloudColor(f1);
+		float r = (float)vec3D15.xCoord;
+		float g = (float)vec3D15.yCoord;
+		float b = (float)vec3D15.zCoord; 
 		float f19;
 		float f20;
 		float f21;
-		if(GameSettingsValues.anaglyph) {
-			f19 = (f16 * 30.0F + f17 * 59.0F + f18 * 11.0F) / 100.0F;
-			f20 = (f16 * 30.0F + f17 * 70.0F) / 100.0F;
-			f21 = (f16 * 30.0F + f18 * 70.0F) / 100.0F;
-			f16 = f19;
-			f17 = f20;
-			f18 = f21;
-		}
 
 		f19 = (float)(d8 * 0.0D);
 		f20 = (float)(d10 * 0.0D);
@@ -963,15 +923,9 @@ public class RenderGlobal implements IWorldAccess {
 		float f26 = 9.765625E-4F;
 		GL11.glScalef(f4, 1.0F, f4);
 
-		for(int i27 = 0; i27 < 2; ++i27) {
-			if(i27 == 0) {
+		for(int l = 0; l < 2; ++l) {
+			if(l == 0) {
 				GL11.glColorMask(false, false, false, false);
-			} else if(GameSettingsValues.anaglyph) {
-				if(EntityRenderer.anaglyphField == 0) {
-					GL11.glColorMask(false, true, true, true);
-				} else {
-					GL11.glColorMask(true, false, false, true);
-				}
 			} else {
 				GL11.glColorMask(true, true, true, true);
 			}
@@ -984,7 +938,7 @@ public class RenderGlobal implements IWorldAccess {
 					float f32 = f30 - f22;
 					float f33 = f31 - f23;
 					if(f12 > -f5 - 1.0F) {
-						tessellator3.setColorRGBA_F(f16 * 0.7F, f17 * 0.7F, f18 * 0.7F, 0.8F);
+						tessellator3.setColorRGBA_F(r * 0.7F, g * 0.7F, b * 0.7F, 0.8F);
 						tessellator3.setNormal(0.0F, -1.0F, 0.0F);
 						tessellator3.addVertexWithUV((double)(f32 + 0.0F), (double)(f12 + 0.0F), (double)(f33 + (float)b24), (double)((f30 + 0.0F) * f21 + f19), (double)((f31 + (float)b24) * f21 + f20));
 						tessellator3.addVertexWithUV((double)(f32 + (float)b24), (double)(f12 + 0.0F), (double)(f33 + (float)b24), (double)((f30 + (float)b24) * f21 + f19), (double)((f31 + (float)b24) * f21 + f20));
@@ -993,7 +947,7 @@ public class RenderGlobal implements IWorldAccess {
 					}
 
 					if(f12 <= f5 + 1.0F) {
-						tessellator3.setColorRGBA_F(f16, f17, f18, 0.8F);
+						tessellator3.setColorRGBA_F(r, g, b, 0.8F);
 						tessellator3.setNormal(0.0F, 1.0F, 0.0F);
 						tessellator3.addVertexWithUV((double)(f32 + 0.0F), (double)(f12 + f5 - f26), (double)(f33 + (float)b24), (double)((f30 + 0.0F) * f21 + f19), (double)((f31 + (float)b24) * f21 + f20));
 						tessellator3.addVertexWithUV((double)(f32 + (float)b24), (double)(f12 + f5 - f26), (double)(f33 + (float)b24), (double)((f30 + (float)b24) * f21 + f19), (double)((f31 + (float)b24) * f21 + f20));
@@ -1001,7 +955,7 @@ public class RenderGlobal implements IWorldAccess {
 						tessellator3.addVertexWithUV((double)(f32 + 0.0F), (double)(f12 + f5 - f26), (double)(f33 + 0.0F), (double)((f30 + 0.0F) * f21 + f19), (double)((f31 + 0.0F) * f21 + f20));
 					}
 
-					tessellator3.setColorRGBA_F(f16 * 0.9F, f17 * 0.9F, f18 * 0.9F, 0.8F);
+					tessellator3.setColorRGBA_F(r * 0.9F, g * 0.9F, b * 0.9F, 0.8F);
 					int i34;
 					if(i28 > -1) {
 						tessellator3.setNormal(-1.0F, 0.0F, 0.0F);
@@ -1025,7 +979,7 @@ public class RenderGlobal implements IWorldAccess {
 						}
 					}
 
-					tessellator3.setColorRGBA_F(f16 * 0.8F, f17 * 0.8F, f18 * 0.8F, 0.8F);
+					tessellator3.setColorRGBA_F(r * 0.8F, g * 0.8F, b * 0.8F, 0.8F);
 					if(i29 > -1) {
 						tessellator3.setNormal(0.0F, 0.0F, -1.0F);
 
@@ -1057,156 +1011,6 @@ public class RenderGlobal implements IWorldAccess {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 	}
-
-	/*
-	public boolean updateRenderers(EntityLiving entityLiving1, boolean z2) {
-		if(this.worldRenderersToUpdate.size() <= 0) {
-			return false;
-		} 
-		
-		boolean z3 = false;
-		if(z3) {
-			Collections.sort(this.worldRenderersToUpdate, new RenderSorter(entityLiving1));
-			int i17 = this.worldRenderersToUpdate.size() - 1;
-			int i18 = this.worldRenderersToUpdate.size();
-
-			for(int i19 = 0; i19 < i18; ++i19) {
-				WorldRenderer worldRenderer20 = (WorldRenderer)this.worldRenderersToUpdate.get(i17 - i19);
-				if(!z2) {
-					if(worldRenderer20.distanceToEntitySquared(entityLiving1) > 256.0F) {
-						if(worldRenderer20.isInFrustum) {
-							if(i19 >= 30) {
-								return false;
-							}
-						} else if(i19 >= 1) {
-							return false;
-						}
-					}
-				} else if(!worldRenderer20.isInFrustum) {
-					continue;
-				}
-
-				worldRenderer20.updateRenderer();
-				this.worldRenderersToUpdate.remove(worldRenderer20);
-				worldRenderer20.needsUpdate = false;
-			}
-
-			return this.worldRenderersToUpdate.size() == 0;
-		} else {
-			byte b4 = 2;
-			RenderSorter renderSorter5 = new RenderSorter(entityLiving1);
-			WorldRenderer[] worldRenderer6 = new WorldRenderer[b4];
-			ArrayList<WorldRenderer> arrayList7 = null;
-			int i8 = this.worldRenderersToUpdate.size();
-			int i9 = 0;
-
-			int i10;
-			WorldRenderer worldRenderer11;
-			int i12;
-			int i13;
-			label169:
-			for(i10 = 0; i10 < i8; ++i10) {
-				worldRenderer11 = (WorldRenderer)this.worldRenderersToUpdate.get(i10);
-				if(!z2) {
-					if(worldRenderer11.distanceToEntitySquared(entityLiving1) > 256.0F) {
-						for(i12 = 0; i12 < b4 && (worldRenderer6[i12] == null || renderSorter5.doCompare(worldRenderer6[i12], worldRenderer11) <= 0); ++i12) {
-						}
-
-						--i12;
-						if(i12 <= 0) {
-							continue;
-						}
-
-						i13 = i12;
-
-						while(true) {
-							--i13;
-							if(i13 == 0) {
-								worldRenderer6[i12] = worldRenderer11;
-								continue label169;
-							}
-
-							worldRenderer6[i13 - 1] = worldRenderer6[i13];
-						}
-					}
-				} else if(!worldRenderer11.isInFrustum) {
-					continue;
-				}
-
-				if(arrayList7 == null) {
-					arrayList7 = new ArrayList<WorldRenderer>();
-				}
-
-				++i9;
-				arrayList7.add(worldRenderer11);
-				this.worldRenderersToUpdate.set(i10, (Object)null);
-			}
-
-			if(arrayList7 != null) {
-				if(arrayList7.size() > 1) {
-					Collections.sort(arrayList7, renderSorter5);
-				}
-
-				for(i10 = arrayList7.size() - 1; i10 >= 0; --i10) {
-					worldRenderer11 = (WorldRenderer)arrayList7.get(i10);
-					worldRenderer11.updateRenderer();
-					worldRenderer11.needsUpdate = false;
-				}
-			}
-
-			i10 = 0;
-
-			int i21;
-			for(i21 = b4 - 1; i21 >= 0; --i21) {
-				WorldRenderer worldRenderer22 = worldRenderer6[i21];
-				if(worldRenderer22 != null) {
-					if(!worldRenderer22.isInFrustum && i21 != b4 - 1) {
-						worldRenderer6[i21] = null;
-						worldRenderer6[0] = null;
-						break;
-					}
-
-					worldRenderer6[i21].updateRenderer();
-					worldRenderer6[i21].needsUpdate = false;
-					++i10;
-				}
-			}
-
-			i21 = 0;
-			i12 = 0;
-
-			for(i13 = this.worldRenderersToUpdate.size(); i21 != i13; ++i21) {
-				WorldRenderer worldRenderer14 = (WorldRenderer)this.worldRenderersToUpdate.get(i21);
-				if(worldRenderer14 != null) {
-					boolean z15 = false;
-
-					for(int i16 = 0; i16 < b4 && !z15; ++i16) {
-						if(worldRenderer14 == worldRenderer6[i16]) {
-							z15 = true;
-						}
-					}
-
-					if(!z15) {
-						if(i12 != i21) {
-							this.worldRenderersToUpdate.set(i12, worldRenderer14);
-						}
-
-						++i12;
-					}
-				}
-			}
-
-			while(true) {
-				--i21;
-				if(i21 < i12) {
-					return i8 == i9 + i10;
-				}
-
-				this.worldRenderersToUpdate.remove(i21);
-			}
-		}
-	}
-	*/
 	
 	public boolean isMoving(EntityLiving entityliving) {
 		boolean moving = this.isMovingNow(entityliving);
@@ -1531,6 +1335,12 @@ public class RenderGlobal implements IWorldAccess {
 		
 		this.mc.sndManager.playStreaming(string1, (float)i2, (float)i3, (float)i4, 1.0F, 1.0F);
 	}
+	
+	public void showString(String s) {
+		if (s != null) {
+			this.mc.ingameGUI.showString(s);
+		}
+	}
 
 	public void playSound(String string1, double d2, double d4, double d6, float f8, float f9) {
 		float f10 = 16.0F;
@@ -1678,6 +1488,18 @@ public class RenderGlobal implements IWorldAccess {
 
 	}
 
+	public void updateAllRenderers() {
+		if(this.worldRenderers != null) {
+			for(int i = 0; i < this.worldRenderers.length; ++i) {
+				if(this.worldRenderers[i].isChunkLit && !this.worldRenderers[i].needsUpdate) {
+					this.worldRenderersToUpdate.add(this.worldRenderers[i]);
+					this.worldRenderers[i].markDirty();
+				}
+			}
+
+		}
+	}
+	
 	public void doNothingWithTileEntity(int i1, int i2, int i3, TileEntity tileEntity4) {
 	}
 

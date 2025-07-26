@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 
 public class EntityPlayerSP extends EntityPlayer {
 	public MovementInput movementInput;
-	protected Minecraft mc;
+	public Minecraft mc;
 	protected int sprintToggleTimer = 0;
 	public int sprintingTicksLeft = 0;
 	public float renderArmYaw;
@@ -140,7 +140,7 @@ public class EntityPlayerSP extends EntityPlayer {
 				if(this.sprintToggleTimer == 0) {
 					this.sprintToggleTimer = 7;
 				} else {
-					if(GameRules.enableSprinting)  { this.setSprinting(true); }
+					if(GameRules.boolRule("enableSprinting"))  { this.setSprinting(true); }
 					this.sprintToggleTimer = 0;
 				}
 			}
@@ -204,14 +204,14 @@ public class EntityPlayerSP extends EntityPlayer {
 		return f1;
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setInteger("Score", this.score);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setInteger("Score", this.score);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.score = nBTTagCompound1.getInteger("Score");
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.score = compoundTag.getInteger("Score");
 	}
 
 	public void closeScreen() {

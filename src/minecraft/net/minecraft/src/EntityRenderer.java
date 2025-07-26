@@ -14,8 +14,6 @@ import org.lwjgl.util.glu.GLU;
 import net.minecraft.client.Minecraft;
 
 public class EntityRenderer {
-	public static boolean anaglyphEnable = false;
-	public static int anaglyphField;
 	private Minecraft mc;
 	private float farPlaneDistance = 0.0F;
 	public ItemRenderer itemRenderer;
@@ -55,8 +53,7 @@ public class EntityRenderer {
 	float torchFlickerDY = 0.0F;
 	private Random random = new Random();
 	private int rainSoundCounter = 0;
-	float[] rainXCoords;
-	float[] rainYCoords;
+	
 	volatile int field_1394_b = 0;
 	volatile int field_1393_c = 0;
 	FloatBuffer fogColorBuffer = GLAllocation.createDirectFloatBuffer(16);
@@ -67,10 +64,22 @@ public class EntityRenderer {
 	private float fogColor1;
 	public int debugViewDirection;
 
+	float rainXCoords[] = new float[1024];
+	float rainYCoords[] = new float[1024];
+	
 	public EntityRenderer(Minecraft minecraft1) {
 		this.mc = minecraft1;
 		this.itemRenderer = new ItemRenderer(minecraft1);
 		this.lightmapTexture = minecraft1.renderEngine.allocateAndSetupTexture(new BufferedImage(16, 16, 1));
+		
+		// LUT
+		int idx = 0;
+		for (int x = -16; x < 16; x ++) for (int z = -16; z < 16; z ++) {
+			float distance = MathHelper.sqrt_float((float)(x * x) + (z * z));
+			this.rainXCoords [idx] = -((float)x) / distance;
+			this.rainYCoords [idx] = ((float)z) / distance;
+			idx ++;
+		}
 	}
 
 	public void updateRenderer() {
@@ -325,11 +334,6 @@ public class EntityRenderer {
 		this.farPlaneDistance = (float)(256 >> GameSettingsValues.renderDistance);
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		float f3 = 0.07F;
-		if(GameSettingsValues.anaglyph) {
-			GL11.glTranslatef((float)(-(i2 * 2 - 1)) * f3, 0.0F, 0.0F);
-		}
-
 		if(this.cameraZoom != 1.0D) {
 			GL11.glTranslatef((float)this.cameraYaw, (float)(-this.cameraPitch), 0.0F);
 			GL11.glScaled(this.cameraZoom, this.cameraZoom, 1.0D);
@@ -344,9 +348,6 @@ public class EntityRenderer {
 
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
-		if(GameSettingsValues.anaglyph) {
-			GL11.glTranslatef((float)(i2 * 2 - 1) * 0.1F, 0.0F, 0.0F);
-		}
 
 		this.hurtCameraEffect(f1);
 		if(GameSettingsValues.viewBobbing) {
@@ -394,11 +395,6 @@ public class EntityRenderer {
 		if(this.debugViewDirection <= 0) {
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
 			GL11.glLoadIdentity();
-			float f3 = 0.07F;
-			if(GameSettingsValues.anaglyph) {
-				GL11.glTranslatef((float)(-(i2 * 2 - 1)) * f3, 0.0F, 0.0F);
-			}
-
 			if(this.cameraZoom != 1.0D) {
 				GL11.glTranslatef((float)this.cameraYaw, (float)(-this.cameraPitch), 0.0F);
 				GL11.glScaled(this.cameraZoom, this.cameraZoom, 1.0D);
@@ -412,9 +408,6 @@ public class EntityRenderer {
 
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glLoadIdentity();
-			if(GameSettingsValues.anaglyph) {
-				GL11.glTranslatef((float)(i2 * 2 - 1) * 0.1F, 0.0F, 0.0F);
-			}
 
 			GL11.glPushMatrix();
 			this.hurtCameraEffect(f1);
@@ -532,7 +525,6 @@ public class EntityRenderer {
 
 		//Profiler.endSection();
 		if(!this.mc.skipRenderWorld) {
-			anaglyphEnable = GameSettingsValues.anaglyph;
 			ScaledResolution scaledResolution13 = new ScaledResolution(this.mc.displayWidth, this.mc.displayHeight);
 			int i14 = scaledResolution13.getScaledWidth();
 			int i15 = scaledResolution13.getScaledHeight();
@@ -610,393 +602,363 @@ public class EntityRenderer {
 	}
 
 	public void renderWorld(float f1, long j2) {
-		//Profiler.startSection("lightTex");
+
+		// Update the lightmap 
 		if(this.lightmapUpdateNeeded) {
 			this.updateLightmap();
 		}
 
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		
+		// Who's the viewer...
 		if(this.mc.renderViewEntity == null) {
 			this.mc.renderViewEntity = this.mc.thePlayer;
 		}
 
-		//Profiler.endStartSection("pick");
 		this.getMouseOver(f1);
 		EntityLiving entityLiving4 = this.mc.renderViewEntity;
 		RenderGlobal renderGlobal5 = this.mc.renderGlobal;
 		EffectRenderer effectRenderer6 = this.mc.effectRenderer;
+		
 		double d7 = entityLiving4.lastTickPosX + (entityLiving4.posX - entityLiving4.lastTickPosX) * (double)f1;
 		double d9 = entityLiving4.lastTickPosY + (entityLiving4.posY - entityLiving4.lastTickPosY) * (double)f1;
 		double d11 = entityLiving4.lastTickPosZ + (entityLiving4.posZ - entityLiving4.lastTickPosZ) * (double)f1;
 		int i16;
 
-		for(int i18 = 0; i18 < 2; ++i18) {
-			if(GameSettingsValues.anaglyph) {
-				anaglyphField = i18;
-				if(anaglyphField == 0) {
-					GL11.glColorMask(false, true, true, false);
-				} else {
-					GL11.glColorMask(true, false, false, false);
-				}
+		GL11.glViewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
+		this.updateFogColor(f1);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+
+		this.setupCameraTransform(f1, 0);
+		ActiveRenderInfo.updateRenderInfo(this.mc.thePlayer, GameSettingsValues.thirdPersonView == 2);
+
+		ClippingHelperImpl.getInstance();
+		if(GameSettingsValues.renderDistance < 2) {
+			this.setupFog(-1, f1);
+
+			renderGlobal5.renderSky(f1);
+		}
+
+		GL11.glEnable(GL11.GL_FOG);
+		this.setupFog(1, f1);
+		if(GameSettingsValues.ambientOcclusion) {
+			GL11.glShadeModel(GL11.GL_SMOOTH);
+		}
+
+		Frustrum frustrum19 = new Frustrum();
+		frustrum19.setPosition(d7, d9, d11);
+		this.mc.renderGlobal.clipRenderersByFrustum(frustrum19, f1);
+		
+		while(!this.mc.renderGlobal.updateRenderers(entityLiving4, false) && j2 != 0L) {
+			long j20 = j2 - System.nanoTime();
+			if(j20 < 0L || j20 > 1000000000L) {
+				break;
 			}
+		}
 
-			//Profiler.endStartSection("clear");
-			GL11.glViewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
-			this.updateFogColor(f1);
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			//Profiler.endStartSection("camera");
-			this.setupCameraTransform(f1, i18);
-			ActiveRenderInfo.updateRenderInfo(this.mc.thePlayer, GameSettingsValues.thirdPersonView == 2);
-			//Profiler.endStartSection("frustrum");
-			ClippingHelperImpl.getInstance();
-			if(GameSettingsValues.renderDistance < 2) {
-				this.setupFog(-1, f1);
-				//Profiler.endStartSection("sky");
-				renderGlobal5.renderSky(f1);
-			}
+		this.setupFog(0, f1);
+		GL11.glEnable(GL11.GL_FOG);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/terrain.png"));
+		RenderHelper.disableStandardItemLighting();
 
-			GL11.glEnable(GL11.GL_FOG);
-			this.setupFog(1, f1);
-			if(GameSettingsValues.ambientOcclusion) {
-				GL11.glShadeModel(GL11.GL_SMOOTH);
-			}
+		renderGlobal5.sortAndRender(entityLiving4, 0, (double)f1);
+		GL11.glShadeModel(GL11.GL_FLAT);
+		EntityPlayer entityPlayer21;
+		if(this.debugViewDirection == 0) {
+			RenderHelper.enableStandardItemLighting();
 
-			//Profiler.endStartSection("culling");
-			Frustrum frustrum19 = new Frustrum();
-			frustrum19.setPosition(d7, d9, d11);
-			this.mc.renderGlobal.clipRenderersByFrustum(frustrum19, f1);
-			if(i18 == 0) {
-				//Profiler.endStartSection("updatechunks");
+			renderGlobal5.renderEntities(entityLiving4.getCurrentNodeVec3d(f1), frustrum19, f1);
+			this.enableLightmap((double)f1);
 
-				while(!this.mc.renderGlobal.updateRenderers(entityLiving4, false) && j2 != 0L) {
-					long j20 = j2 - System.nanoTime();
-					if(j20 < 0L || j20 > 1000000000L) {
-						break;
-					}
-				}
-			}
-
-			this.setupFog(0, f1);
-			GL11.glEnable(GL11.GL_FOG);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/terrain.png"));
+			effectRenderer6.func_1187_b(entityLiving4, f1);
 			RenderHelper.disableStandardItemLighting();
-			//Profiler.endStartSection("terrain");
-			renderGlobal5.sortAndRender(entityLiving4, 0, (double)f1);
-			GL11.glShadeModel(GL11.GL_FLAT);
-			EntityPlayer entityPlayer21;
-			if(this.debugViewDirection == 0) {
-				RenderHelper.enableStandardItemLighting();
-				//Profiler.endStartSection("entities");
-				renderGlobal5.renderEntities(entityLiving4.getCurrentNodeVec3d(f1), frustrum19, f1);
-				this.enableLightmap((double)f1);
-				//Profiler.endStartSection("litParticles");
-				effectRenderer6.func_1187_b(entityLiving4, f1);
-				RenderHelper.disableStandardItemLighting();
-				this.setupFog(0, f1);
-				//Profiler.endStartSection("particles");
-				effectRenderer6.renderParticles(entityLiving4, f1);
-				this.disableLightmap((double)f1);
-				if(this.mc.objectMouseOver != null && entityLiving4.isInsideOfMaterial(Material.water) && entityLiving4 instanceof EntityPlayer && !GameSettingsValues.hideGUI) {
-					entityPlayer21 = (EntityPlayer)entityLiving4;
-					GL11.glDisable(GL11.GL_ALPHA_TEST);
-					//Profiler.endStartSection("outline");
-					renderGlobal5.drawBlockBreaking(entityPlayer21, this.mc.objectMouseOver, 0, entityPlayer21.inventory.getCurrentItem(), f1);
-					renderGlobal5.drawSelectionBox(entityPlayer21, this.mc.objectMouseOver, 0, entityPlayer21.inventory.getCurrentItem(), f1);
-					GL11.glEnable(GL11.GL_ALPHA_TEST);
-				}
-			}
-
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glDepthMask(true);
 			this.setupFog(0, f1);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDisable(GL11.GL_CULL_FACE);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/terrain.png"));
-			if(GameSettingsValues.fancyGraphics) {
-				//Profiler.endStartSection("water");
-				if(GameSettingsValues.ambientOcclusion) {
-					GL11.glShadeModel(GL11.GL_SMOOTH);
-				}
 
-				GL11.glColorMask(false, false, false, false);
-				i16 = renderGlobal5.sortAndRender(entityLiving4, 1, (double)f1);
-				if(GameSettingsValues.anaglyph) {
-					if(anaglyphField == 0) {
-						GL11.glColorMask(false, true, true, true);
-					} else {
-						GL11.glColorMask(true, false, false, true);
-					}
-				} else {
-					GL11.glColorMask(true, true, true, true);
-				}
-
-				if(i16 > 0) {
-					renderGlobal5.renderAllRenderLists(1, (double)f1);
-				}
-
-				GL11.glShadeModel(GL11.GL_FLAT);
-			} else {
-				//Profiler.endStartSection("water");
-				renderGlobal5.sortAndRender(entityLiving4, 1, (double)f1);
-			}
-
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glDisable(GL11.GL_BLEND);
-			if(this.cameraZoom == 1.0D && entityLiving4 instanceof EntityPlayer && !GameSettingsValues.hideGUI && this.mc.objectMouseOver != null && !entityLiving4.isInsideOfMaterial(Material.water)) {
+			effectRenderer6.renderParticles(entityLiving4, f1);
+			this.disableLightmap((double)f1);
+			if(this.mc.objectMouseOver != null && entityLiving4.isInsideOfMaterial(Material.water) && entityLiving4 instanceof EntityPlayer && !GameSettingsValues.hideGUI) {
 				entityPlayer21 = (EntityPlayer)entityLiving4;
 				GL11.glDisable(GL11.GL_ALPHA_TEST);
-				//Profiler.endStartSection("outline");
+
 				renderGlobal5.drawBlockBreaking(entityPlayer21, this.mc.objectMouseOver, 0, entityPlayer21.inventory.getCurrentItem(), f1);
 				renderGlobal5.drawSelectionBox(entityPlayer21, this.mc.objectMouseOver, 0, entityPlayer21.inventory.getCurrentItem(), f1);
 				GL11.glEnable(GL11.GL_ALPHA_TEST);
 			}
+		}
 
-			//Profiler.endStartSection("weather");
-			this.renderRainSnow(f1);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glDepthMask(true);
+		this.setupFog(0, f1);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/terrain.png"));
+		if(GameSettingsValues.fancyGraphics) {
+			if(GameSettingsValues.ambientOcclusion) {
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+			}
+
+			GL11.glColorMask(false, false, false, false);
+			i16 = renderGlobal5.sortAndRender(entityLiving4, 1, (double)f1);
+			GL11.glColorMask(true, true, true, true);
+
+			if(i16 > 0) {
+				renderGlobal5.renderAllRenderLists(1, (double)f1);
+			}
+
+			GL11.glShadeModel(GL11.GL_FLAT);
+		} else {
+			renderGlobal5.sortAndRender(entityLiving4, 1, (double)f1);
+		}
+
+		GL11.glDepthMask(true);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_BLEND);
+		if(this.cameraZoom == 1.0D && entityLiving4 instanceof EntityPlayer && !GameSettingsValues.hideGUI && this.mc.objectMouseOver != null && !entityLiving4.isInsideOfMaterial(Material.water)) {
+			entityPlayer21 = (EntityPlayer)entityLiving4;
+			GL11.glDisable(GL11.GL_ALPHA_TEST);
+
+			renderGlobal5.drawBlockBreaking(entityPlayer21, this.mc.objectMouseOver, 0, entityPlayer21.inventory.getCurrentItem(), f1);
+			renderGlobal5.drawSelectionBox(entityPlayer21, this.mc.objectMouseOver, 0, entityPlayer21.inventory.getCurrentItem(), f1);
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+		}
+
+		this.renderWeather(f1);
+		GL11.glDisable(GL11.GL_FOG);
+		if(this.pointedEntity != null) {
+			;
+		}
+
+		if(GameSettingsValues.shouldRenderClouds() && !this.mc.theWorld.worldProvider.isCaveWorld) {
+			GL11.glPushMatrix();
+			this.setupFog(0, f1);
+			GL11.glEnable(GL11.GL_FOG);
+			renderGlobal5.renderClouds(f1);
 			GL11.glDisable(GL11.GL_FOG);
-			if(this.pointedEntity != null) {
-				;
-			}
+			this.setupFog(1, f1);
+			GL11.glPopMatrix();
+		}
 
-			if(GameSettingsValues.shouldRenderClouds() && !this.mc.theWorld.worldProvider.isCaveWorld) {
-				//Profiler.endStartSection("clouds");
-				GL11.glPushMatrix();
-				this.setupFog(0, f1);
-				GL11.glEnable(GL11.GL_FOG);
-				renderGlobal5.renderClouds(f1);
-				GL11.glDisable(GL11.GL_FOG);
-				this.setupFog(1, f1);
-				GL11.glPopMatrix();
-			}
-
-			//Profiler.endStartSection("hand");
-			if(this.cameraZoom == 1.0D) {
-				GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-				this.renderHand(f1, i18);
-			}
-
-			if(!GameSettingsValues.anaglyph) {
-				//Profiler.endSection();
-				return;
-			}
+		if(this.cameraZoom == 1.0D) {
+			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+			this.renderHand(f1, 0);
 		}
 
 		GL11.glColorMask(true, true, true, false);
-		//Profiler.endSection();
 	}
 
 	private void addRainParticles() {
-		float f1 = this.mc.theWorld.getRainStrength(1.0F);
+		float rainStrength = this.mc.theWorld.getRainStrength(1.0F);
 		if(!GameSettingsValues.fancyGraphics) {
-			f1 /= 2.0F;
+			rainStrength /= 2.0F;
 		}
 
-		if(f1 != 0.0F) {
+		if(rainStrength != 0.0F) {
 			this.random.setSeed((long)this.rendererUpdateCount * 312987231L);
-			EntityLiving entityLiving2 = this.mc.renderViewEntity;
-			World world3 = this.mc.theWorld;
-			int i4 = MathHelper.floor_double(entityLiving2.posX);
-			int i5 = MathHelper.floor_double(entityLiving2.posY);
-			int i6 = MathHelper.floor_double(entityLiving2.posZ);
-			byte b7 = 10;
-			double d8 = 0.0D;
-			double d10 = 0.0D;
-			double d12 = 0.0D;
-			int i14 = 0;
-			int i15 = (int)(100.0F * f1 * f1);
+			EntityLiving thePlayer = this.mc.renderViewEntity;
+			World world = this.mc.theWorld;
+
+			int x = MathHelper.floor_double(thePlayer.posX);
+			int y = MathHelper.floor_double(thePlayer.posY);
+			int z = MathHelper.floor_double(thePlayer.posZ);
+			
+			byte radius = 10;
+
+			double fxX = 0.0D;
+			double fxY = 0.0D;
+			double fxZ = 0.0D;
+			
+			int soundCounter = 0;
+			int maxParticles = (int)(100.0F * rainStrength * rainStrength);
+
 			if(GameSettingsValues.particleSetting == 1) {
-				i15 >>= 1;
+				maxParticles >>= 1;
 			} else if(GameSettingsValues.particleSetting == 2) {
-				i15 = 0;
+				maxParticles = 0;
 			}
 
-			for(int i16 = 0; i16 < i15; ++i16) {
-				int i17 = i4 + this.random.nextInt(b7) - this.random.nextInt(b7);
-				int i18 = i6 + this.random.nextInt(b7) - this.random.nextInt(b7);
-				int i19 = world3.getPrecipitationHeight(i17, i18);
-				int i20 = world3.getBlockId(i17, i19 - 1, i18);
-				BiomeGenBase biomeGenBase21 = world3.getBiomeGenForCoords(i17, i18);
-				if(i19 <= i5 + b7 && i19 >= i5 - b7 && biomeGenBase21.canSpawnLightningBolt() && biomeGenBase21.getFloatTemperature() > 0.2F) {
-					float f22 = this.random.nextFloat();
-					float f23 = this.random.nextFloat();
-					if(i20 > 0) {
-						if(Block.blocksList[i20].blockMaterial == Material.lava) {
-							this.mc.effectRenderer.addEffect(new EntitySmokeFX(world3, (double)((float)i17 + f22), (double)((float)i19 + 0.1F) - Block.blocksList[i20].minY, (double)((float)i18 + f23), 0.0D, 0.0D, 0.0D));
+			for(int i = 0; i < maxParticles; ++i) {
+				int partX = x + this.random.nextInt(radius) - this.random.nextInt(radius);
+				int partZ = z + this.random.nextInt(radius) - this.random.nextInt(radius);
+				int partY = world.getPrecipitationHeight(partX, partZ);
+				int blockID = world.getBlockId(partX, partY - 1, partZ);
+
+				BiomeGenBase biomeGen = world.getBiomeGenForCoords(partX, partZ);
+				int particleType = Weather.particleDecide(biomeGen, world);
+				if(particleType != Weather.RAIN) continue;
+
+				if(partY <= y + radius && partY >= y - radius && biomeGen.canSpawnLightningBolt() && biomeGen.getFloatTemperature() > 0.2F) {
+					float fineDx = this.random.nextFloat();
+					float fineDz = this.random.nextFloat();
+					
+					if(blockID > 0) {
+						if(Block.blocksList[blockID].blockMaterial == Material.lava) {
+							this.mc.effectRenderer.addEffect(new EntitySmokeFX(world, (double)((float)partX + fineDx), (double)((float)partY + 0.1F) - Block.blocksList[blockID].minY, (double)((float)partZ + fineDz), 0.0D, 0.0D, 0.0D));
 						} else {
-							++i14;
-							if(this.random.nextInt(i14) == 0) {
-								d8 = (double)((float)i17 + f22);
-								d10 = (double)((float)i19 + 0.1F) - Block.blocksList[i20].minY;
-								d12 = (double)((float)i18 + f23);
+							++soundCounter;
+							if(this.random.nextInt(soundCounter) == 0) {
+								fxX = (double)((float)partX + fineDx);
+								fxY = (double)((float)partY + 0.1F) - Block.blocksList[blockID].minY;
+								fxZ = (double)((float)partZ + fineDz);
 							}
 
-							this.mc.effectRenderer.addEffect(new EntityRainFX(world3, (double)((float)i17 + f22), (double)((float)i19 + 0.1F) - Block.blocksList[i20].minY, (double)((float)i18 + f23)));
+							this.mc.effectRenderer.addEffect(new EntityRainFX(world, (double)((float)partX + fineDx), (double)((float)partY + 0.1F) - Block.blocksList[blockID].minY, (double)((float)partZ + fineDz)));
 						}
 					}
 				}
 			}
 
-			if(i14 > 0 && this.random.nextInt(3) < this.rainSoundCounter++) {
+			if(soundCounter > 0 && this.random.nextInt(3) < this.rainSoundCounter++) {
 				this.rainSoundCounter = 0;
-				if(d10 > entityLiving2.posY + 1.0D && world3.getPrecipitationHeight(MathHelper.floor_double(entityLiving2.posX), MathHelper.floor_double(entityLiving2.posZ)) > MathHelper.floor_double(entityLiving2.posY)) {
-					this.mc.theWorld.playSoundEffect(d8, d10, d12, "ambient.weather.rain", 0.1F, 0.5F);
+				if(fxY > thePlayer.posY + 1.0D && world.getPrecipitationHeight(MathHelper.floor_double(thePlayer.posX), MathHelper.floor_double(thePlayer.posZ)) > MathHelper.floor_double(thePlayer.posY)) {
+					this.mc.theWorld.playSoundEffect(fxX, fxY, fxZ, "ambient.weather.rain", 0.1F, 0.5F);
 				} else {
-					this.mc.theWorld.playSoundEffect(d8, d10, d12, "ambient.weather.rain", 0.2F, 1.0F);
+					this.mc.theWorld.playSoundEffect(fxX, fxY, fxZ, "ambient.weather.rain", 0.2F, 1.0F);
 				}
 			}
 
 		}
 	}
 
-	protected void renderRainSnow(float f1) {
-		float f2 = this.mc.theWorld.getRainStrength(f1);
-		if(f2 > 0.0F) {
-			this.enableLightmap((double)f1);
-			if(this.rainXCoords == null) {
-				this.rainXCoords = new float[1024];
-				this.rainYCoords = new float[1024];
+	protected void renderWeather(float renderPartialTick) {
+		EntityLiving entityPlayerSP = this.mc.renderViewEntity;
+		World world = this.mc.theWorld;
+		float fRain = world.getRainStrength(renderPartialTick);
+		float fSnow = world.getSnowStrength(renderPartialTick);
 
-				for(int i3 = 0; i3 < 32; ++i3) {
-					for(int i4 = 0; i4 < 32; ++i4) {
-						float f5 = (float)(i4 - 16);
-						float f6 = (float)(i3 - 16);
-						float f7 = MathHelper.sqrt_float(f5 * f5 + f6 * f6);
-						this.rainXCoords[i3 << 5 | i4] = -f6 / f7;
-						this.rainYCoords[i3 << 5 | i4] = f5 / f7;
-					}
+		if(fRain <= 0.0F && fSnow <= 0.0F) return;
+		this.enableLightmap((double)renderPartialTick);
+		
+		// player block coordinates
+		int playerX = MathHelper.floor_double(entityPlayerSP.posX);
+		int playerY = MathHelper.floor_double(entityPlayerSP.posY);
+		int playerZ = MathHelper.floor_double(entityPlayerSP.posZ);
+		
+		// Prepare tessellator & texture
+		Tessellator tessellator = Tessellator.instance;
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.01F);
+		//GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/snow.png"));
+
+		double interpolatedX = entityPlayerSP.lastTickPosX + (entityPlayerSP.posX - entityPlayerSP.lastTickPosX) * (double)renderPartialTick;
+		double interpolatedY = entityPlayerSP.lastTickPosY + (entityPlayerSP.posY - entityPlayerSP.lastTickPosY) * (double)renderPartialTick;
+		double interpolatedZ = entityPlayerSP.lastTickPosZ + (entityPlayerSP.posZ - entityPlayerSP.lastTickPosZ) * (double)renderPartialTick;
+
+		byte radius = 12;
+
+		byte lastParticle = -1;
+		float f4 = (float)rendererUpdateCount + renderPartialTick;
+
+		for(int x = playerX - radius; x <= playerX + radius; ++x) {
+			for(int z = playerZ - radius; z <= playerZ + radius; ++z) {
+				
+				int idx = ((z - playerZ) + 16) * 32 + ((x - playerX) + 16);
+				float distanceX = rainXCoords[idx] * 0.5F;
+				float distanceZ = rainYCoords[idx] * 0.5F;				
+				
+				BiomeGenBase biomegenbase = world.getBiomeGenForCoords(x, z);
+				int particleType = Weather.particleDecide(biomegenbase, world);
+				if(particleType == 0) continue;
+				int y = world.getPrecipitationHeight(x, z);
+				if(y < 0) {
+					y = 0;
 				}
-			}
+				
+				int y1 = playerY - radius;
+				int y2 = playerY + radius;
+				
+				if(y1 < y) {
+					y1 = y;
+				}
 
-			EntityLiving entityLiving41 = this.mc.renderViewEntity;
-			World world42 = this.mc.theWorld;
-			int i43 = MathHelper.floor_double(entityLiving41.posX);
-			int i44 = MathHelper.floor_double(entityLiving41.posY);
-			int i45 = MathHelper.floor_double(entityLiving41.posZ);
-			Tessellator tessellator8 = Tessellator.instance;
-			GL11.glDisable(GL11.GL_CULL_FACE);
-			GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glAlphaFunc(GL11.GL_GREATER, 0.01F);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/environment/snow.png"));
-			double d9 = entityLiving41.lastTickPosX + (entityLiving41.posX - entityLiving41.lastTickPosX) * (double)f1;
-			double d11 = entityLiving41.lastTickPosY + (entityLiving41.posY - entityLiving41.lastTickPosY) * (double)f1;
-			double d13 = entityLiving41.lastTickPosZ + (entityLiving41.posZ - entityLiving41.lastTickPosZ) * (double)f1;
-			int i15 = MathHelper.floor_double(d11);
-			byte b16 = 5;
-			if(GameSettingsValues.fancyGraphics) {
-				b16 = 10;
-			}
-
-			byte b18 = -1;
-			float f19 = (float)this.rendererUpdateCount + f1;
-			if(GameSettingsValues.fancyGraphics) {
-				b16 = 10;
-			}
-
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			for(int i20 = i45 - b16; i20 <= i45 + b16; ++i20) {
-				for(int i21 = i43 - b16; i21 <= i43 + b16; ++i21) {
-					int i22 = (i20 - i45 + 16) * 32 + i21 - i43 + 16;
-					float f23 = this.rainXCoords[i22] * 0.5F;
-					float f24 = this.rainYCoords[i22] * 0.5F;
-					BiomeGenBase biomeGenBase25 = world42.getBiomeGenForCoords(i21, i20);
-					if(biomeGenBase25.canSpawnLightningBolt() || biomeGenBase25.getEnableSnow()) {
-						int i26 = world42.getPrecipitationHeight(i21, i20);
-						int i27 = i44 - b16;
-						int i28 = i44 + b16;
-						if(i27 < i26) {
-							i27 = i26;
-						}
-
-						if(i28 < i26) {
-							i28 = i26;
-						}
-
-						float f29 = 1.0F;
-						int i30 = i26;
-						if(i26 < i15) {
-							i30 = i15;
-						}
-
-						if(i27 != i28) {
-							this.random.setSeed((long)(i21 * i21 * 3121 + i21 * 45238971 ^ i20 * i20 * 418711 + i20 * 13761));
-							float f31 = biomeGenBase25.getFloatTemperature();
-							float f32;
-							double d35;
-							
-							// in this implementation, getTemperatureAtHeight is not yet implemented. So if the biome main T is > 0.15F it will rain rather than snow.
-							
-							if(world42.getWorldChunkManager().getTemperatureAtHeight(f31, i26) >= 0.15F) {
-								if(b18 != 0) {
-									if(b18 >= 0) {
-										tessellator8.draw();
-									}
-
-									b18 = 0;
-									GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/environment/rain.png"));
-									tessellator8.startDrawingQuads();
+				if(y2 < y) {
+					y2 = y;
+				}
+				
+				if(y1 != y2) {
+					
+					this.random.setSeed(x * x * 3121 + x * 0x2b24abb ^ z * z * 0x66397 + z * 13761);
+					
+					switch(particleType) {
+						case Weather.RAIN:
+							if(lastParticle != 0) {
+								if(lastParticle > 0) {
+									tessellator.draw();
 								}
-
-								f32 = ((float)(this.rendererUpdateCount + i21 * i21 * 3121 + i21 * 45238971 + i20 * i20 * 418711 + i20 * 13761 & 31) + f1) / 32.0F * (3.0F + this.random.nextFloat());
-								double d33 = (double)((float)i21 + 0.5F) - entityLiving41.posX;
-								d35 = (double)((float)i20 + 0.5F) - entityLiving41.posZ;
-								float f37 = MathHelper.sqrt_double(d33 * d33 + d35 * d35) / (float)b16;
-								float f38 = 1.0F;
-								tessellator8.setBrightness(world42.getLightBrightnessForSkyBlocks(i21, i30, i20, 0));
-								tessellator8.setColorRGBA_F(f38, f38, f38, ((1.0F - f37 * f37) * 0.5F + 0.5F) * f2);
-								tessellator8.setTranslation(-d9 * 1.0D, -d11 * 1.0D, -d13 * 1.0D);
-								tessellator8.addVertexWithUV((double)((float)i21 - f23) + 0.5D, (double)i27, (double)((float)i20 - f24) + 0.5D, (double)(0.0F * f29), (double)((float)i27 * f29 / 4.0F + f32 * f29));
-								tessellator8.addVertexWithUV((double)((float)i21 + f23) + 0.5D, (double)i27, (double)((float)i20 + f24) + 0.5D, (double)(1.0F * f29), (double)((float)i27 * f29 / 4.0F + f32 * f29));
-								tessellator8.addVertexWithUV((double)((float)i21 + f23) + 0.5D, (double)i28, (double)((float)i20 + f24) + 0.5D, (double)(1.0F * f29), (double)((float)i28 * f29 / 4.0F + f32 * f29));
-								tessellator8.addVertexWithUV((double)((float)i21 - f23) + 0.5D, (double)i28, (double)((float)i20 - f24) + 0.5D, (double)(0.0F * f29), (double)((float)i28 * f29 / 4.0F + f32 * f29));
-								tessellator8.setTranslation(0.0D, 0.0D, 0.0D);
-							} else {
-								if(b18 != 1) {
-									if(b18 >= 0) {
-										tessellator8.draw();
-									}
-
-									b18 = 1;
-									GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/environment/snow.png"));
-									tessellator8.startDrawingQuads();
-								}
-
-								f32 = ((float)(this.rendererUpdateCount & 511) + f1) / 512.0F;
-								float f46 = this.random.nextFloat() + f19 * 0.01F * (float)this.random.nextGaussian();
-								float f34 = this.random.nextFloat() + f19 * (float)this.random.nextGaussian() * 0.001F;
-								d35 = (double)((float)i21 + 0.5F) - entityLiving41.posX;
-								double d47 = (double)((float)i20 + 0.5F) - entityLiving41.posZ;
-								float f39 = MathHelper.sqrt_double(d35 * d35 + d47 * d47) / (float)b16;
-								float f40 = 1.0F;
-								tessellator8.setBrightness((world42.getLightBrightnessForSkyBlocks(i21, i30, i20, 0) * 3 + 15728880) / 4);
-								tessellator8.setColorRGBA_F(f40, f40, f40, ((1.0F - f39 * f39) * 0.3F + 0.5F) * f2);
-								tessellator8.setTranslation(-d9 * 1.0D, -d11 * 1.0D, -d13 * 1.0D);
-								tessellator8.addVertexWithUV((double)((float)i21 - f23) + 0.5D, (double)i27, (double)((float)i20 - f24) + 0.5D, (double)(0.0F * f29 + f46), (double)((float)i27 * f29 / 4.0F + f32 * f29 + f34));
-								tessellator8.addVertexWithUV((double)((float)i21 + f23) + 0.5D, (double)i27, (double)((float)i20 + f24) + 0.5D, (double)(1.0F * f29 + f46), (double)((float)i27 * f29 / 4.0F + f32 * f29 + f34));
-								tessellator8.addVertexWithUV((double)((float)i21 + f23) + 0.5D, (double)i28, (double)((float)i20 + f24) + 0.5D, (double)(1.0F * f29 + f46), (double)((float)i28 * f29 / 4.0F + f32 * f29 + f34));
-								tessellator8.addVertexWithUV((double)((float)i21 - f23) + 0.5D, (double)i28, (double)((float)i20 - f24) + 0.5D, (double)(0.0F * f29 + f46), (double)((float)i28 * f29 / 4.0F + f32 * f29 + f34));
-								tessellator8.setTranslation(0.0D, 0.0D, 0.0D);
+								
+								lastParticle = 0;
+								GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/environment/rain.png"));
+								tessellator.startDrawingQuads();
 							}
-						}
+							
+							float f9 = (((float)(rendererUpdateCount + x * x * 3121 + x * 0x2b24abb + z * z * 0x66397 + z * 13761 & 0x1f) + renderPartialTick) / 32F) * (3F + this.random.nextFloat());
+							double ddX = (double)((float)x + 0.5F) - entityPlayerSP.posX;
+							double ddZ = (double)((float)z + 0.5F) - entityPlayerSP.posZ;
+							float hypotenuse = MathHelper.sqrt_double(ddX * ddX + ddZ * ddZ) / (float)radius;
+							
+							tessellator.setBrightness(world.getLightBrightnessForSkyBlocks(x, y, z, 0));
+							tessellator.setColorRGBA_F(1, 1, 1, ((1.0F - hypotenuse * hypotenuse) * 0.5F + 0.5F) * fRain);
+							
+							tessellator.setTranslation(-interpolatedX * 1.0D, -interpolatedY * 1.0D, -interpolatedZ * 1.0D);
+							tessellator.addVertexWithUV((double)((float)x - distanceX) + 0.5D, y1, (double)((float)z - distanceZ) + 0.5D, 0.0F, ((float)y1) / 4F + f9);
+							tessellator.addVertexWithUV((double)((float)x + distanceX) + 0.5D, y1, (double)((float)z + distanceZ) + 0.5D, 1.0F, ((float)y1) / 4F + f9);
+							tessellator.addVertexWithUV((double)((float)x + distanceX) + 0.5D, y2, (double)((float)z + distanceZ) + 0.5D, 1.0F, ((float)y2) / 4F + f9);
+							tessellator.addVertexWithUV((double)((float)x - distanceX) + 0.5D, y2, (double)((float)z - distanceZ) + 0.5D, 0.0F, ((float)y2) / 4F + f9);
+							tessellator.setTranslation(0.0D, 0.0D, 0.0D);
+							break;
+							
+						case Weather.SNOW:
+							if (lastParticle != 1)	{
+								if (lastParticle >= 0)	{
+									tessellator.draw();
+								}
+
+								lastParticle = 1;
+								GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/environment/snow.png"));
+								tessellator.startDrawingQuads();
+							}
+							
+							// Sometimes (in cold biomes during winter) rain is substituted for snow
+							if(fSnow < fRain) fSnow = fRain;
+							
+							float f10 = ((float)(rendererUpdateCount & 0x1ff) + renderPartialTick) / 512F;
+							float f11 = this.random.nextFloat() + f4 * 0.01F * (float)this.random.nextGaussian();
+							float f12 = this.random.nextFloat() + f4 * (float)this.random.nextGaussian() * 0.001F;
+							double dddX = (double)((float)x + 0.5F) - entityPlayerSP.posX;
+							double dddZ = (double)((float)z + 0.5F) - entityPlayerSP.posZ;
+							float hypotenuse2 = MathHelper.sqrt_double(dddX * dddX + dddZ * dddZ) / (float)radius;
+							
+							tessellator.setBrightness(world.getLightBrightnessForSkyBlocks(x, y, z, 0));
+							tessellator.setColorRGBA_F(1, 1, 1, ((1.0F - hypotenuse2 * hypotenuse2) * 0.3F + 0.5F) * fSnow);
+							
+							tessellator.setTranslation(-interpolatedX * 1.0D, -interpolatedY * 1.0D, -interpolatedZ * 1.0D);
+							tessellator.addVertexWithUV((double)((float)x - distanceX) + 0.5D, y1, (double)((float)z - distanceZ) + 0.5D, 0.0F + f11, ((float)y1) / 4F + f10 + f12);
+							tessellator.addVertexWithUV((double)((float)x + distanceX) + 0.5D, y1, (double)((float)z + distanceZ) + 0.5D, 1.0F + f11, ((float)y1) / 4F + f10 + f12);
+							tessellator.addVertexWithUV((double)((float)x + distanceX) + 0.5D, y2, (double)((float)z + distanceZ) + 0.5D, 1.0F + f11, ((float)y2) / 4F + f10 + f12);
+							tessellator.addVertexWithUV((double)((float)x - distanceX) + 0.5D, y2, (double)((float)z - distanceZ) + 0.5D, 0.0F + f11, ((float)y2) / 4F + f10 + f12);
+							tessellator.setTranslation(0.0D, 0.0D, 0.0D);
+							break;
+
 					}
 				}
 			}
-
-			if(b18 >= 0) {
-				tessellator8.draw();
-			}
-
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-			this.disableLightmap((double)f1);
 		}
+		
+		if (lastParticle >= 0)	{
+			tessellator.draw();
+		}
+
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+		this.disableLightmap((double)renderPartialTick);
+		
 	}
 
 	public void setupOverlayRendering() {
@@ -1035,7 +997,7 @@ public class EntityRenderer {
 			}
 
 			if(f11 > 0.0F) {
-				if(GameRules.hasSunriseSunset) {
+				if(GameRules.boolRule("hasSunriseSunset")) {
 					float[] f12 = world2.worldProvider.calcSunriseSunsetColors(world2.getCelestialAngle(f1), f1);
 					if(f12 != null) {
 						f11 *= f12[3];
@@ -1071,12 +1033,12 @@ public class EntityRenderer {
 
 		int i21 = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entityLiving3, f1);
 		if(this.cloudFog) {
-			Vec3D vec3D13 = world2.drawClouds(f1);
+			Vec3D vec3D13 = world2.getCloudColor(f1);
 			this.fogColorRed = (float)vec3D13.xCoord;
 			this.fogColorGreen = (float)vec3D13.yCoord;
 			this.fogColorBlue = (float)vec3D13.zCoord;
 		} else if(i21 != 0 && Block.blocksList[i21].blockMaterial == Material.water) {
-			if (!GameRules.colouredWater) {
+			if (!GameRules.boolRule("colouredWater")) {
 				this.fogColorRed = 0.02F;
 				this.fogColorGreen = 0.02F;
 				this.fogColorBlue = 0.2F;
@@ -1135,23 +1097,15 @@ public class EntityRenderer {
 		}
 		*/
 
-		if(GameSettingsValues.anaglyph) {
-			float f23 = (this.fogColorRed * 30.0F + this.fogColorGreen * 59.0F + this.fogColorBlue * 11.0F) / 100.0F;
-			float f17 = (this.fogColorRed * 30.0F + this.fogColorGreen * 70.0F) / 100.0F;
-			float f18 = (this.fogColorRed * 30.0F + this.fogColorBlue * 70.0F) / 100.0F;
-			this.fogColorRed = f23;
-			this.fogColorGreen = f17;
-			this.fogColorBlue = f18;
-		}
-
 		GL11.glClearColor(this.fogColorRed, this.fogColorGreen, this.fogColorBlue, 0.0F);
 	}
 
-	private void setupFog(int i1, float f2) {
-		EntityLiving entityLiving3 = this.mc.renderViewEntity;
-		boolean z4 = false;
-		if(entityLiving3 instanceof EntityPlayer) {
-			z4 = ((EntityPlayer)entityLiving3).capabilities.isCreativeMode;
+	private void setupFog(int i1, float renderPartialTick) {
+		EntityLiving viewerEntity = this.mc.renderViewEntity;
+		boolean creative = false;
+		
+		if(viewerEntity instanceof EntityPlayer) {
+			creative = ((EntityPlayer)viewerEntity).capabilities.isCreativeMode;
 		}
 
 		if(i1 == 999) {
@@ -1168,71 +1122,52 @@ public class EntityRenderer {
 			GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(this.fogColorRed, this.fogColorGreen, this.fogColorBlue, 1.0F));
 			GL11.glNormal3f(0.0F, -1.0F, 0.0F);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			int i5 = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entityLiving3, f2);
-			float f6;
+			int i5 = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, viewerEntity, renderPartialTick);
+			float dist;
 			
 			// TODO: Blindness
 			/*
-			if(entityLiving3.isPotionActive(Potion.blindness)) {
-				f6 = 5.0F;
-				int i7 = entityLiving3.getActivePotionEffect(Potion.blindness).getDuration();
+			if(viewerEntity.isPotionActive(Potion.blindness)) {
+				dist = 5.0F;
+				int i7 = viewerEntity.getActivePotionEffect(Potion.blindness).getDuration();
 				if(i7 < 20) {
-					f6 = 5.0F + (this.farPlaneDistance - 5.0F) * (1.0F - (float)i7 / 20.0F);
+					dist = 5.0F + (this.farPlaneDistance - 5.0F) * (1.0F - (float)i7 / 20.0F);
 				}
 
 				GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
 				if(i1 < 0) {
 					GL11.glFogf(GL11.GL_FOG_START, 0.0F);
-					GL11.glFogf(GL11.GL_FOG_END, f6 * 0.8F);
+					GL11.glFogf(GL11.GL_FOG_END, dist * 0.8F);
 				} else {
-					GL11.glFogf(GL11.GL_FOG_START, f6 * 0.25F);
-					GL11.glFogf(GL11.GL_FOG_END, f6);
+					GL11.glFogf(GL11.GL_FOG_START, dist * 0.25F);
+					GL11.glFogf(GL11.GL_FOG_END, dist);
 				}
 
 				if(GLContext.getCapabilities().GL_NV_fog_distance) {
 					GL11.glFogi(34138, 34139);
 				}
 			} else*/ {
-				float f8;
 				float f9;
-				float f12;
 				if(this.cloudFog) {
 					GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
 					GL11.glFogf(GL11.GL_FOG_DENSITY, 0.1F);
-					f6 = 1.0F;
-					f12 = 1.0F;
-					f8 = 1.0F;
-					if(GameSettingsValues.anaglyph) {
-						f9 = (f6 * 30.0F + f12 * 59.0F + f8 * 11.0F) / 100.0F;
-					}
-				} else if(i5 > 0 && Block.blocksList[i5].blockMaterial == Material.water /* && !((EntityPlayer)entityLiving3).divingHelmetOn()*/) {
-					GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
-					
-					//if(!entityLiving3.isPotionActive(Potion.waterBreathing)) {
-						GL11.glFogf(GL11.GL_FOG_DENSITY, 0.1F);
-					//} else {
-					//	GL11.glFogf(GL11.GL_FOG_DENSITY, 0.05F);
-					//}
 
-					f6 = 0.4F;
-					f12 = 0.4F;
-					f8 = 0.9F;
-					if(GameSettingsValues.anaglyph) {
-						f9 = (f6 * 30.0F + f12 * 59.0F + f8 * 11.0F) / 100.0F;
-					}
+				} else if(i5 > 0 && Block.blocksList[i5].blockMaterial == Material.water /* && !((EntityPlayer)viewerEntity).divingHelmetOn()*/) {
+					GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
+					GL11.glFogf(GL11.GL_FOG_DENSITY, 0.1F);
+
 				} else if(i5 > 0 && Block.blocksList[i5].blockMaterial == Material.lava) {
 					GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
 					GL11.glFogf(GL11.GL_FOG_DENSITY, 2.0F);
-					f6 = 0.4F;
-					f12 = 0.3F;
-					f8 = 0.3F;
-					if(GameSettingsValues.anaglyph) {
-						f9 = (f6 * 30.0F + f12 * 59.0F + f8 * 11.0F) / 100.0F;
-					}
+
 				} else {
-					f6 = this.farPlaneDistance;
-					if(this.mc.theWorld.worldProvider.getWorldHasNoSky() && !z4) {
-						double d13 = (double)((entityLiving3.getBrightnessForRender(f2) & 15728640) >> 20) / 16.0D + (entityLiving3.lastTickPosY + (entityLiving3.posY - entityLiving3.lastTickPosY) * (double)f2 + 4.0D) / 32.0D;
+					dist = this.farPlaneDistance;
+
+					float fogIntensity = 0.0F;
+					
+					if(this.mc.theWorld.worldProvider.getWorldHasNoSky() && !creative) {
+						double d13 = (double)((viewerEntity.getBrightnessForRender(renderPartialTick) & 15728640) >> 20) / 16.0D + (viewerEntity.lastTickPosY + (viewerEntity.posY - viewerEntity.lastTickPosY) * (double)renderPartialTick + 4.0D) / 32.0D;
+						
 						if(d13 < 1.0D) {
 							if(d13 < 0.0D) {
 								d13 = 0.0D;
@@ -1244,30 +1179,29 @@ public class EntityRenderer {
 								f9 = 5.0F;
 							}
 
-							if(f6 > f9) {
-								f6 = f9;
+							if(dist > f9) {
+								dist = f9;
 							}
 						}
+					} else {
+						fogIntensity = (float)Math.max(0, this.mc.theWorld.getFogIntensity(renderPartialTick) - this.mc.theWorld.getRainStrength(renderPartialTick));
+						
 					}
-					
-
+					dist = (float) Math.min(dist, 256.0F - 192.0F * fogIntensity);
 					GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
 					if(i1 < 0) {
 						GL11.glFogf(GL11.GL_FOG_START, 0.0F);
-						GL11.glFogf(GL11.GL_FOG_END, f6 * 0.8F);
+						GL11.glFogf(GL11.GL_FOG_END, dist * 0.8F);
 					} else {
-						GL11.glFogf(GL11.GL_FOG_START, f6 * 0.25F);
-						GL11.glFogf(GL11.GL_FOG_END, f6);
+						// This is the "normal" fog
+						GL11.glFogf(GL11.GL_FOG_START, dist * 0.25F);						
+						GL11.glFogf(GL11.GL_FOG_END, dist);
 					}
 
 					if(GLContext.getCapabilities().GL_NV_fog_distance) {
 						GL11.glFogi(34138, 34139);
 					}
 
-					if(this.mc.theWorld.worldProvider.func_48218_b((int)entityLiving3.posX, (int)entityLiving3.posZ)) {
-						GL11.glFogf(GL11.GL_FOG_START, f6 * 0.05F);
-						GL11.glFogf(GL11.GL_FOG_END, Math.min(f6, 192.0F) * 0.5F);
-					}
 				}
 			}
 

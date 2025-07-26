@@ -66,14 +66,6 @@ public class TextureLavaFlowFX extends TextureFX {
 			i5 = (int)(f3 * 100.0F + 155.0F);
 			i6 = (int)(f3 * f3 * 255.0F);
 			i7 = (int)(f3 * f3 * f3 * f3 * 128.0F);
-			if(this.anaglyphEnabled) {
-				i8 = (i5 * 30 + i6 * 59 + i7 * 11) / 100;
-				i9 = (i5 * 30 + i6 * 70) / 100;
-				int i10 = (i5 * 30 + i7 * 70) / 100;
-				i5 = i8;
-				i6 = i9;
-				i7 = i10;
-			}
 
 			this.imageData[i2 * 4 + 0] = (byte)i5;
 			this.imageData[i2 * 4 + 1] = (byte)i6;

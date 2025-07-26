@@ -320,10 +320,10 @@ public class EntityBoat extends Entity {
 		}
 	}
 
-	protected void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
+	protected void writeEntityToNBT(NBTTagCompound compoundTag) {
 	}
 
-	protected void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
+	protected void readEntityFromNBT(NBTTagCompound compoundTag) {
 	}
 
 	public float getShadowSize() {

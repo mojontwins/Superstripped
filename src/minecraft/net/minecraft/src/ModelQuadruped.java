@@ -9,8 +9,8 @@ public class ModelQuadruped extends ModelBase {
 	public ModelRenderer leg2;
 	public ModelRenderer leg3;
 	public ModelRenderer leg4;
-	protected float field_40331_g = 8.0F;
-	protected float field_40332_n = 4.0F;
+	protected float headOffsetX = 8.0F;
+	protected float headOffsetY = 4.0F;
 
 	public ModelQuadruped(int i1, float f2) {
 		this.head.addBox(-4.0F, -4.0F, -8.0F, 8, 8, 8, f2);
@@ -37,7 +37,7 @@ public class ModelQuadruped extends ModelBase {
 		if(this.isChild) {
 			float f8 = 2.0F;
 			GL11.glPushMatrix();
-			GL11.glTranslatef(0.0F, this.field_40331_g * f7, this.field_40332_n * f7);
+			GL11.glTranslatef(0.0F, this.headOffsetX * f7, this.headOffsetY * f7);
 			this.head.render(f7);
 			GL11.glPopMatrix();
 			GL11.glPushMatrix();

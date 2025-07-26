@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-public class EntityZombie extends EntityMob implements IMob {
+public class EntityZombie extends EntityArmoredMob implements IMob {
 	public EntityZombie(World world1) {
 		super(world1);
 		this.texture = "/mob/zombie.png";
@@ -12,7 +12,7 @@ public class EntityZombie extends EntityMob implements IMob {
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, this.moveSpeed, false));
 		this.tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityVillager.class, this.moveSpeed, true));
 		this.tasks.addTask(4, new EntityAIMoveTwardsRestriction(this, this.moveSpeed));
-		this.tasks.addTask(5, new EntityAIMoveThroughVillage(this, this.moveSpeed, false));
+		//this.tasks.addTask(5, new EntityAIMoveThroughVillage(this, this.moveSpeed, false));
 		this.tasks.addTask(6, new EntityAIWander(this, this.moveSpeed));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(7, new EntityAILookIdle(this));

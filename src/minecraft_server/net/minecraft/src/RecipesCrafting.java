@@ -9,5 +9,9 @@ public class RecipesCrafting {
 		craftingManager1.addRecipe(new ItemStack(Block.sandStone), new Object[]{"##", "##", '#', Block.sand});
 		craftingManager1.addRecipe(new ItemStack(Block.sandStone, 4, 2), new Object[]{"##", "##", '#', Block.sandStone});
 		craftingManager1.addRecipe(new ItemStack(Block.sandStone, 1, 1), new Object[]{"#", "#", '#', new ItemStack(Block.stairSingle, 1, 1)});
+
+		craftingManager1.addRecipe(new ItemStack(Block.fenceIron, 16), new Object[]{"###", "###", '#', Item.ingotIron});
+		craftingManager1.addRecipe(new ItemStack(Block.thinGlass, 16), new Object[]{"###", "###", '#', Block.glass});
+		
 	}
 }

@@ -47,17 +47,17 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting {
 		this.yOffset = 0.0F;
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		if(nBTTagCompound1.hasKey("playerGameType")) {
-			this.itemInWorldManager.toggleGameType(nBTTagCompound1.getInteger("playerGameType"));
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		if(compoundTag.hasKey("playerGameType")) {
+			this.itemInWorldManager.toggleGameType(compoundTag.getInteger("playerGameType"));
 		}
 
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setInteger("playerGameType", this.itemInWorldManager.getGameType());
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setInteger("playerGameType", this.itemInWorldManager.getGameType());
 	}
 
 	public void setWorld(World world1) {

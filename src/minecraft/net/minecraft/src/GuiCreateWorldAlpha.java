@@ -17,6 +17,12 @@ public class GuiCreateWorldAlpha extends GuiScreen {
 	private boolean enableCheats;
 	private boolean isCreative;
 	private boolean snowCovered;
+	private boolean enableSeasons = true;
+	private int worldTypeId = 0;
+	
+	private String worldTypeStrings[] = new String[] {
+			"Alpha", "Alpha cold", "Infdev", "Sky", "Ocean"
+	};
 	
     public GuiCreateWorldAlpha(GuiScreen parentGuiScreen, int slot) {
     	this.parentGuiScreen = parentGuiScreen;
@@ -34,18 +40,19 @@ public class GuiCreateWorldAlpha extends GuiScreen {
     public void initGui() {
     	this.controlList.clear();
     	
-    	textboxWorldName = new GuiTextField(this.fontRenderer, width / 2 - 144, 90, 140, 20);
+    	textboxWorldName = new GuiTextField(this, this.fontRenderer, width / 2 - 144, 60, 140, 20);
     	textboxWorldName.setFocused(true);
     	textboxWorldName.setText(this.levelName);
     	textboxWorldName.setMaxStringLength(16);
     	
-        textboxSeed = new GuiTextField(this.fontRenderer, width / 2 + 4, 90, 140, 20);
+        textboxSeed = new GuiTextField(this, this.fontRenderer, width / 2 + 4, 60, 140, 20);
         textboxSeed.setText(this.seed);
         textboxSeed.drawTextBox();
         
-        this.controlList.add(new GuiButton(100, this.width / 2 - 104, 120, 208, 20, this.getOptionDisplayStringAlpha(100)));
-        this.controlList.add(new GuiButton(101, this.width / 2 - 104, 142, 208, 20, this.getOptionDisplayStringAlpha(101)));
-        this.controlList.add(new GuiButton(102, this.width / 2 - 104, 164, 208, 20, this.getOptionDisplayStringAlpha(102)));
+        this.controlList.add(new GuiButton(100, this.width / 2 - 104, 90, 208, 20, this.getOptionDisplayStringAlpha(100)));
+        this.controlList.add(new GuiButton(101, this.width / 2 - 104, 112, 208, 20, this.getOptionDisplayStringAlpha(101)));
+        this.controlList.add(new GuiButton(102, this.width / 2 - 104, 134, 208, 20, this.getOptionDisplayStringAlpha(102)));
+        this.controlList.add(new GuiButton(103, this.width / 2 - 104, 156, 208, 20, this.getOptionDisplayStringAlpha(103)));
                 
         this.controlList.add(new GuiButton(0, this.width / 2 - 104, 198, 102, 20, "Create"));
         this.controlList.add(new GuiButton(1, this.width / 2 + 2, 198, 102, 20, "Cancel"));
@@ -107,7 +114,7 @@ public class GuiCreateWorldAlpha extends GuiScreen {
 						}
 						
 						this.mc.startWorld("World" + this.slot, this.sanitizedWorldName(), 
-								new WorldSettings(actualSeed, gameMode, this.enableCheats, this.snowCovered, GameRules.defaultWorldType(this.snowCovered)));
+								new WorldSettings(actualSeed, gameMode, this.enableCheats, this.snowCovered, this.enableSeasons, GameRules.defaultWorldType(this.worldTypeId)));
 						this.mc.displayGuiScreen((GuiScreen)null);
 					}
 					break;
@@ -135,7 +142,8 @@ public class GuiCreateWorldAlpha extends GuiScreen {
 		switch (i) {
 			case 100: return "Game mode: " + (this.isCreative ? "Creative" : "Survival");
 			case 101: return "Enable cheats: " + (this.enableCheats ? "ON" : "OFF");
-			case 102: return "Weather: " + (this.snowCovered ? "Winter" : "Spring");
+			case 102: return "Type: " + this.worldTypeStrings[this.worldTypeId];
+			case 103: return "Enable seasons: " + (this.enableSeasons ? "ON" : "OFF");
 		}
 		return null;
 	}
@@ -150,18 +158,23 @@ public class GuiCreateWorldAlpha extends GuiScreen {
 		}
 		
 		if (i1 == 102) {
-			this.snowCovered = !this.snowCovered;
+			this.worldTypeId = (this.worldTypeId + 1) % (this.worldTypeStrings.length);
+			this.snowCovered = (this.worldTypeId == 1);
+		}
+		
+		if (i1 == 103) {
+			this.enableSeasons = !this.enableSeasons;
 		}
 	}
     
 	public void drawScreen(int i, int j, float f) {
 		this.drawDefaultBackground();
 		this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 20, 16777215);
-		this.drawCenteredString(this.fontRenderer, "Enter a name for your world and a seed!", this.width/2, 50, 0xEEEEEE);
-		this.drawCenteredString(this.fontRenderer, "If left blank, default values will be used.", this.width/2, 60, 0xEEEEEE);
+		//this.drawCenteredString(this.fontRenderer, "Enter a name for your world and a seed!", this.width/2, 50, 0xEEEEEE);
+		//this.drawCenteredString(this.fontRenderer, "If left blank, default values will be used.", this.width/2, 60, 0xEEEEEE);
     	
-    	this.drawString(this.fontRenderer, "Name", this.width / 2 - 144, 80, 0xCCCCCC);
-    	this.drawString(this.fontRenderer, "Seed:", this.width / 2 + 4, 80, 0xCCCCCC);
+    	this.drawString(this.fontRenderer, "Name", this.width / 2 - 144, 50, 0xCCCCCC);
+    	this.drawString(this.fontRenderer, "Seed:", this.width / 2 + 4, 50, 0xCCCCCC);
     	
     	this.textboxWorldName.drawTextBox();
 		this.textboxSeed.drawTextBox();

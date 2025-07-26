@@ -15,7 +15,7 @@ public class ItemFood extends Item {
 		
 		this.displayOnCreativeTab = CreativeTabs.tabFood;
 		
-		if (!GameRules.stackableFood) this.setMaxStackSize(1);
+		if (!GameRules.boolRule("stackableFood")) this.setMaxStackSize(1);
 	}
 
 	public ItemFood(int i1, int i2, boolean z3) {
@@ -25,7 +25,7 @@ public class ItemFood extends Item {
 	public ItemStack onFoodEaten(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
 		--itemStack.stackSize;
 		
-		if (GameRules.enableHunger) {
+		if (GameRules.boolRule("enableHunger")) {
 			entityPlayer.getFoodStats().addStats(this);
 		} else {
 			int heal = this.healAmount;

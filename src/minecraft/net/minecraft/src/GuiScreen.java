@@ -193,4 +193,7 @@ public class GuiScreen extends Gui {
 	
 	protected void func_85041_a(int var1, int var2, int var3, long var4) {
 	}
+	
+	public void selectNextField() {
+	}
 }

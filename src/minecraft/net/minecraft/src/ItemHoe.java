@@ -1,28 +1,45 @@
 package net.minecraft.src;
 
 public class ItemHoe extends Item {
-	public ItemHoe(int i1, EnumToolMaterial enumToolMaterial2) {
-		super(i1);
+	public ItemHoe(int id, EnumToolMaterial toolMaterial) {
+		super(id);
 		this.maxStackSize = 1;
-		this.setMaxDamage(enumToolMaterial2.getMaxUses());
+		this.setMaxDamage(toolMaterial.getMaxUses());
+		
+		this.displayOnCreativeTab = CreativeTabs.tabTools;
 	}
 
-	public boolean onItemUse(ItemStack itemStack1, EntityPlayer entityPlayer2, World world3, int i4, int i5, int i6, int i7) {
-		if(!entityPlayer2.canPlayerEdit(i4, i5, i6)) {
+	public boolean onItemUse(ItemStack theStack, EntityPlayer thePlayer, World world, int x, int y, int z, int side) {
+		if(!thePlayer.canPlayerEdit(x, y, z)) {
 			return false;
 		} else {
-			int i8 = world3.getBlockId(i4, i5, i6);
-			int i9 = world3.getBlockId(i4, i5 + 1, i6);
-			if((i7 == 0 || i9 != 0 || i8 != Block.grass.blockID) && i8 != Block.dirt.blockID) {
+			int i8 = world.getBlockId(x, y, z);
+			int i9 = world.getBlockId(x, y + 1, z);
+			if((side == 0 || i9 != 0 || i8 != Block.grass.blockID) && i8 != Block.dirt.blockID) {
 				return false;
 			} else {
 				Block block10 = Block.tilledField;
-				world3.playSoundEffect((double)((float)i4 + 0.5F), (double)((float)i5 + 0.5F), (double)((float)i6 + 0.5F), block10.stepSound.getStepSound(), (block10.stepSound.getVolume() + 1.0F) / 2.0F, block10.stepSound.getPitch() * 0.8F);
-				if(world3.isRemote) {
+				world.playSoundEffect((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), block10.stepSound.getStepSound(), (block10.stepSound.getVolume() + 1.0F) / 2.0F, block10.stepSound.getPitch() * 0.8F);
+				if(world.isRemote) {
 					return true;
 				} else {
-					world3.setBlockWithNotify(i4, i5, i6, block10.blockID);
-					itemStack1.damageItem(1, entityPlayer2);
+					world.setBlockWithNotify(x, y, z, block10.blockID);
+					theStack.damageItem(1, thePlayer);
+					
+					if(world.rand.nextInt(8) == 0 && i8 == Block.grass.blockID) {
+						byte b11 = 1;
+
+						for(int i12 = 0; i12 < b11; ++i12) {
+							float f13 = 0.7F;
+							float f14 = world.rand.nextFloat() * f13 + (1.0F - f13) * 0.5F;
+							float f15 = 1.2F;
+							float f16 = world.rand.nextFloat() * f13 + (1.0F - f13) * 0.5F;
+							EntityItem entityItem17 = new EntityItem(world, (double)((float)x + f14), (double)((float)y + f15), (double)((float)z + f16), new ItemStack(Item.seeds));
+							entityItem17.delayBeforeCanPickup = 10;
+							world.spawnEntityInWorld(entityItem17);
+						}
+					}
+
 					return true;
 				}
 			}
@@ -31,5 +48,10 @@ public class ItemHoe extends Item {
 
 	public boolean isFull3D() {
 		return true;
+	}
+	
+	@Override
+	public boolean canHarvestBlock(Block block) {
+		return block == Block.leaves;
 	}
 }

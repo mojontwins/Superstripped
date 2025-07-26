@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-public class EntityArmoredMob extends EntityMob {
+public class EntityArmoredMob extends EntityMob implements IArmoredMob {
 	// Added a proper inventory to manage actual armor and stuff
 	public InventoryMob inventory;
 	protected int carryoverDamage = 0;
@@ -38,6 +38,7 @@ public class EntityArmoredMob extends EntityMob {
 		int var3 = var1 * var2 + this.carryoverDamage;
 		int strength = var3 / 25;
 		this.carryoverDamage = var3 % 25;
+
 		super.damageEntity(damageSource, strength);
 	}
 	
@@ -45,6 +46,25 @@ public class EntityArmoredMob extends EntityMob {
 		return 9;
 	}
 
+	public void setArmor(int type, ItemStack itemStack) {
+		this.inventory.setArmorItemInSlot(3 - type, itemStack);
+	}
+	
+	public ItemStack getArmor(int type) {
+		return this.inventory.getArmorItemInSlot(3 - type);
+	}
+	
+	@Override
+	public ItemStack getHeldItem() {
+		return this.inventory.getHeldItem();
+	}
+	
+	@Override
+	public boolean setHeldItem(ItemStack itemStack) {
+		this.inventory.setHeldItem(itemStack);
+		return true;
+	}
+	
 	@Override
 	public int getMaxHealth() {
 		// TODO Auto-generated method stub

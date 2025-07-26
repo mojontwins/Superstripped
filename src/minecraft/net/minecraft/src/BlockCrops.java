@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class BlockCrops extends BlockFlower {
@@ -15,15 +16,24 @@ public class BlockCrops extends BlockFlower {
 		return i1 == Block.tilledField.blockID;
 	}
 
-	public void updateTick(World world1, int i2, int i3, int i4, Random random5) {
-		super.updateTick(world1, i2, i3, i4, random5);
-		if(world1.getBlockLightValue(i2, i3 + 1, i4) >= 9) {
-			int i6 = world1.getBlockMetadata(i2, i3, i4);
-			if(i6 < 7) {
-				float f7 = this.getGrowthRate(world1, i2, i3, i4);
-				if(random5.nextInt((int)(25.0F / f7) + 1) == 0) {
-					++i6;
-					world1.setBlockMetadataWithNotify(i2, i3, i4, i6);
+	public void updateTick(World world, int x, int y, int z, Random rand) {
+		super.updateTick(world, x, y, z, rand);
+		if(world.getBlockLightValue(x, y + 1, z) >= 9) {
+			int meta = world.getBlockMetadata(x, y, z);
+			if(meta < 7) {
+				float gr = this.getGrowthRate(world, x, y, z); 	// max = 9
+				
+				if(Seasons.activated()) {
+					if(Seasons.currentSeason == Seasons.WINTER) { 
+						gr *= .8F;
+					} else if(Seasons.currentSeason == Seasons.SUMMER) {
+						gr *= 1.2F;
+					}
+				}
+				
+				if(rand.nextInt((int)(25.0F / gr) + 1) == 0) {
+					++meta;
+					world.setBlockMetadataWithNotify(x, y, z, meta);
 				}
 			}
 		}
@@ -34,44 +44,57 @@ public class BlockCrops extends BlockFlower {
 		world1.setBlockMetadataWithNotify(i2, i3, i4, 7);
 	}
 
-	private float getGrowthRate(World world1, int i2, int i3, int i4) {
-		float f5 = 1.0F;
-		int i6 = world1.getBlockId(i2, i3, i4 - 1);
-		int i7 = world1.getBlockId(i2, i3, i4 + 1);
-		int i8 = world1.getBlockId(i2 - 1, i3, i4);
-		int i9 = world1.getBlockId(i2 + 1, i3, i4);
-		int i10 = world1.getBlockId(i2 - 1, i3, i4 - 1);
-		int i11 = world1.getBlockId(i2 + 1, i3, i4 - 1);
-		int i12 = world1.getBlockId(i2 + 1, i3, i4 + 1);
-		int i13 = world1.getBlockId(i2 - 1, i3, i4 + 1);
-		boolean z14 = i8 == this.blockID || i9 == this.blockID;
-		boolean z15 = i6 == this.blockID || i7 == this.blockID;
-		boolean z16 = i10 == this.blockID || i11 == this.blockID || i12 == this.blockID || i13 == this.blockID;
+	public void getCollidingBoundingBoxes(World world, int x, int y, int z, AxisAlignedBB bb, ArrayList<AxisAlignedBB> bbArray, Entity entity) {
+		this.getCollidingBoundingBoxes(world, x, y, z, bb, bbArray);
+	}
+	
+	public void getCollidingBoundingBoxes(World world, int x, int y, int z, AxisAlignedBB bb, ArrayList<AxisAlignedBB> bbArray) {
+		AxisAlignedBB axisAlignedBB7 = this.getCollisionBoundingBoxFromPool(world, x, y, z);
+		if(axisAlignedBB7 != null && bb.intersectsWith(axisAlignedBB7)) {
+			bbArray.add(axisAlignedBB7);
+		}
 
-		for(int i17 = i2 - 1; i17 <= i2 + 1; ++i17) {
-			for(int i18 = i4 - 1; i18 <= i4 + 1; ++i18) {
-				int i19 = world1.getBlockId(i17, i3 - 1, i18);
-				float f20 = 0.0F;
-				if(i19 == Block.tilledField.blockID) {
-					f20 = 1.0F;
-					if(world1.getBlockMetadata(i17, i3 - 1, i18) > 0) {
-						f20 = 3.0F;
+	}	
+	
+	private float getGrowthRate(World world, int x, int y, int z) {
+		float growthRate = 1.0F;
+		int bn = world.getBlockId(x, y, z - 1);
+		int bs = world.getBlockId(x, y, z + 1);
+		int bw = world.getBlockId(x - 1, y, z);
+		int be = world.getBlockId(x + 1, y, z);
+		int bnw = world.getBlockId(x - 1, y, z - 1);
+		int bne = world.getBlockId(x + 1, y, z - 1);
+		int bse = world.getBlockId(x + 1, y, z + 1);
+		int bsw = world.getBlockId(x - 1, y, z + 1);
+		boolean nextz = bw == this.blockID || be == this.blockID;
+		boolean nextx = bn == this.blockID || bs == this.blockID;
+		boolean nextd = bnw == this.blockID || bne == this.blockID || bse == this.blockID || bsw == this.blockID;
+
+		for(int xx = x - 1; xx <= x + 1; ++xx) {
+			for(int zz = z - 1; zz <= z + 1; ++zz) {
+				int blockID = world.getBlockId(xx, y - 1, zz);
+				float growD = 0.0F;
+				
+				if(blockID == Block.tilledField.blockID) {
+					growD = 1.0F;
+					if(world.getBlockMetadata(xx, y - 1, zz) > 0) {
+						growD = 3.0F;
 					}
 				}
 
-				if(i17 != i2 || i18 != i4) {
-					f20 /= 4.0F;
+				if(xx != x || zz != z) {
+					growD /= 4.0F;
 				}
 
-				f5 += f20;
+				growthRate += growD;
 			}
 		}
 
-		if(z16 || z14 && z15) {
-			f5 /= 2.0F;
+		if(nextd || nextz && nextx) {
+			growthRate /= 2.0F;
 		}
 
-		return f5;
+		return growthRate;
 	}
 
 	public int getBlockTextureFromSideAndMetadata(int i1, int i2) {

@@ -127,14 +127,14 @@ public abstract class EntityAnimal extends EntityAgeable implements IAnimals {
 		return this.worldObj.getBlockId(i1, i2 - 1, i3) == Block.grass.blockID ? 10.0F : this.worldObj.getLightBrightness(i1, i2, i3) - 0.5F;
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setInteger("InLove", this.inLove);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setInteger("InLove", this.inLove);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.inLove = nBTTagCompound1.getInteger("InLove");
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.inLove = compoundTag.getInteger("InLove");
 	}
 
 	protected Entity findPlayerToAttack() {

@@ -150,16 +150,16 @@ public class AnvilSaveConverter extends SaveFormatOld {
 						if(dataInputStream12 == null) {
 							System.out.println("Failed to fetch input stream");
 						} else {
-							NBTTagCompound nBTTagCompound13 = CompressedStreamTools.read((DataInput)dataInputStream12);
+							NBTTagCompound compoundTag3 = CompressedStreamTools.read((DataInput)dataInputStream12);
 							dataInputStream12.close();
-							NBTTagCompound nBTTagCompound14 = nBTTagCompound13.getCompoundTag("Level");
-							AnvilConverterData anvilConverterData15 = ChunkLoader.load(nBTTagCompound14);
-							NBTTagCompound nBTTagCompound16 = new NBTTagCompound();
-							NBTTagCompound nBTTagCompound17 = new NBTTagCompound();
-							nBTTagCompound16.setTag("Level", nBTTagCompound17);
-							ChunkLoader.convertToAnvilFormat(anvilConverterData15, nBTTagCompound17, worldChunkManager3);
+							NBTTagCompound compoundTag4 = compoundTag3.getCompoundTag("Level");
+							AnvilConverterData anvilConverterData15 = ChunkLoader.load(compoundTag4);
+							NBTTagCompound compoundTag6 = new NBTTagCompound();
+							NBTTagCompound compoundTag7 = new NBTTagCompound();
+							compoundTag6.setTag("Level", compoundTag7);
+							ChunkLoader.convertToAnvilFormat(anvilConverterData15, compoundTag7, worldChunkManager3);
 							DataOutputStream dataOutputStream18 = regionFile9.getChunkDataOutputStream(i10, i11);
-							CompressedStreamTools.write(nBTTagCompound16, (DataOutput)dataOutputStream18);
+							CompressedStreamTools.write(compoundTag6, (DataOutput)dataOutputStream18);
 							dataOutputStream18.close();
 						}
 					}

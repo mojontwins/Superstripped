@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.mojontwins.minecraft.commands.TileEntityCommandBlock;
+
 import net.minecraft.client.Minecraft;
 
 public class NetClientHandler extends NetHandler {
@@ -43,16 +45,17 @@ public class NetClientHandler extends NetHandler {
 		this.netManager.wakeThreads();
 	}
 
-	public void handleLogin(Packet1Login packet1Login1) {
+	public void handleLogin(Packet1Login packet) {
+		System.out.println ("Received login info, seasons: " + packet.enableSeasons);
 		this.mc.playerController = new PlayerControllerMP(this.mc, this);
-		this.worldClient = new WorldClient(this, new WorldSettings(0L, packet1Login1.serverMode, false, false, false, packet1Login1.terrainType), packet1Login1.dimension, packet1Login1.difficultySetting);
+		this.worldClient = new WorldClient(this, new WorldSettings(0L, packet.serverMode, false, false, packet.enableSeasons, packet.terrainType), packet.dimension, packet.difficultySetting);
 		this.worldClient.isRemote = true;
 		this.mc.changeWorld1(this.worldClient);
-		this.mc.thePlayer.dimension = packet1Login1.dimension;
+		this.mc.thePlayer.dimension = packet.dimension;
 		this.mc.displayGuiScreen(new GuiDownloadTerrain(this));
-		this.mc.thePlayer.entityId = packet1Login1.protocolVersion;
-		this.currentServerMaxPlayers = packet1Login1.maxPlayers;
-		((PlayerControllerMP)this.mc.playerController).setCreative(packet1Login1.serverMode == 1);
+		this.mc.thePlayer.entityId = packet.protocolVersion;
+		this.currentServerMaxPlayers = packet.maxPlayers;
+		((PlayerControllerMP)this.mc.playerController).setCreative(packet.serverMode == 1);
 	}
 
 	public void handlePickupSpawn(Packet21PickupSpawn packet21PickupSpawn1) {
@@ -714,20 +717,14 @@ public class NetClientHandler extends NetHandler {
 			entityPlayerSP2.addChatMessage(Packet70Bed.bedChat[i3]);
 		}
 
-		if(i3 == 1) {
-			this.worldClient.getWorldInfo().setRaining(true);
-			this.worldClient.setRainStrength(1.0F);
-		} else if(i3 == 2) {
-			this.worldClient.getWorldInfo().setRaining(false);
-			this.worldClient.setRainStrength(0.0F);
-		} else if(i3 == 3) {
-			((PlayerControllerMP)this.mc.playerController).setCreative(packet70Bed1.gameMode == 1);
-		} else if(i3 == 101) {
-			this.worldClient.getWorldInfo().setSandstorming(true);
-			this.worldClient.setRainStrength(1.0F);
-		} else if(i3 == 102) {
-			this.worldClient.getWorldInfo().setSandstorming(false);
-			this.worldClient.setRainStrength(0.0F);
+		// This is encoded differently to vanilla
+		if (i3 == 1) {
+			this.worldClient.getWorldInfo().setRaining(packet70Bed1.raining);
+			this.worldClient.setRainStrength(packet70Bed1.raining ? 1.0F : 0.0F);
+			this.worldClient.getWorldInfo().setSnowing(packet70Bed1.snowing);
+			this.worldClient.setSnowingStrength(packet70Bed1.snowing ? 1.0F : 0.0F);
+			this.worldClient.getWorldInfo().setThundering(packet70Bed1.thundering);
+			this.worldClient.setThunderingStrength(packet70Bed1.thundering ? 1.0F : 0.0F);
 		}
 	}
 
@@ -768,5 +765,27 @@ public class NetClientHandler extends NetHandler {
 		entityPlayerSP2.capabilities.isCreativeMode = packet202PlayerAbilities1.isCreativeMode;
 		entityPlayerSP2.capabilities.disableDamage = packet202PlayerAbilities1.disableDamage;
 		entityPlayerSP2.capabilities.allowFlying = packet202PlayerAbilities1.allowFlying;
+	}
+	
+	public void handleUpdateDayOfTheYear(Packet95UpdateDayOfTheYear packet) {
+		System.out.println("Got day of the year = " + packet.dayOfTheYear);
+		this.worldClient.performDayOfTheYearUpdate(packet.dayOfTheYear);
+	}
+	
+	public void handleUpdateCommandBlock(Packet91UpdateCommandBlock packet91UpdateCommandBlock) {
+		int x = packet91UpdateCommandBlock.x;
+		int y = packet91UpdateCommandBlock.y;
+		int z = packet91UpdateCommandBlock.z;
+		
+		if(this.mc.theWorld.blockExists(x, y, z)) {
+			TileEntity tileEntity = this.mc.theWorld.getBlockTileEntity(x, y, z);
+			if(tileEntity instanceof TileEntityCommandBlock) {
+				TileEntityCommandBlock tileEntityCommandBlock = (TileEntityCommandBlock) tileEntity;
+				
+				tileEntityCommandBlock.command = packet91UpdateCommandBlock.command;
+				
+				tileEntityCommandBlock.onInventoryChanged();
+			}
+		}
 	}
 }

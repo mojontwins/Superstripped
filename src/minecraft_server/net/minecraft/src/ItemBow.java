@@ -10,7 +10,7 @@ public class ItemBow extends Item {
 	}
 
 	public void onPlayerStoppedUsing(ItemStack itemStack1, World world2, EntityPlayer entityPlayer3, int i4) {
-		if (!GameRules.classicBow) {
+		if (!GameRules.boolRule("classicBow")) {
 			boolean z5 = entityPlayer3.capabilities.isCreativeMode;
 			if(z5 || entityPlayer3.inventory.hasItem(Item.arrow.shiftedIndex)) {
 				int i6 = this.getMaxItemUseDuration(itemStack1) - i4;
@@ -49,7 +49,7 @@ public class ItemBow extends Item {
 	}
 
 	public int getMaxItemUseDuration(ItemStack itemStack1) {
-		if (!GameRules.classicBow) {
+		if (!GameRules.boolRule("classicBow")) {
 			return 72000;
 		} else {
 			return 0;
@@ -57,7 +57,7 @@ public class ItemBow extends Item {
 	}
 
 	public EnumAction getItemUseAction(ItemStack itemStack1) {
-		if (!GameRules.classicBow) {
+		if (!GameRules.boolRule("classicBow")) {
 			return EnumAction.bow;
 		} else {
 			return EnumAction.none;
@@ -66,7 +66,7 @@ public class ItemBow extends Item {
 
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
 		if(entityPlayer.capabilities.isCreativeMode || entityPlayer.inventory.hasItem(Item.arrow.shiftedIndex)) {
-			if (!GameRules.classicBow) {
+			if (!GameRules.boolRule("classicBow")) {
 				entityPlayer.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
 			} else {
 				world.playSoundAtEntity(entityPlayer, "random.bow", 1.0F, 1.0F / (Item.itemRand.nextFloat() * 0.4F + 0.8F));

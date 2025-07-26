@@ -64,13 +64,13 @@ public class FontRenderer {
 			throw new RuntimeException(iOException22);
 		}
 
-		int i23 = bufferedimage.getWidth();
+		int armorValue = bufferedimage.getWidth();
 		int imgHeight = bufferedimage.getHeight();
-		int charW = i23 / 16;
+		int charW = armorValue / 16;
 		int charH = imgHeight / 16;
-		float kx = (float)i23 / 128.0F;
-		int[] ai = new int[i23 * imgHeight];
-		bufferedimage.getRGB(0, 0, i23, imgHeight, ai, 0, i23);
+		float kx = (float)armorValue / 128.0F;
+		int[] ai = new int[armorValue * imgHeight];
+		bufferedimage.getRGB(0, 0, armorValue, imgHeight, ai, 0, armorValue);
 
 		int l;
 		int j1;
@@ -87,7 +87,7 @@ public class FontRenderer {
 				boolean l2 = true;
 
 				for(i3 = 0; i3 < charH && l2; ++i3) {
-					k3 = (j1 * charH + i3) * i23;
+					k3 = (j1 * charH + i3) * armorValue;
 					i4 = ai[j2 + k3];
 					int alpha = i4 >> 24 & 255;
 					if(alpha > 16) {
@@ -128,15 +128,6 @@ public class FontRenderer {
 			int i26 = (l >> 0 & 1) * 170 + j1;
 			if(l == 6) {
 				i25 += 85;
-			}
-
-			if(GameSettingsValues.anaglyph) {
-				i3 = (i25 * 30 + j2 * 59 + i26 * 11) / 100;
-				k3 = (i25 * 30 + j2 * 70) / 100;
-				i4 = (i25 * 30 + i26 * 70) / 100;
-				i25 = i3;
-				j2 = k3;
-				i26 = i4;
 			}
 
 			if(l >= 16) {

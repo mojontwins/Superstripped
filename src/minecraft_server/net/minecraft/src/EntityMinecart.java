@@ -607,12 +607,12 @@ public class EntityMinecart extends Entity implements IInventory {
 		}
 	}
 
-	protected void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		nBTTagCompound1.setInteger("Type", this.minecartType);
+	protected void writeEntityToNBT(NBTTagCompound compoundTag) {
+		compoundTag.setInteger("Type", this.minecartType);
 		if(this.minecartType == 2) {
-			nBTTagCompound1.setDouble("PushX", this.pushX);
-			nBTTagCompound1.setDouble("PushZ", this.pushZ);
-			nBTTagCompound1.setShort("Fuel", (short)this.fuel);
+			compoundTag.setDouble("PushX", this.pushX);
+			compoundTag.setDouble("PushZ", this.pushZ);
+			compoundTag.setShort("Fuel", (short)this.fuel);
 		} else if(this.minecartType == 1) {
 			NBTTagList nBTTagList2 = new NBTTagList();
 
@@ -625,19 +625,19 @@ public class EntityMinecart extends Entity implements IInventory {
 				}
 			}
 
-			nBTTagCompound1.setTag("Items", nBTTagList2);
+			compoundTag.setTag("Items", nBTTagList2);
 		}
 
 	}
 
-	protected void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		this.minecartType = nBTTagCompound1.getInteger("Type");
+	protected void readEntityFromNBT(NBTTagCompound compoundTag) {
+		this.minecartType = compoundTag.getInteger("Type");
 		if(this.minecartType == 2) {
-			this.pushX = nBTTagCompound1.getDouble("PushX");
-			this.pushZ = nBTTagCompound1.getDouble("PushZ");
-			this.fuel = nBTTagCompound1.getShort("Fuel");
+			this.pushX = compoundTag.getDouble("PushX");
+			this.pushZ = compoundTag.getDouble("PushZ");
+			this.fuel = compoundTag.getShort("Fuel");
 		} else if(this.minecartType == 1) {
-			NBTTagList nBTTagList2 = nBTTagCompound1.getTagList("Items");
+			NBTTagList nBTTagList2 = compoundTag.getTagList("Items");
 			this.cargoItems = new ItemStack[this.getSizeInventory()];
 
 			for(int i3 = 0; i3 < nBTTagList2.tagCount(); ++i3) {

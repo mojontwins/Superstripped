@@ -672,11 +672,11 @@ public abstract class EntityLiving extends Entity {
 	}
 
 	protected String getHurtSound() {
-		return GameRules.classicHurtSound ? "random.hurt" : "damage.hurtflesh";
+		return GameRules.boolRule("classicHurtSound") ? "random.hurt" : "damage.hurtflesh";
 	}
 
 	protected String getDeathSound() {
-		return GameRules.classicHurtSound ? "random.hurt" : "damage.hurtflesh";
+		return GameRules.boolRule("classicHurtSound") ? "random.hurt" : "damage.hurtflesh";
 	}
 
 	public void knockBack(Entity entity1, int i2, double d3, double d5) {
@@ -695,25 +695,25 @@ public abstract class EntityLiving extends Entity {
 
 	}
 
-	public void onDeath(DamageSource damageSource1) {
-		Entity entity2 = damageSource1.getEntity();
-		if(this.scoreValue >= 0 && entity2 != null) {
-			entity2.addToPlayerScore(this, this.scoreValue);
+	public void onDeath(DamageSource damageSource) {
+		Entity damagerEntity = damageSource.getEntity();
+		if(this.scoreValue >= 0 && damagerEntity != null) {
+			damagerEntity.addToPlayerScore(this, this.scoreValue);
 		}
 
-		if(entity2 != null) {
-			entity2.onKillEntity(this);
+		if(damagerEntity != null) {
+			damagerEntity.onKillEntity(this);
 		}
 
 		this.dead = true;
 		if(!this.worldObj.isRemote) {
-			int i3 = 0;
-			// TODO : Increase i3 as a means of better looting
+			int looting = 0;
+			// TODO : Increase looting as a means of better looting
 
 			if(!this.isChild()) {
-				this.dropFewItems(this.recentlyHit > 0, i3);
+				this.dropFewItems(this.recentlyHit > 0, looting);
 				if(this.recentlyHit > 0) {
-					int i4 = this.rand.nextInt(200) - i3;
+					int i4 = this.rand.nextInt(200) - looting;
 					if(i4 < 5) {
 						this.dropRareDrop(i4 <= 0 ? 1 : 0);
 					}
@@ -727,16 +727,16 @@ public abstract class EntityLiving extends Entity {
 	protected void dropRareDrop(int i1) {
 	}
 
-	protected void dropFewItems(boolean z1, int i2) {
-		int i3 = this.getDropItemId();
-		if(i3 > 0) {
-			int i4 = this.rand.nextInt(3);
-			if(i2 > 0) {
-				i4 += this.rand.nextInt(i2 + 1);
+	protected void dropFewItems(boolean justHit, int looting) {
+		int itemID = this.getDropItemId();
+		if(itemID > 0) {
+			int amount = this.rand.nextInt(3);
+			if(looting > 0) {
+				amount += this.rand.nextInt(looting + 1);
 			}
 
-			for(int i5 = 0; i5 < i4; ++i5) {
-				this.dropItem(i3, 1);
+			for(int i = 0; i < amount; ++i) {
+				this.dropItem(itemID, 1);
 			}
 		}
 
@@ -750,7 +750,7 @@ public abstract class EntityLiving extends Entity {
 		super.fall(f1);
 		int i2 = (int)Math.ceil((double)(f1 - 3.0F));
 		if(i2 > 0) {
-			if(!GameRules.classicHurtSound) {
+			if(!GameRules.boolRule("classicHurtSound")) {
 				if(i2 > 4) {
 					this.worldObj.playSoundAtEntity(this, "damage.fallbig", 1.0F, 1.0F);
 				} else {
@@ -889,28 +889,28 @@ public abstract class EntityLiving extends Entity {
 		//return i4 == Block.ladder.blockID || i4 == Block.vine.blockID;
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		nBTTagCompound1.setShort("Health", (short)this.health);
-		nBTTagCompound1.setShort("HurtTime", (short)this.hurtTime);
-		nBTTagCompound1.setShort("DeathTime", (short)this.deathTime);
-		nBTTagCompound1.setShort("AttackTime", (short)this.attackTime);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		compoundTag.setShort("Health", (short)this.health);
+		compoundTag.setShort("HurtTime", (short)this.hurtTime);
+		compoundTag.setShort("DeathTime", (short)this.deathTime);
+		compoundTag.setShort("AttackTime", (short)this.attackTime);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
 		if(this.health < -32768) {
 			this.health = -32768;
 		}
 
-		this.health = nBTTagCompound1.getShort("Health");
-		if(!nBTTagCompound1.hasKey("Health")) {
+		this.health = compoundTag.getShort("Health");
+		if(!compoundTag.hasKey("Health")) {
 			this.health = this.getMaxHealth();
 		}
 
-		this.hurtTime = nBTTagCompound1.getShort("HurtTime");
-		this.deathTime = nBTTagCompound1.getShort("DeathTime");
-		this.attackTime = nBTTagCompound1.getShort("AttackTime");
-		if(nBTTagCompound1.hasKey("ActiveEffects")) {
-			NBTTagList nBTTagList2 = nBTTagCompound1.getTagList("ActiveEffects");
+		this.hurtTime = compoundTag.getShort("HurtTime");
+		this.deathTime = compoundTag.getShort("DeathTime");
+		this.attackTime = compoundTag.getShort("AttackTime");
+		if(compoundTag.hasKey("ActiveEffects")) {
+			NBTTagList nBTTagList2 = compoundTag.getTagList("ActiveEffects");
 
 			for(int i3 = 0; i3 < nBTTagList2.tagCount(); ++i3) {
 				NBTTagCompound nBTTagCompound4 = (NBTTagCompound)nBTTagList2.tagAt(i3);
@@ -1272,6 +1272,10 @@ public abstract class EntityLiving extends Entity {
 		return null;
 	}
 
+	public boolean setHeldItem(ItemStack itemStack) {
+		return false;
+	}
+	
 	public void handleHealthUpdate(byte b1) {
 		if(b1 == 2) {
 			this.legYaw = 1.5F;

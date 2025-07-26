@@ -3,6 +3,7 @@ package net.minecraft.src;
 import java.util.List;
 import java.util.Random;
 
+import com.mojontwins.minecraft.worldedit.ItemMagicWand;
 import com.risugami.recipebook.ItemRecipeBook;
 
 public class Item implements ITextureProvider {
@@ -108,7 +109,7 @@ public class Item implements ITextureProvider {
 	public static Item dyePowder = (new ItemDye(95)).setIconCoord(14, 4).setItemName("dyePowder");
 	public static Item bone = (new Item(96)).setIconCoord(12, 1).setItemName("bone").setFull3D().setCreativeTab(CreativeTabs.tabMisc);
 	public static Item sugar = (new Item(97)).setIconCoord(13, 0).setItemName("sugar").setCreativeTab(CreativeTabs.tabMaterials);
-
+	public static Item redstoneRepeater = (new ItemReed(100, Block.redstoneRepeaterIdle)).setIconCoord(6, 5).setItemName("diode").setCreativeTab(CreativeTabs.tabRedstone);
 	public static Item cookie = (new ItemFood(101, 1, 0.1F, false)).setIconCoord(12, 5).setItemName("cookie");
 	public static ItemShears shears = (ItemShears)(new ItemShears(103)).setIconCoord(13, 5).setItemName("shears");
 	public static Item melon = (new ItemFood(104, 2, 0.3F, false)).setIconCoord(13, 6).setItemName("melon");
@@ -167,6 +168,15 @@ public class Item implements ITextureProvider {
 	public static Item battleWood = (new ItemBattleAxe(436, EnumToolMaterial.WOOD)).setIconCoord(0, 30).setItemName("battleAxeWood");
 	public static Item knifeWood = (new ItemKnife(437, EnumToolMaterial.WOOD)).setIconCoord(0, 31).setItemName("knifeWood");
 	
+	public static Item magicWand = (new ItemMagicWand(999-256)).setIconCoord(8, 12).setItemName("magic wand");
+	
+	protected static final Item armorPieceForTier [][] = new Item[][] {
+		{ Item.helmetLeather, Item.plateLeather, Item.legsLeather, Item.bootsLeather }, 
+		{ Item.helmetChain, Item.plateChain, Item.legsChain, Item.bootsChain },
+		{ Item.helmetGold, Item.plateGold, Item.legsGold, Item.bootsGold },
+		{ Item.helmetSteel, Item.plateSteel, Item.legsSteel, Item.bootsSteel },
+		{ Item.helmetDiamond, Item.plateDiamond, Item.legsDiamond, Item.bootsDiamond }
+	};
 	
 	public final int shiftedIndex;
 	protected int maxStackSize = 64;

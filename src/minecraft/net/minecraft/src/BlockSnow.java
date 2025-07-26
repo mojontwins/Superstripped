@@ -3,16 +3,16 @@ package net.minecraft.src;
 import java.util.Random;
 
 public class BlockSnow extends Block {
-	protected BlockSnow(int i1, int i2) {
-		super(i1, i2, Material.snow);
+	protected BlockSnow(int blockID, int blockIndexInTexture) {
+		super(blockID, blockIndexInTexture, Material.snow);
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
 		this.setTickRandomly(true);
 		this.displayOnCreativeTab = CreativeTabs.tabDeco;
 	}
 
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world1, int i2, int i3, int i4) {
-		int i5 = world1.getBlockMetadata(i2, i3, i4) & 7;
-		return i5 >= 3 ? AxisAlignedBB.getBoundingBoxFromPool((double)i2 + this.minX, (double)i3 + this.minY, (double)i4 + this.minZ, (double)i2 + this.maxX, (double)((float)i3 + 0.5F), (double)i4 + this.maxZ) : null;
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+		int i5 = world.getBlockMetadata(x, y, z) & 7;
+		return i5 >= 3 ? AxisAlignedBB.getBoundingBoxFromPool((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)((float)y + 0.5F), (double)z + this.maxZ) : null;
 	}
 
 	public boolean isOpaqueCube() {
@@ -23,44 +23,48 @@ public class BlockSnow extends Block {
 		return false;
 	}
 
-	public void setBlockBoundsBasedOnState(IBlockAccess iBlockAccess1, int i2, int i3, int i4) {
-		int i5 = iBlockAccess1.getBlockMetadata(i2, i3, i4) & 7;
-		float f6 = (float)(2 * (1 + i5)) / 16.0F;
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f6, 1.0F);
+	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
+		int meta = world.getBlockMetadata(x, y, z) & 7;
+		float b = (float)(2 * (1 + meta)) / 16.0F;
+		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, b, 1.0F);
 	}
 
-	public boolean canPlaceBlockAt(World world1, int i2, int i3, int i4) {
-		int i5 = world1.getBlockId(i2, i3 - 1, i4);
-		return i5 != 0 && (i5 == Block.leaves.blockID || Block.blocksList[i5].isOpaqueCube()) ? world1.getBlockMaterial(i2, i3 - 1, i4).blocksMovement() : false;
+	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+		Block block = world.getBlock(x, y, z);
+		Block below = world.getBlock(x, y - 1, z);
+		
+		return 
+				(block == null || block.blockMaterial.isGroundCover()) &&
+				below != null && (below == Block.leaves || below.isOpaqueCube()) ? below.blockMaterial.blocksMovement() : false;
 	}
 
-	public void onNeighborBlockChange(World world1, int i2, int i3, int i4, int i5) {
-		this.canSnowStay(world1, i2, i3, i4);
+	public void onNeighborBlockChange(World world, int x, int y, int z, int i5) {
+		this.canSnowStay(world, x, y, z);
 	}
 
-	private boolean canSnowStay(World world1, int i2, int i3, int i4) {
-		if(!this.canPlaceBlockAt(world1, i2, i3, i4)) {
-			this.dropBlockAsItem(world1, i2, i3, i4, world1.getBlockMetadata(i2, i3, i4), 0);
-			world1.setBlockWithNotify(i2, i3, i4, 0);
+	private boolean canSnowStay(World world, int x, int y, int z) {
+		if(!this.canPlaceBlockAt(world, x, y, z)) {
+			this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+			world.setBlockWithNotify(x, y, z, 0);
 			return false;
 		} else {
 			return true;
 		}
 	}
 
-	public void harvestBlock(World world1, EntityPlayer entityPlayer2, int i3, int i4, int i5, int i6) {
-		int i7 = Item.snowball.shiftedIndex;
-		float f8 = 0.7F;
-		double d9 = (double)(world1.rand.nextFloat() * f8) + (double)(1.0F - f8) * 0.5D;
-		double d11 = (double)(world1.rand.nextFloat() * f8) + (double)(1.0F - f8) * 0.5D;
-		double d13 = (double)(world1.rand.nextFloat() * f8) + (double)(1.0F - f8) * 0.5D;
-		EntityItem entityItem15 = new EntityItem(world1, (double)i3 + d9, (double)i4 + d11, (double)i5 + d13, new ItemStack(i7, 1, 0));
-		entityItem15.delayBeforeCanPickup = 10;
-		world1.spawnEntityInWorld(entityItem15);
-		world1.setBlockWithNotify(i3, i4, i5, 0);
+	public void harvestBlock(World world, EntityPlayer thePlayer, int x, int y, int z, int meta) {
+		int snowballId = Item.snowball.shiftedIndex;
+		float r = 0.7F;
+		double dx = (double)(world.rand.nextFloat() * r) + (double)(1.0F - r) * 0.5D;
+		double dy = (double)(world.rand.nextFloat() * r) + (double)(1.0F - r) * 0.5D;
+		double dz = (double)(world.rand.nextFloat() * r) + (double)(1.0F - r) * 0.5D;
+		EntityItem entityItem = new EntityItem(world, (double)x + dx, (double)y + dy, (double)z + dz, new ItemStack(snowballId, 1, 0));
+		entityItem.delayBeforeCanPickup = 10;
+		world.spawnEntityInWorld(entityItem);
+		world.setBlockWithNotify(x, y, z, 0);
 	}
 
-	public int idDropped(int i1, Random random2, int i3) {
+	public int idDropped(int meta, Random rand, int fortune) {
 		return Item.snowball.shiftedIndex;
 	}
 
@@ -68,15 +72,27 @@ public class BlockSnow extends Block {
 		return 0;
 	}
 
-	public void updateTick(World world1, int i2, int i3, int i4, Random random5) {
-		if(world1.getSavedLightValue(EnumSkyBlock.Block, i2, i3, i4) > 11) {
-			this.dropBlockAsItem(world1, i2, i3, i4, world1.getBlockMetadata(i2, i3, i4), 0);
-			world1.setBlockWithNotify(i2, i3, i4, 0);
+	public void updateTick(World world, int x, int y, int z, Random rand) {
+		if(world.getSavedLightValue(EnumSkyBlock.Block, x, y, z) > 11) {
+			this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+			world.setBlockWithNotify(x, y, z, 0);
 		}
 
+		// Seasonal
+		if(Seasons.activated()) {
+			BiomeGenBase biomeGen = world.getBiomeGenForCoords(x, z);
+			if(biomeGen.weather != Weather.cold && (Seasons.currentSeason != Seasons.WINTER || biomeGen.weather == Weather.desert)) {
+				world.setBlockWithNotify(x, y, z, 0);
+				
+				if(world.getBlockId(x - 1, y, z) == this.blockID) world.setBlockWithNotify(x, y, z, 0);
+				if(world.getBlockId(x + 1, y, z) == this.blockID) world.setBlockWithNotify(x, y, z, 0);
+				if(world.getBlockId(x, y, z) == this.blockID) world.setBlockWithNotify(x, y, z, 0);
+				if(world.getBlockId(x, y, z - 1) == this.blockID) world.setBlockWithNotify(x, y, z, 0);
+			}
+		}
 	}
 
-	public boolean shouldSideBeRendered(IBlockAccess iBlockAccess1, int i2, int i3, int i4, int i5) {
-		return i5 == 1 ? true : super.shouldSideBeRendered(iBlockAccess1, i2, i3, i4, i5);
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+		return side == 1 ? true : super.shouldSideBeRendered(world, x, y, z, side);
 	}
 }

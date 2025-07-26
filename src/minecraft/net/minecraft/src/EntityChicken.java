@@ -17,7 +17,7 @@ public class EntityChicken extends EntityAnimal {
 		float f2 = 0.25F;
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 0.38F));
-		if (GameRules.canBreedAnimals) {
+		if (GameRules.boolRule("canBreedAnimals")) {
 			this.tasks.addTask(2, new EntityAIMate(this, f2));
 		}
 		this.tasks.addTask(3, new EntityAITempt(this, 0.25F, Item.wheat.shiftedIndex, false));
@@ -69,12 +69,12 @@ public class EntityChicken extends EntityAnimal {
 	protected void fall(float f1) {
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
 	}
 
 	protected String getLivingSound() {
@@ -94,7 +94,7 @@ public class EntityChicken extends EntityAnimal {
 	}
 
 	protected void dropFewItems(boolean z1, int i2) {
-		if(!GameRules.edibleChicken) {
+		if(!GameRules.boolRule("edibleChicken")) {
 			super.dropFewItems(z1, i2);
 		} else {
 			int i3 = this.rand.nextInt(3) + this.rand.nextInt(1 + i2);

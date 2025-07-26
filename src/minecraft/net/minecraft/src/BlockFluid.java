@@ -33,7 +33,7 @@ public abstract class BlockFluid extends Block implements ILiquid {
 					biomeGen = iBlockAccess1.getBiomeGenForCoords(i2 + i9, i4 + i8);
 					int i10 = biomeGen.waterColorMultiplier;
 					
-					if(GameRules.colouredWater) {
+					if(GameRules.boolRule("colouredWater")) {
 						// Use a ramp if the color multiplier is white
 						if(i10 == 0xFFFFFF) {
 							i10 = biomeGen.getBiomeWaterColor();
@@ -64,7 +64,7 @@ public abstract class BlockFluid extends Block implements ILiquid {
 					biomeGen = iBlockAccess1.getBiomeGenForCoords(i2 + i9, i4 + i8);
 					int i10 = biomeGen.waterColorMultiplier;
 					
-					if(GameRules.colouredWater) {
+					if(GameRules.boolRule("colouredWater")) {
 						// Use a ramp if the color multiplier is white
 						if(i10 == 0xFFFFFF) {
 							i10 = biomeGen.getBiomeWaterColor();

@@ -17,7 +17,7 @@ public class FoodStats {
 	}
 
 	public void onUpdate(EntityPlayer entityPlayer1) {
-		if(GameRules.enableHunger) {
+		if(GameRules.boolRule("enableHunger")) {
 			int i2 = entityPlayer1.worldObj.difficultySetting;
 			this.prevFoodLevel = this.foodLevel;
 			if(this.foodExhaustionLevel > 4.0F) {
@@ -50,21 +50,21 @@ public class FoodStats {
 		}
 	}
 
-	public void readNBT(NBTTagCompound nBTTagCompound1) {
-		if(nBTTagCompound1.hasKey("foodLevel")) {
-			this.foodLevel = nBTTagCompound1.getInteger("foodLevel");
-			this.foodTimer = nBTTagCompound1.getInteger("foodTickTimer");
-			this.foodSaturationLevel = nBTTagCompound1.getFloat("foodSaturationLevel");
-			this.foodExhaustionLevel = nBTTagCompound1.getFloat("foodExhaustionLevel");
+	public void readNBT(NBTTagCompound compoundTag) {
+		if(compoundTag.hasKey("foodLevel")) {
+			this.foodLevel = compoundTag.getInteger("foodLevel");
+			this.foodTimer = compoundTag.getInteger("foodTickTimer");
+			this.foodSaturationLevel = compoundTag.getFloat("foodSaturationLevel");
+			this.foodExhaustionLevel = compoundTag.getFloat("foodExhaustionLevel");
 		}
 
 	}
 
-	public void writeNBT(NBTTagCompound nBTTagCompound1) {
-		nBTTagCompound1.setInteger("foodLevel", this.foodLevel);
-		nBTTagCompound1.setInteger("foodTickTimer", this.foodTimer);
-		nBTTagCompound1.setFloat("foodSaturationLevel", this.foodSaturationLevel);
-		nBTTagCompound1.setFloat("foodExhaustionLevel", this.foodExhaustionLevel);
+	public void writeNBT(NBTTagCompound compoundTag) {
+		compoundTag.setInteger("foodLevel", this.foodLevel);
+		compoundTag.setInteger("foodTickTimer", this.foodTimer);
+		compoundTag.setFloat("foodSaturationLevel", this.foodSaturationLevel);
+		compoundTag.setFloat("foodExhaustionLevel", this.foodExhaustionLevel);
 	}
 
 	public int getFoodLevel() {

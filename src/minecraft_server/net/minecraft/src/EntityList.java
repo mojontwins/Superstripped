@@ -1,6 +1,9 @@
 package net.minecraft.src;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class EntityList {
@@ -96,6 +99,14 @@ public class EntityList {
 		Integer integer1 = (Integer)stringToIDMapping.get(string0);
 		return integer1 == null ? 90 : integer1.intValue();
 	}
+	
+	public static List<String> getAllEntityStrings() {
+		List<String> result = new ArrayList<String>();
+		Iterator<String> it = stringToClassMapping.keySet().iterator();
+		while(it.hasNext()) result.add(it.next());
+		return result;
+	}
+
 
 	static {
 		addMapping(EntityItem.class, "Item", 1);

@@ -8,9 +8,8 @@ viewDistance:0
 guiScale:0
 particles:0
 bobView:true
-anaglyph3d:false
 advancedOpengl:false
-fpsLimit:1
+fpsLimit:0
 difficulty:2
 fancyGraphics:true
 ao:true

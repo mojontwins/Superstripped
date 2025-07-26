@@ -32,19 +32,21 @@ public class ItemPickaxe extends ItemTool {
 		super(i1, damageModifier, enumToolMaterial2, blocksEffectiveAgainst);
 	}
 
-	public boolean canHarvestBlock(Block block1) {
-		return block1 == Block.obsidian ? 
+	public boolean canHarvestBlock(Block block) {
+		if(block == Block.glass) return true;
+		
+		return block == Block.obsidian ? 
 				this.toolMaterial.getHarvestLevel() == 3 
 			: 
-				(block1 != Block.blockDiamond && block1 != Block.oreDiamond ? 
-						(block1 != Block.blockGold && block1 != Block.oreGold ? 
-								(block1 != Block.oreCoal  && block1 != Block.blockSteel && block1 != Block.oreIron  ? 
-										(block1 != Block.blockLapis && block1 != Block.oreLapis  ? 
-												(block1 != Block.oreRedstone && block1 != Block.oreRedstoneGlowing  ? 
-														(block1.blockMaterial == Material.rock ? 
+				(block != Block.blockDiamond && block != Block.oreDiamond ? 
+						(block != Block.blockGold && block != Block.oreGold ? 
+								(block != Block.oreCoal  && block != Block.blockSteel && block != Block.oreIron  ? 
+										(block != Block.blockLapis && block != Block.oreLapis  ? 
+												(block != Block.oreRedstone && block != Block.oreRedstoneGlowing  ? 
+														(block.blockMaterial == Material.rock ? 
 																true 
 															: 
-																block1.blockMaterial == Material.iron) 
+																block.blockMaterial == Material.iron) 
 													:
 														this.toolMaterial.getHarvestLevel() >= 2) 
 											:

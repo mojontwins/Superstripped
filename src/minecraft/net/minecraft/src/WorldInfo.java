@@ -31,6 +31,7 @@ public class WorldInfo {
 	private boolean hardcore = false;
 	private boolean enableCheats = false;
 	private boolean snowCovered = false;
+	private boolean enableSeasons = true;
 
 	public WorldInfo(NBTTagCompound nBTWorldInfo) {
 		this.randomSeed = nBTWorldInfo.getLong("RandomSeed");
@@ -77,6 +78,7 @@ public class WorldInfo {
 		Seasons.dayOfTheYear = nBTWorldInfo.getInteger("DayOfTheYear");
 		this.hardcore = nBTWorldInfo.getBoolean("hardcore");
 		this.snowCovered = nBTWorldInfo.getBoolean("SnowCovered");
+		this.enableSeasons = nBTWorldInfo.getBoolean("EnableSeasons");
 		
 		GameRules.loadRules(nBTWorldInfo);
 		
@@ -92,41 +94,43 @@ public class WorldInfo {
 		return  "Level Name:" + this.levelName +", RandomSeed: " + this.randomSeed + ", Terrain: " + this.terrainType + ", sizeOnDisk: " + this.sizeOnDisk + ", player: " + this.playerTag;
 	}
 	
-	public WorldInfo(WorldSettings worldSettings1, String string2) {
-		this.randomSeed = worldSettings1.getSeed();
-		this.gameType = worldSettings1.getGameType();
-		this.mapFeaturesEnabled = worldSettings1.isMapFeaturesEnabled();
-		this.levelName = string2;
-		this.hardcore = worldSettings1.getHardcoreEnabled();
-		this.enableCheats = worldSettings1.isEnableCheats();
-		this.terrainType = worldSettings1.getTerrainType();
-		this.snowCovered = worldSettings1.isSnowCovered();
+	public WorldInfo(WorldSettings worldSettings, String levelName) {
+		this.randomSeed = worldSettings.getSeed();
+		this.gameType = worldSettings.getGameType();
+		this.mapFeaturesEnabled = worldSettings.isMapFeaturesEnabled();
+		this.levelName = levelName;
+		this.hardcore = worldSettings.getHardcoreEnabled();
+		this.enableCheats = worldSettings.isEnableCheats();
+		this.terrainType = worldSettings.getTerrainType();
+		this.snowCovered = worldSettings.isSnowCovered();
+		this.enableSeasons = worldSettings.isEnableSeasons();
 	}
 
-	public WorldInfo(WorldInfo worldInfo1) {
-		this.randomSeed = worldInfo1.randomSeed;
-		this.terrainType = worldInfo1.terrainType;
-		this.gameType = worldInfo1.gameType;
-		this.mapFeaturesEnabled = worldInfo1.mapFeaturesEnabled;
-		this.enableCheats = worldInfo1.enableCheats;
-		this.spawnX = worldInfo1.spawnX;
-		this.spawnY = worldInfo1.spawnY;
-		this.spawnZ = worldInfo1.spawnZ;
-		this.worldTime = worldInfo1.worldTime;
-		this.lastTimePlayed = worldInfo1.lastTimePlayed;
-		this.sizeOnDisk = worldInfo1.sizeOnDisk;
-		this.playerTag = worldInfo1.playerTag;
-		this.dimension = worldInfo1.dimension;
-		this.levelName = worldInfo1.levelName;
-		this.saveVersion = worldInfo1.saveVersion;
-		this.rainTime = worldInfo1.rainTime;
-		this.raining = worldInfo1.raining;
-		this.thunderTime = worldInfo1.thunderTime;
-		this.thundering = worldInfo1.thundering;
-		this.sandstormingTime = worldInfo1.sandstormingTime;
-		this.sandstorming = worldInfo1.sandstorming;
-		this.hardcore = worldInfo1.hardcore;
-		this.snowCovered = worldInfo1.snowCovered;
+	public WorldInfo(WorldInfo worldInfo) {
+		this.randomSeed = worldInfo.randomSeed;
+		this.terrainType = worldInfo.terrainType;
+		this.gameType = worldInfo.gameType;
+		this.mapFeaturesEnabled = worldInfo.mapFeaturesEnabled;
+		this.enableCheats = worldInfo.enableCheats;
+		this.spawnX = worldInfo.spawnX;
+		this.spawnY = worldInfo.spawnY;
+		this.spawnZ = worldInfo.spawnZ;
+		this.worldTime = worldInfo.worldTime;
+		this.lastTimePlayed = worldInfo.lastTimePlayed;
+		this.sizeOnDisk = worldInfo.sizeOnDisk;
+		this.playerTag = worldInfo.playerTag;
+		this.dimension = worldInfo.dimension;
+		this.levelName = worldInfo.levelName;
+		this.saveVersion = worldInfo.saveVersion;
+		this.rainTime = worldInfo.rainTime;
+		this.raining = worldInfo.raining;
+		this.thunderTime = worldInfo.thunderTime;
+		this.thundering = worldInfo.thundering;
+		this.sandstormingTime = worldInfo.sandstormingTime;
+		this.sandstorming = worldInfo.sandstorming;
+		this.hardcore = worldInfo.hardcore;
+		this.snowCovered = worldInfo.snowCovered;
+		this.enableSeasons = worldInfo.enableSeasons;
 	}
 
 	public NBTTagCompound getNBTTagCompound() {
@@ -176,6 +180,7 @@ public class WorldInfo {
 		nBTWorldInfo.setInteger("DayOfTheYear", Seasons.dayOfTheYear);
 		nBTWorldInfo.setBoolean("hardcore", this.hardcore);
 		nBTWorldInfo.setBoolean("SnowCovered", this.snowCovered);
+		nBTWorldInfo.setBoolean("EnableSeasons", this.enableSeasons);
 
 		GameRules.saveRules(nBTWorldInfo);
 		
@@ -361,5 +366,13 @@ public class WorldInfo {
 
 	public void setSnowingTime(int snowingTime) {
 		this.snowingTime = snowingTime;
+	}
+
+	public boolean isEnableSeasons() {
+		return enableSeasons;
+	}
+
+	public void setEnableSeasons(boolean enableSeasons) {
+		this.enableSeasons = enableSeasons;
 	}
 }

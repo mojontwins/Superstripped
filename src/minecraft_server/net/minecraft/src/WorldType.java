@@ -4,6 +4,7 @@ public class WorldType {
 	public static final WorldType[] worldTypes = new WorldType[16];
 	public static final WorldType DEFAULT = (new WorldType(0, "default", 1, 0)).setVersioned();
 	public static final WorldType FLAT = new WorldType(1, "flat");
+	public static final WorldType SKY = new WorldType(2, "sky", 1, 0);
 	public static final WorldType AMPLIFIED = new WorldType(3, "amplified", 1, 0);	
 	public static final WorldType HELL = (new WorldType(4, "hell", 1, -1)).setCanBeCreated(false).disableCreatePortalToTheNether();
 	public static final WorldType INFDEV = new WorldType(5, "infdev", 1, 0);
@@ -11,6 +12,7 @@ public class WorldType {
 	public static final WorldType ALPHA_SNOW = new WorldType(7, "alpha_snow", 1, 0);
 	public static final WorldType DEFAULT_1_1 = (new WorldType(8, "default_1_1", 0, 0)).setCanBeCreated(false);
 	public static final WorldType DEBUG = new WorldType(9, "debug", 1, 0).setCanBeCreated(false);
+	public static final WorldType OCEAN = new WorldType(10, "ocean", 1, 0);
 	
 	private final String worldType;
 	private final int generatorVersion;
@@ -139,7 +141,13 @@ public class WorldType {
 									this == AMPLIFIED ?
 												new ChunkProviderAmplified(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled())
 											:
-												new ChunkProviderGenerate(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled()));
+												this == SKY ? 
+														new ChunkProviderSky(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled())
+													:
+														this == OCEAN ? 
+																new ChunkProviderOcean(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled())
+															:
+														new ChunkProviderGenerate(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled()));
 	}
 
 	public int getSeaLevel(World world) {

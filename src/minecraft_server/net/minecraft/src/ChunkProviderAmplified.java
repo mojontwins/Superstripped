@@ -10,10 +10,10 @@ public class ChunkProviderAmplified extends ChunkProviderGenerate {
 		this.terrainNoise = new double[825];
 		this.parabolicField = new float[25];
 
-		for (int var5 = -2; var5 <= 2; ++var5) {
-			for (int var6 = -2; var6 <= 2; ++var6) {
-				float var7 = 10.0F / MathHelper.sqrt_float((float) (var5 * var5 + var6 * var6) + 0.2F);
-				this.parabolicField[var5 + 2 + (var6 + 2) * 5] = var7;
+		for (int x = -2; x <= 2; ++x) {
+			for (int z = -2; z <= 2; ++z) {
+				float var7 = 10.0F / MathHelper.sqrt_float((float) (x * x + z * z) + 0.2F);
+				this.parabolicField[x + 2 + (z + 2) * 5] = var7;
 			}
 		}
 	}
@@ -93,7 +93,7 @@ public class ChunkProviderAmplified extends ChunkProviderGenerate {
 	public void replaceBlocksForBiome(int chunkX, int chunkZ, byte[] blockArray, BiomeGenBase[] biomeGenBase4) {
 		byte seaLevel = 63;
 		double d6 = 8.0D / 256D;
-		this.stoneNoise = this.noiseGenStone.generateNoiseOctaves(this.stoneNoise, chunkX * 16, chunkZ * 16, 0, 16, 16, 1, d6 * 2.0D, d6 * 2.0D, d6 * 2.0D);
+		this.stoneNoise = this.noiseStone.generateNoiseOctaves(this.stoneNoise, chunkX * 16, chunkZ * 16, 0, 16, 16, 1, d6 * 2.0D, d6 * 2.0D, d6 * 2.0D);
 
 		for(int z = 0; z < 16; ++z) {
 			for(int x = 0; x < 16; ++x) {
@@ -154,10 +154,10 @@ public class ChunkProviderAmplified extends ChunkProviderGenerate {
 	}
 	
 	private void initializeNoiseField(int x, int y, int z) {
-		this.noise6 = this.noiseGen6.generateNoiseOctaves(this.noise6, x, z, 5, 5, 200.0D, 200.0D, 0.5D);
-		this.noise3 = this.noiseGen3.generateNoiseOctaves(this.noise3, x, y, z, 5, 33, 5, 8.555150000000001D, 4.277575000000001D, 8.555150000000001D);
-		this.noise1 = this.noiseGen1.generateNoiseOctaves(this.noise1, x, y, z, 5, 33, 5, 684.412D, 684.412D, 684.412D);
-		this.noise2 = this.noiseGen2.generateNoiseOctaves(this.noise2, x, y, z, 5, 33, 5, 684.412D, 684.412D, 684.412D);
+		this.scaleArray = this.depthNoise.generateNoiseOctaves(this.scaleArray, x, z, 5, 5, 200.0D, 200.0D, 0.5D);
+		this.mainArray = this.mainNoise.generateNoiseOctaves(this.mainArray, x, y, z, 5, 33, 5, 8.555150000000001D, 4.277575000000001D, 8.555150000000001D);
+		this.minLimitArray = this.minLimitNoise.generateNoiseOctaves(this.minLimitArray, x, y, z, 5, 33, 5, 684.412D, 684.412D, 684.412D);
+		this.maxLimitArray = this.maxLimitNoise.generateNoiseOctaves(this.maxLimitArray, x, y, z, 5, 33, 5, 684.412D, 684.412D, 684.412D);
 		int var12 = 0;
 		int var13 = 0;
 		for (int var16 = 0; var16 < 5; ++var16) {
@@ -195,7 +195,7 @@ public class ChunkProviderAmplified extends ChunkProviderGenerate {
 				var19 /= var20;
 				var18 = var18 * 0.9F + 0.1F;
 				var19 = (var19 * 4.0F - 1.0F) / 8.0F;
-				double var46 = this.noise6[var13] / 8000.0D;
+				double var46 = this.scaleArray[var13] / 8000.0D;
 
 				if (var46 < 0.0D) {
 					var46 = -var46 * 0.3D;
@@ -234,9 +234,9 @@ public class ChunkProviderAmplified extends ChunkProviderGenerate {
 						var32 *= 4.0D;
 					}
 
-					double var34 = this.noise2[var12] / 512.0D;
-					double var36 = this.noise3[var12] / 512.0D;
-					double var38 = (this.noise1[var12] / 10.0D + 1.0D) / 2.0D;
+					double var34 = this.maxLimitArray[var12] / 512.0D;
+					double var36 = this.mainArray[var12] / 512.0D;
+					double var38 = (this.minLimitArray[var12] / 10.0D + 1.0D) / 2.0D;
 					double var40 = MathHelper.denormalizeClamp(var34, var36, var38) - var32;
 
 					if (var31 > 29) {

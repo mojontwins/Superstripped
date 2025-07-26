@@ -141,7 +141,8 @@ public class RenderBlocks {
 			case 10: return this.renderBlockStairs(block, x, y, z);
 			case 11: return this.renderBlockFence((BlockFence)block, x, y, z);
 			case 12: return this.renderBlockLever(block, x, y, z);
-			case 13: return this.renderBlockCactus(block, x, y, z); 
+			case 15: return this.renderBlockRepeater(block, x, y, z);
+			case 18: return this.renderBlockPane((BlockPane)block, x, y, z);
 			case 20: return this.renderBlockVine(block, x, y, z);
 			case 23: return this.renderBlockLilyPad(block, x, y, z);	
 			case 31: return this.renderLog(block, x, y, z);
@@ -1012,6 +1013,57 @@ public class RenderBlocks {
 		return true;
 	}
 	
+	public boolean renderBlockPane(BlockPane block, int x, int y, int z) { 
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.setBrightness(block.getMixedBrightnessForBlock(this.blockAccess, x, y, z));
+		
+		int colorMultiplier = block.colorMultiplier(this.blockAccess, x, y, z);
+		float r = (float)(colorMultiplier >> 16 & 255) / 255.0F;
+		float g = (float)(colorMultiplier >> 8 & 255) / 255.0F;
+		float b = (float)(colorMultiplier & 255) / 255.0F;
+		
+		tessellator.setColorOpaque_F(r, g, b);
+		
+		boolean connectN = block.canThisPaneConnectToThisBlockID(this.blockAccess.getBlockId(x, y, z - 1));
+		boolean connectS = block.canThisPaneConnectToThisBlockID(this.blockAccess.getBlockId(x, y, z + 1));
+		boolean connectW = block.canThisPaneConnectToThisBlockID(this.blockAccess.getBlockId(x - 1, y, z));
+		boolean connectE = block.canThisPaneConnectToThisBlockID(this.blockAccess.getBlockId(x + 1, y, z));
+		
+		// New, simple renderer
+		if (!connectN && !connectS && !connectW && !connectE) {
+			block.setBlockBounds(.5F-0.0625F, 0.0F, .5F-0.0625F, .5F+0.0625F, 1.0F, .5F+0.0625F);
+			this.renderStandardBlock(block, x, y, z);
+		} else if (connectN && connectS && !connectW && !connectE) {
+			block.setBlockBounds(.5F-0.0625F, 0.0F, 0.0F, .5F+0.0625F, 1.0F, 1.0F);
+			this.renderStandardBlock(block, x, y, z);
+		} else if (!connectN && !connectS && connectW && connectE) {
+			block.setBlockBounds(0.0F, 0.0F, .5F-0.0625F, 1.0F, 1.0F, .5F+0.0625F);
+			this.renderStandardBlock(block, x, y, z);
+		} else {
+			if (connectS) {
+				block.setBlockBounds(.5F-0.0625F, 0.0F, .5F, .5F+0.0625F, 1.0F, 1F);
+				this.renderStandardBlock(block, x, y, z);
+			}
+			
+			if (connectN) {
+				block.setBlockBounds(.5F-0.0625F, 0.0F, 0F, .5F+0.0625F, 1.0F, .5F);
+				this.renderStandardBlock(block, x, y, z);
+			}
+			
+			if (connectE) {
+				block.setBlockBounds(0.5F, 0.0F, .5F-0.0625F, 1.0F, 1.0F, .5F+0.0625F);
+				this.renderStandardBlock(block, x, y, z);
+			}
+			
+			if (connectW) {
+				block.setBlockBounds(0F, 0.0F, .5F-0.0625F, 0.5F, 1.0F, .5F+0.0625F);
+				this.renderStandardBlock(block, x, y, z);
+			}
+		}
+		
+		return true;
+	}
+	
 	public boolean renderCrossedSquares(Block block1, int i2, int i3, int i4) {
 		return this.renderCrossedSquares(block1, i2, i3, i4, false);
 	}
@@ -1024,14 +1076,6 @@ public class RenderBlocks {
 		float f8 = (float)(i7 >> 16 & 255) / 255.0F;
 		float f9 = (float)(i7 >> 8 & 255) / 255.0F;
 		float f10 = (float)(i7 & 255) / 255.0F;
-		if(EntityRenderer.anaglyphEnable) {
-			float f11 = (f8 * 30.0F + f9 * 59.0F + f10 * 11.0F) / 100.0F;
-			float f12 = (f8 * 30.0F + f9 * 70.0F) / 100.0F;
-			float f13 = (f8 * 30.0F + f10 * 70.0F) / 100.0F;
-			f8 = f11;
-			f9 = f12;
-			f10 = f13;
-		}
 
 		tessellator5.setColorOpaque_F(f6 * f8, f6 * f9, f6 * f10);
 		double d19 = (double)i2;
@@ -1234,7 +1278,7 @@ public class RenderBlocks {
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(this.blockAccess, x, y, z));
 		
 		// Render a lily flower on top
-		if((variation & 4) != 0) {
+		if(block == Block.waterlily && (variation & 4) != 0) {
 			this.overrideBlockTexture = 12 * 16 + 12;
 			this.renderCrossedSquares(Block.plantYellow, x, y, z, true);
 			this.overrideBlockTexture = -1;
@@ -1398,7 +1442,7 @@ public class RenderBlocks {
 			double d18 = 0.0D;
 			double d20 = 1.0D;
 			Material material22 = block1.blockMaterial;
-			int i23 = this.blockAccess.getBlockMetadata(i2, i3, i4);
+			int armorValue = this.blockAccess.getBlockMetadata(i2, i3, i4);
 			
 			double d24 = (double)this.getFluidHeight(i2, i3, i4, material22);
 			double d26 = (double)this.getFluidHeight(i2, i3, i4 + 1, material22);
@@ -1410,10 +1454,10 @@ public class RenderBlocks {
 			int i37;
 			if(this.renderAllFaces || z10) {
 				z13 = true;
-				i34 = block1.getBlockTextureFromSideAndMetadata(1, i23);
+				i34 = block1.getBlockTextureFromSideAndMetadata(1, armorValue);
 				float f35 = (float)BlockFluid.func_293_a(this.blockAccess, i2, i3, i4, material22);
 				if(f35 > -999.0F) {
-					i34 = block1.getBlockTextureFromSideAndMetadata(2, i23);
+					i34 = block1.getBlockTextureFromSideAndMetadata(2, armorValue);
 				}
 
 				d24 -= d32;
@@ -1517,7 +1561,7 @@ public class RenderBlocks {
 					}
 
 					z13 = true;
-					int i66 = block1.getBlockTextureFromSideAndMetadata(i34 + 2, i23);
+					int i66 = block1.getBlockTextureFromSideAndMetadata(i34 + 2, armorValue);
 					
 					int i39 = (i66 & 15) << 4;
 					int i67 = i66 & 0xff0;
@@ -1641,14 +1685,6 @@ public class RenderBlocks {
 		float f6 = (float)(i5 >> 16 & 255) / 255.0F;
 		float f7 = (float)(i5 >> 8 & 255) / 255.0F;
 		float f8 = (float)(i5 & 255) / 255.0F;
-		if(EntityRenderer.anaglyphEnable) {
-			float f9 = (f6 * 30.0F + f7 * 59.0F + f8 * 11.0F) / 100.0F;
-			float f10 = (f6 * 30.0F + f7 * 70.0F) / 100.0F;
-			float f11 = (f6 * 30.0F + f8 * 70.0F) / 100.0F;
-			f6 = f9;
-			f7 = f10;
-			f8 = f11;
-		}
 
 		return Minecraft.isAmbientOcclusionEnabled() && Block.lightValue[block1.blockID] == 0 ? 
 				this.renderStandardBlockWithAmbientOcclusion(block1, i2, i3, i4, f6, f7, f8) 
@@ -1656,28 +1692,28 @@ public class RenderBlocks {
 				this.renderStandardBlockWithColorMultiplier(block1, i2, i3, i4, f6, f7, f8);
 	}
 	
-	public boolean renderLog(Block par1Block, int par2, int par3, int par4) {
-		int var5 = this.blockAccess.getBlockMetadata(par2, par3, par4);
-		int var6 = var5 & 12;
+	public boolean renderLog(Block block, int x, int y, int z) {
+		int meta = this.blockAccess.getBlockMetadata(x, y, z);
+		int orientation = GameRules.boolRule("renderAllBlocksStraight") ? 0 : (meta & 12);
 
-		if (var6 == 4) {
+		if (orientation == 4) {
 			this.uvRotateEast = 1;
 			this.uvRotateWest = 1;
 			this.uvRotateTop = 1;
 			this.uvRotateBottom = 1;
-		} else if (var6 == 8) {
+		} else if (orientation == 8) {
 			this.uvRotateSouth = 1;
 			this.uvRotateNorth = 1;
 		}
 
-		boolean var7 = this.renderStandardBlock(par1Block, par2, par3, par4);
+		boolean result = this.renderStandardBlock(block, x, y, z);
 		this.uvRotateSouth = 0;
 		this.uvRotateEast = 0;
 		this.uvRotateWest = 0;
 		this.uvRotateNorth = 0;
 		this.uvRotateTop = 0;
 		this.uvRotateBottom = 0;
-		return var7;
+		return result;
 	}
 
 	public boolean renderStandardBlockWithAmbientOcclusion(Block block1, int i2, int i3, int i4, float f5, float f6, float f7) {
@@ -1704,7 +1740,7 @@ public class RenderBlocks {
 		int i20 = i19;
 		int i21 = i19;
 		int i22 = i19;
-		int i23 = i19;
+		int armorValue = i19;
 		int i24 = i19;
 		int i25 = i19;
 		if(block1.minY <= 0.0D) {
@@ -1720,7 +1756,7 @@ public class RenderBlocks {
 		}
 
 		if(block1.maxX >= 1.0D) {
-			i23 = block1.getMixedBrightnessForBlock(this.blockAccess, i2 + 1, i3, i4);
+			armorValue = block1.getMixedBrightnessForBlock(this.blockAccess, i2 + 1, i3, i4);
 		}
 
 		if(block1.minZ <= 0.0D) {
@@ -2292,16 +2328,16 @@ public class RenderBlocks {
 				f12 = (this.aoLightValueXPos + this.aoLightValueScratchXZPP + this.aoLightValueScratchXYPP + this.aoLightValueScratchXYZPPP) / 4.0F;
 				f11 = (this.aoLightValueScratchXZPN + this.aoLightValueXPos + this.aoLightValueScratchXYZPPN + this.aoLightValueScratchXYPP) / 4.0F;
 				f10 = (this.aoLightValueScratchXYZPNN + this.aoLightValueScratchXYPN + this.aoLightValueScratchXZPN + this.aoLightValueXPos) / 4.0F;
-				this.brightnessTopLeft = this.getAoBrightness(this.aoBrightnessXYPN, this.aoBrightnessXYZPNP, this.aoBrightnessXZPP, i23);
-				this.brightnessTopRight = this.getAoBrightness(this.aoBrightnessXZPP, this.aoBrightnessXYPP, this.aoBrightnessXYZPPP, i23);
-				this.brightnessBottomRight = this.getAoBrightness(this.aoBrightnessXZPN, this.aoBrightnessXYZPPN, this.aoBrightnessXYPP, i23);
-				this.brightnessBottomLeft = this.getAoBrightness(this.aoBrightnessXYZPNN, this.aoBrightnessXYPN, this.aoBrightnessXZPN, i23);
+				this.brightnessTopLeft = this.getAoBrightness(this.aoBrightnessXYPN, this.aoBrightnessXYZPNP, this.aoBrightnessXZPP, armorValue);
+				this.brightnessTopRight = this.getAoBrightness(this.aoBrightnessXZPP, this.aoBrightnessXYPP, this.aoBrightnessXYZPPP, armorValue);
+				this.brightnessBottomRight = this.getAoBrightness(this.aoBrightnessXZPN, this.aoBrightnessXYZPPN, this.aoBrightnessXYPP, armorValue);
+				this.brightnessBottomLeft = this.getAoBrightness(this.aoBrightnessXYZPNN, this.aoBrightnessXYPN, this.aoBrightnessXZPN, armorValue);
 			} else {
 				f12 = this.aoLightValueXPos;
 				f11 = this.aoLightValueXPos;
 				f10 = this.aoLightValueXPos;
 				f9 = this.aoLightValueXPos;
-				this.brightnessTopLeft = this.brightnessBottomLeft = this.brightnessBottomRight = this.brightnessTopRight = i23;
+				this.brightnessTopLeft = this.brightnessBottomLeft = this.brightnessBottomRight = this.brightnessTopRight = armorValue;
 			}
 
 			this.colorRedTopLeft = this.colorRedBottomLeft = this.colorRedBottomRight = this.colorRedTopRight = (z18 ? f5 : 1.0F) * 0.6F;
@@ -2463,21 +2499,87 @@ public class RenderBlocks {
 		return z9;
 	}
 
-	public boolean renderBlockCactus(Block block1, int i2, int i3, int i4) {
-		int i5 = block1.colorMultiplier(this.blockAccess, i2, i3, i4);
-		float f6 = (float)(i5 >> 16 & 255) / 255.0F;
-		float f7 = (float)(i5 >> 8 & 255) / 255.0F;
-		float f8 = (float)(i5 & 255) / 255.0F;
-		if(EntityRenderer.anaglyphEnable) {
-			float f9 = (f6 * 30.0F + f7 * 59.0F + f8 * 11.0F) / 100.0F;
-			float f10 = (f6 * 30.0F + f7 * 70.0F) / 100.0F;
-			float f11 = (f6 * 30.0F + f8 * 70.0F) / 100.0F;
-			f6 = f9;
-			f7 = f10;
-			f8 = f11;
+	private boolean renderBlockRepeater(Block block1, int i2, int i3, int i4) {
+		int i5 = this.blockAccess.getBlockMetadata(i2, i3, i4);
+		int i6 = i5 & 3;
+		int i7 = (i5 & 12) >> 2;
+		this.renderStandardBlock(block1, i2, i3, i4);
+		Tessellator tessellator8 = Tessellator.instance;
+		tessellator8.setBrightness(block1.getMixedBrightnessForBlock(this.blockAccess, i2, i3, i4));
+		tessellator8.setColorOpaque_F(1.0F, 1.0F, 1.0F);
+		double d9 = -0.1875D;
+		double d11 = 0.0D;
+		double d13 = 0.0D;
+		double d15 = 0.0D;
+		double d17 = 0.0D;
+		switch(i6) {
+		case 0:
+			d17 = -0.3125D;
+			d13 = BlockRedstoneRepeater.repeaterTorchOffset[i7];
+			break;
+		case 1:
+			d15 = 0.3125D;
+			d11 = -BlockRedstoneRepeater.repeaterTorchOffset[i7];
+			break;
+		case 2:
+			d17 = 0.3125D;
+			d13 = -BlockRedstoneRepeater.repeaterTorchOffset[i7];
+			break;
+		case 3:
+			d15 = -0.3125D;
+			d11 = BlockRedstoneRepeater.repeaterTorchOffset[i7];
 		}
 
-		return this.renderBlockCactusImpl(block1, i2, i3, i4, f6, f7, f8);
+		this.renderTorchAtAngle(block1, (double)i2 + d11, (double)i3 + d9, (double)i4 + d13, 0.0D, 0.0D);
+		this.renderTorchAtAngle(block1, (double)i2 + d15, (double)i3 + d9, (double)i4 + d17, 0.0D, 0.0D);
+		int i19 = block1.getBlockTextureFromSide(1);
+		
+		/*
+		int i20 = (i19 & 15) << 4;
+		int i21 = i19 & 0xff0;
+		double u1 = (double)((float)i20 / 256F);
+		double u2 = (double)(((float)i20 + 15.99F) / 256F);
+		double v1 = (double)((float)i21 / 256F);
+		double v2 = (double)(((float)i21 + 15.99F) / 256F);
+		*/
+		Idx2uvF.calc(i19);
+		double u1 = Idx2uvF.u1;
+		double u2 = Idx2uvF.u2;
+		double v1 = Idx2uvF.v1;
+		double v2 = Idx2uvF.v2;
+
+		double d30 = 0.125D;
+		double d32 = (double)(i2 + 1);
+		double d34 = (double)(i2 + 1);
+		double d36 = (double)(i2 + 0);
+		double d38 = (double)(i2 + 0);
+		double d40 = (double)(i4 + 0);
+		double d42 = (double)(i4 + 1);
+		double d44 = (double)(i4 + 1);
+		double d46 = (double)(i4 + 0);
+		double d48 = (double)i3 + d30;
+		if(i6 == 2) {
+			d32 = d34 = (double)(i2 + 0);
+			d36 = d38 = (double)(i2 + 1);
+			d40 = d46 = (double)(i4 + 1);
+			d42 = d44 = (double)(i4 + 0);
+		} else if(i6 == 3) {
+			d32 = d38 = (double)(i2 + 0);
+			d34 = d36 = (double)(i2 + 1);
+			d40 = d42 = (double)(i4 + 0);
+			d44 = d46 = (double)(i4 + 1);
+		} else if(i6 == 1) {
+			d32 = d38 = (double)(i2 + 1);
+			d34 = d36 = (double)(i2 + 0);
+			d40 = d42 = (double)(i4 + 1);
+			d44 = d46 = (double)(i4 + 0);
+		}
+
+		tessellator8.addVertexWithUV(d38, d48, d46, u1, v1);
+		tessellator8.addVertexWithUV(d36, d48, d44, u1, v2);
+		tessellator8.addVertexWithUV(d34, d48, d42, u2, v2);
+		tessellator8.addVertexWithUV(d32, d48, d40, u2, v1);
+		return true;
 	}
 
 	public boolean renderBlockCactusImpl(Block block1, int i2, int i3, int i4, float f5, float f6, float f7) {

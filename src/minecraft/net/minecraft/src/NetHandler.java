@@ -237,4 +237,12 @@ public abstract class NetHandler {
 	public void func_50100_a(Packet202PlayerAbilities packet202PlayerAbilities1) {
 		this.registerPacket(packet202PlayerAbilities1);
 	}
+	
+	public void handleUpdateDayOfTheYear(Packet95UpdateDayOfTheYear packet) {
+		this.registerPacket(packet);
+	}
+	
+	public void handleUpdateCommandBlock(Packet91UpdateCommandBlock packet91UpdateCommandBlock) {
+		this.registerPacket(packet91UpdateCommandBlock);
+	}
 }

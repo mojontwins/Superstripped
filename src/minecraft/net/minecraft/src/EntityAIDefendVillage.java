@@ -11,6 +11,7 @@ public class EntityAIDefendVillage extends EntityAITarget {
 	}
 
 	public boolean shouldExecute() {
+		/*
 		Village village1 = this.irongolem.getVillage();
 		if(village1 == null) {
 			return false;
@@ -18,6 +19,8 @@ public class EntityAIDefendVillage extends EntityAITarget {
 			this.villageAgressorTarget = village1.findNearestVillageAggressor(this.irongolem);
 			return this.func_48376_a(this.villageAgressorTarget, false);
 		}
+		*/
+		return false;
 	}
 
 	public void startExecuting() {

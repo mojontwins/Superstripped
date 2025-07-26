@@ -24,18 +24,18 @@ public class ChunkLoader {
 		return anvilConverterData3;
 	}
 
-	public static void convertToAnvilFormat(AnvilConverterData anvilConverterData0, NBTTagCompound nBTTagCompound1, WorldChunkManager worldChunkManager2) {
-		nBTTagCompound1.setInteger("xPos", anvilConverterData0.x);
-		nBTTagCompound1.setInteger("zPos", anvilConverterData0.z);
-		nBTTagCompound1.setLong("LastUpdate", anvilConverterData0.lastUpdated);
+	public static void convertToAnvilFormat(AnvilConverterData anvilConverterData0, NBTTagCompound compoundTag, WorldChunkManager worldChunkManager2) {
+		compoundTag.setInteger("xPos", anvilConverterData0.x);
+		compoundTag.setInteger("zPos", anvilConverterData0.z);
+		compoundTag.setLong("LastUpdate", anvilConverterData0.lastUpdated);
 		int[] i3 = new int[anvilConverterData0.heightmap.length];
 
 		for(int i4 = 0; i4 < anvilConverterData0.heightmap.length; ++i4) {
 			i3[i4] = anvilConverterData0.heightmap[i4];
 		}
 
-		nBTTagCompound1.func_48183_a("HeightMap", i3);
-		nBTTagCompound1.setBoolean("TerrainPopulated", anvilConverterData0.terrainPopulated);
+		compoundTag.func_48183_a("HeightMap", i3);
+		compoundTag.setBoolean("TerrainPopulated", anvilConverterData0.terrainPopulated);
 		NBTTagList nBTTagList16 = new NBTTagList("Sections");
 
 		int i7;
@@ -61,15 +61,15 @@ public class ChunkLoader {
 				NibbleArray nibbleArray21 = new NibbleArray(b19.length, 4);
 				NibbleArray nibbleArray22 = new NibbleArray(b19.length, 4);
 
-				for(int i23 = 0; i23 < 16; ++i23) {
+				for(int armorValue = 0; armorValue < 16; ++armorValue) {
 					for(int i12 = 0; i12 < 16; ++i12) {
 						for(int i13 = 0; i13 < 16; ++i13) {
-							int i14 = i23 << 11 | i13 << 7 | i12 + (i5 << 4);
+							int i14 = armorValue << 11 | i13 << 7 | i12 + (i5 << 4);
 							byte b15 = anvilConverterData0.blocks[i14];
-							b19[i12 << 8 | i13 << 4 | i23] = (byte)(b15 & 255);
-							nibbleArray20.set(i23, i12, i13, anvilConverterData0.data.get(i23, i12 + (i5 << 4), i13));
-							nibbleArray21.set(i23, i12, i13, anvilConverterData0.skyLight.get(i23, i12 + (i5 << 4), i13));
-							nibbleArray22.set(i23, i12, i13, anvilConverterData0.blockLight.get(i23, i12 + (i5 << 4), i13));
+							b19[i12 << 8 | i13 << 4 | armorValue] = (byte)(b15 & 255);
+							nibbleArray20.set(armorValue, i12, i13, anvilConverterData0.data.get(armorValue, i12 + (i5 << 4), i13));
+							nibbleArray21.set(armorValue, i12, i13, anvilConverterData0.skyLight.get(armorValue, i12 + (i5 << 4), i13));
+							nibbleArray22.set(armorValue, i12, i13, anvilConverterData0.blockLight.get(armorValue, i12 + (i5 << 4), i13));
 						}
 					}
 				}
@@ -84,7 +84,7 @@ public class ChunkLoader {
 			}
 		}
 
-		nBTTagCompound1.setTag("Sections", nBTTagList16);
+		compoundTag.setTag("Sections", nBTTagList16);
 		byte[] b17 = new byte[256];
 
 		for(int i18 = 0; i18 < 16; ++i18) {
@@ -93,11 +93,11 @@ public class ChunkLoader {
 			}
 		}
 
-		nBTTagCompound1.setByteArray("Biomes", b17);
-		nBTTagCompound1.setTag("Entities", anvilConverterData0.entities);
-		nBTTagCompound1.setTag("TileEntities", anvilConverterData0.tileEntities);
+		compoundTag.setByteArray("Biomes", b17);
+		compoundTag.setTag("Entities", anvilConverterData0.entities);
+		compoundTag.setTag("TileEntities", anvilConverterData0.tileEntities);
 		if(anvilConverterData0.tileTicks != null) {
-			nBTTagCompound1.setTag("TileTicks", anvilConverterData0.tileTicks);
+			compoundTag.setTag("TileTicks", anvilConverterData0.tileTicks);
 		}
 
 	}

@@ -120,4 +120,9 @@ public class Gui {
 		tessellator9.addVertexWithUV((double)(i1 + 0), (double)(i2 + 0), (double)this.zLevel, (double)((float)(i3 + 0) / f7), (double)((float)(i4 + 0) / f8));
 		tessellator9.draw();
 	}
+	
+	public String twoDigits(int d) {
+		if (d < 10) return "0" + d;
+		else return "" + d;
+	}
 }

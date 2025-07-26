@@ -45,8 +45,8 @@ public class GuiMultiplayer extends GuiScreen {
 
 	private void loadServerList() {
 		try {
-			NBTTagCompound nBTTagCompound1 = CompressedStreamTools.read(new File(this.mc.mcDataDir, "servers.dat"));
-			NBTTagList nBTTagList2 = nBTTagCompound1.getTagList("servers");
+			NBTTagCompound compoundTag = CompressedStreamTools.read(new File(this.mc.mcDataDir, "servers.dat"));
+			NBTTagList nBTTagList2 = compoundTag.getTagList("servers");
 			this.serverList.clear();
 
 			for(int i3 = 0; i3 < nBTTagList2.tagCount(); ++i3) {

@@ -6,7 +6,8 @@ import java.util.List;
 public class EntityPigZombie extends EntityZombie {
 	private int angerLevel = 0;
 	private int randomSoundDelay = 0;
-	private static final ItemStack defaultHeldItem = new ItemStack(Item.swordGold, 1);
+	private ItemStack heldItem;
+	
 	private int spawnObjectCounter;
 	private boolean preparingToDrop = false;
 	private boolean dropAGoodOne = false;
@@ -17,6 +18,12 @@ public class EntityPigZombie extends EntityZombie {
 		this.moveSpeed = 0.5F;
 		this.attackStrength = 5;
 		this.isImmuneToFire = true;
+		
+		switch(world1.rand.nextInt(8)) {
+		case 0: this.heldItem = new ItemStack(Item.maceGold, 1);
+		case 1: this.heldItem = new ItemStack(Item.battleGold, 1);
+		default: this.heldItem = new ItemStack(Item.swordGold, 1);
+		}
 	}
 
 	protected boolean isAIEnabled() {
@@ -36,14 +43,14 @@ public class EntityPigZombie extends EntityZombie {
 		return this.worldObj.difficultySetting > 0 && this.worldObj.checkIfAABBIsClear(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).size() == 0 && !this.worldObj.isAnyLiquid(this.boundingBox);
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setShort("Anger", (short)this.angerLevel);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setShort("Anger", (short)this.angerLevel);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.angerLevel = nBTTagCompound1.getShort("Anger");
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.angerLevel = compoundTag.getShort("Anger");
 	}
 
 	protected Entity findPlayerToAttack() {
@@ -121,7 +128,7 @@ public class EntityPigZombie extends EntityZombie {
 					if(itemId == 0) {
 						switch(this.rand.nextInt(8)) {
 							case 0:
-								itemId = Item.ingotCopper.shiftedIndex;
+								itemId = Item.ingotIron.shiftedIndex;
 								break;
 							case 1:
 								itemId = Item.silk.shiftedIndex;
@@ -224,6 +231,12 @@ public class EntityPigZombie extends EntityZombie {
 	}
 
 	public ItemStack getHeldItem() {
-		return defaultHeldItem;
+		return heldItem;
+	}
+	
+	@Override
+	public boolean setHeldItem(ItemStack itemStack) {
+		this.heldItem = itemStack;
+		return true;
 	}
 }

@@ -15,10 +15,16 @@ public class BiomeGenAlpha extends BiomeGenBase {
 		this.biomeDecorator.cactiPerChunk = 1;
 		this.biomeDecorator.mushroomsPerChunk = 2;
 		this.biomeDecorator.flowersPerChunk = 4;
+		
+		this.setEnableSnow();
 	}
 
 	public int getSkyColorByTemp(float f1) {
 		return 0x88BBFF;
+	}
+	
+	public boolean canSpawnLightningBolt() {
+		return true;
 	}
 	
 	public void replaceBlocksForBiome(IChunkProvider generator, World world, Random rand, int chunkX, int chunkZ, int x, int z, byte[] blocks, byte[] metadata, int seaLevel, double sandNoise, double gravelNoise, double stoneNoise) {
@@ -37,7 +43,7 @@ public class BiomeGenAlpha extends BiomeGenBase {
 			if (y > 127 - monolithNoise) {
 				blocks[index] = (byte)0;
 				stoneHeight = -1;
-			} else if(y <= 0 + rand.nextInt(5)) {
+			} else if(y <= 0 + rand.nextInt(5) && !(generator instanceof ChunkProviderSky)) {
 				blocks[index] = (byte)Block.bedrock.blockID;
 			} else {
 				byte blockID = blocks[index];

@@ -17,7 +17,7 @@ public class EntityOcelot extends EntityTameable {
 		this.tasks.addTask(6, new EntityAIOcelotSit(this, 0.4F));
 		this.tasks.addTask(7, new EntityAILeapAtTarget(this, 0.3F));
 		this.tasks.addTask(8, new EntityAIOcelotAttack(this));
-		if (GameRules.canBreedAnimals) {
+		if (GameRules.boolRule("canBreedAnimals")) {
 			this.tasks.addTask(9, new EntityAIMate(this, 0.23F));
 		}
 		this.tasks.addTask(10, new EntityAIWander(this, 0.23F));
@@ -83,14 +83,14 @@ public class EntityOcelot extends EntityTameable {
 	protected void fall(float f1) {
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setInteger("CatType", this.getCatType());
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setInteger("CatType", this.getCatType());
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.setCatType(nBTTagCompound1.getInteger("CatType"));
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.setCatType(compoundTag.getInteger("CatType"));
 	}
 
 	protected String getLivingSound() {

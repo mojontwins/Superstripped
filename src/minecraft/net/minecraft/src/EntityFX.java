@@ -115,10 +115,10 @@ public class EntityFX extends Entity {
 		return 0;
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
 	}
 
 	public void setParticleTextureIndex(int i1) {

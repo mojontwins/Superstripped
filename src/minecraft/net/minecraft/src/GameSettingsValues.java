@@ -8,7 +8,7 @@ public class GameSettingsValues {
 	public static boolean invertMouse = false;
 	public static int renderDistance = 0;
 	public static boolean viewBobbing = true;
-	public static boolean anaglyph = false;
+
 	public static boolean advancedOpengl = false;
 	public static int limitFramerate = 1;
 	public static boolean fancyGraphics = true;

@@ -32,10 +32,12 @@ import net.minecraft.src.MathHelper;
 import net.minecraft.src.NetworkListenThread;
 import net.minecraft.src.Packet;
 import net.minecraft.src.Packet4UpdateTime;
+import net.minecraft.src.Packet95UpdateDayOfTheYear;
 import net.minecraft.src.PropertyManager;
 import net.minecraft.src.RConConsoleSource;
 import net.minecraft.src.RConThreadMain;
 import net.minecraft.src.RConThreadQuery;
+import net.minecraft.src.Seasons;
 import net.minecraft.src.ServerCommand;
 import net.minecraft.src.ServerConfigurationManager;
 import net.minecraft.src.ServerGUI;
@@ -43,6 +45,7 @@ import net.minecraft.src.ThreadCommandReader;
 import net.minecraft.src.ThreadServerApplication;
 import net.minecraft.src.ThreadServerSleep;
 import net.minecraft.src.Vec3D;
+import net.minecraft.src.Version;
 import net.minecraft.src.WorldManager;
 import net.minecraft.src.WorldServer;
 import net.minecraft.src.WorldServerMulti;
@@ -93,11 +96,11 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 
 	private boolean startServer() throws UnknownHostException {
 		this.commandHandler = new ConsoleCommandHandler(this);
-		ThreadCommandReader threadCommandReader1 = new ThreadCommandReader(this);
-		threadCommandReader1.setDaemon(true);
-		threadCommandReader1.start();
+		ThreadCommandReader tCommandReader = new ThreadCommandReader(this);
+		tCommandReader.setDaemon(true);
+		tCommandReader.start();
 		ConsoleLogManager.init();
-		logger.info("Starting minecraft server version 1.2.6");
+		logger.info("Starting minecraft server version " + Version.getVersion());
 		
 		GameRules.withMcDataDir(new File("."));
 		GameRules.loadRulesFromOptions();
@@ -118,6 +121,7 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 		this.motd = this.propertyManagerObj.getStringProperty("motd", "A Minecraft Server");
 		this.motd.replace('\u00a7', '$');
 		InetAddress inetAddress2 = null;
+
 		if(this.hostname.length() > 0) {
 			inetAddress2 = InetAddress.getByName(this.hostname);
 		}
@@ -127,9 +131,9 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 
 		try {
 			this.networkServer = new NetworkListenThread(this, inetAddress2, this.serverPort);
-		} catch (IOException iOException15) {
+		} catch (IOException e) {
 			logger.warning("**** FAILED TO BIND TO PORT!");
-			logger.log(Level.WARNING, "The exception was: " + iOException15.toString());
+			logger.log(Level.WARNING, "The exception was: " + e.toString());
 			logger.warning("Perhaps a server is already running on that port?");
 			return false;
 		}
@@ -142,46 +146,51 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 		}
 
 		this.configManager = new ServerConfigurationManager(this);
+
+		// Todo: Proper DimensionManager to dehardcode this
 		this.entityTracker[0] = new EntityTracker(this, 0);
 		this.entityTracker[1] = new EntityTracker(this, -1);
 		this.entityTracker[2] = new EntityTracker(this, 1);
 		this.entityTracker[3] = new EntityTracker(this, 7);
 		this.entityTracker[4] = new EntityTracker(this, 9);
-		long j3 = System.nanoTime();
-		String string5 = this.propertyManagerObj.getStringProperty("level-name", "world");
-		String string6 = this.propertyManagerObj.getStringProperty("level-seed", "");
-		String string7 = this.propertyManagerObj.getStringProperty("level-type", "ALPHA");
+
+		long nowMillis = System.nanoTime();
+		String levelName = this.propertyManagerObj.getStringProperty("level-name", "world");
+		String levelSeed = this.propertyManagerObj.getStringProperty("level-seed", "");
+		String levelType = this.propertyManagerObj.getStringProperty("level-type", "ALPHA");
 		
-		// TODO: ACTUALLY SELECT INFDEV / ALPHA GEN!!
-		logger.info("Configured level type: " + string7);
-		logger.info("Available level types: ALPHA, INFDEV, DEFAULT");
+		logger.info("Configured level type: " + levelType);
+		logger.info("Available level types: ALPHA, INFDEV, SKY");
 		
-		long j8 = (new Random()).nextLong();
-		if(string6.length() > 0) {
+		long seed = (new Random()).nextLong();
+		if(levelSeed.length() > 0) {
 			try {
-				long j10 = Long.parseLong(string6);
-				if(j10 != 0L) {
-					j8 = j10;
+				long newSeed = Long.parseLong(levelSeed);
+				if(newSeed != 0L) {
+					seed = newSeed;
 				}
 			} catch (NumberFormatException numberFormatException14) {
-				j8 = (long)string6.hashCode();
+				seed = (long)levelSeed.hashCode();
 			}
 		}
 
-		WorldType worldType16 = WorldType.parseWorldType(string7);
-		if(worldType16 == null) {
-			worldType16 = GameRules.defaultWorldType();
+		WorldType terrainType = WorldType.parseWorldType(levelType);
+		if(terrainType == null) {
+			terrainType = GameRules.defaultWorldType();
 		}
 
 		this.buildLimit = this.propertyManagerObj.getIntProperty("max-build-height", 256);
 		this.buildLimit = (this.buildLimit + 8) / 16 * 16;
 		this.buildLimit = MathHelper.clamp_int(this.buildLimit, 64, 256);
 		this.propertyManagerObj.setProperty("max-build-height", this.buildLimit);
-		logger.info("Preparing level \"" + string5 + "\"");
-		this.initWorld(new AnvilSaveConverter(new File(".")), string5, j8, worldType16);
-		long j11 = System.nanoTime() - j3;
-		String string13 = String.format("%.3fs", new Object[]{(double)j11 / 1.0E9D});
-		logger.info("Done (" + string13 + ")! For help, type \"help\" or \"?\"");
+
+		logger.info("Preparing level \"" + levelName + "\"");
+		this.initWorld(new AnvilSaveConverter(new File(".")), levelName, seed, terrainType);
+
+		long millis = System.nanoTime() - nowMillis;
+		String timeS = String.format("%.3fs", new Object[]{(double)millis / 1.0E9D});
+		logger.info("Done (" + timeS + ")! For help, type \"help\" or \"?\"");
+		
 		if(this.propertyManagerObj.getBooleanProperty("enable-query", false)) {
 			logger.info("Starting GS4 status listener");
 			this.rconQueryThread = new RConThreadQuery(this);
@@ -197,21 +206,27 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 		return true;
 	}
 
-	private void initWorld(ISaveFormat iSaveFormat1, String string2, long j3, WorldType worldType5) {
-		if(iSaveFormat1.isOldMapFormat(string2)) {
+	private void initWorld(ISaveFormat saveManager, String levelName, long seed, WorldType terrainType) {
+		if(saveManager.isOldMapFormat(levelName)) {
 			logger.info("Converting map!");
-			iSaveFormat1.convertMapFormat(string2, new ConvertProgressUpdater(this));
+			saveManager.convertMapFormat(levelName, new ConvertProgressUpdater(this));
 		}
 
 		this.worldMngr = new WorldServer[5];
 		this.s_field_40028_g = new long[this.worldMngr.length][100];
-		int i6 = this.propertyManagerObj.getIntProperty("gamemode", 0);
-		i6 = WorldSettings.validGameType(i6);
-		logger.info("Default game type: " + i6);
-		boolean z7 = this.propertyManagerObj.getBooleanProperty("generate-structures", true);
-		WorldSettings worldSettings8 = new WorldSettings(j3, i6, z7, false, false, worldType5);
-		AnvilSaveHandler anvilSaveHandler9 = new AnvilSaveHandler(new File("."), string2, true);
+		
+		int gameMode = this.propertyManagerObj.getIntProperty("gamemode", 0);
+		gameMode = WorldSettings.validGameType(gameMode);
+		logger.info("Default game type: " + gameMode);
+		
+		//boolean generateStructures = this.propertyManagerObj.getBooleanProperty("generate-structures", true);
+		boolean enableSeasons = this.propertyManagerObj.getBooleanProperty("enableSeasons", true);
+		
+		WorldSettings worldSettings = new WorldSettings(seed, gameMode, false, false, enableSeasons, terrainType);
+		
+		AnvilSaveHandler saveHandler = new AnvilSaveHandler(new File("."), levelName, true);
 
+		// TODO: Make this dynamic and use a proper DimensionManager class.
 		for(int i = 0; i < this.worldMngr.length; ++i) {
 			byte dimensionId = 0;
 			if(i == 1) {
@@ -231,25 +246,25 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 			}
 			
 			if(i == 0) {
-				this.worldMngr[i] = new WorldServer(this, anvilSaveHandler9, string2, dimensionId, worldSettings8);
+				this.worldMngr[i] = new WorldServer(this, saveHandler, levelName, dimensionId, worldSettings, terrainType);
 			} else {
-				this.worldMngr[i] = new WorldServerMulti(this, anvilSaveHandler9, string2, dimensionId, worldSettings8, this.worldMngr[0]);
+				this.worldMngr[i] = new WorldServerMulti(this, saveHandler, levelName, dimensionId, worldSettings, this.worldMngr[0], terrainType);
 			}
 
 			this.worldMngr[i].addWorldAccess(new WorldManager(this, this.worldMngr[i]));
 			this.worldMngr[i].difficultySetting = this.propertyManagerObj.getIntProperty("difficulty", 1);
 			this.worldMngr[i].setAllowedSpawnTypes(this.propertyManagerObj.getBooleanProperty("spawn-monsters", true), this.spawnPeacefulMobs);
-			this.worldMngr[i].getWorldInfo().setGameType(i6);
+			this.worldMngr[i].getWorldInfo().setGameType(gameMode);
 			this.configManager.setPlayerManager(this.worldMngr);
 		}
 
 		short radius = 196;
 		long prevTime = System.currentTimeMillis();
 
-		for(int i13 = 0; i13 < 1; ++i13) {
-			logger.info("Preparing start region for level " + i13);
-			WorldServer worldServer14 = this.worldMngr[i13];
-			ChunkCoordinates chunkCoordinates15 = worldServer14.getSpawnPoint();
+		for(int dimension = 0; dimension < 1; ++dimension) {
+			logger.info("Preparing start region for level " + dimension);
+			WorldServer worldServer = this.worldMngr[dimension];
+			ChunkCoordinates spawnCoords = worldServer.getSpawnPoint();
 
 			for(int x = -radius; x <= radius && this.serverRunning; x += 16) {
 				for(int z = -radius; z <= radius && this.serverRunning; z += 16) {
@@ -265,10 +280,8 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 						prevTime= currentTime;
 					}
 
-					worldServer14.chunkProviderServer.loadChunk(chunkCoordinates15.posX + x >> 4, chunkCoordinates15.posZ + z >> 4);
+					worldServer.chunkProviderServer.loadChunk(spawnCoords.posX + x >> 4, spawnCoords.posZ + z >> 4);
 
-					while(worldServer14.updatingLighting() && this.serverRunning) { 
-					}
 				}
 			}
 		}
@@ -383,12 +396,12 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 	}
 
 	private void doTick() {
-		long j1 = System.nanoTime();
+		long millis = System.nanoTime();
 		ArrayList<String> arrayList3 = new ArrayList<String>();
-		Iterator<String> iterator4 = s_field_6037_b.keySet().iterator();
+		Iterator<String> it = s_field_6037_b.keySet().iterator();
 
-		while(iterator4.hasNext()) {
-			String string5 = (String)iterator4.next();
+		while(it.hasNext()) {
+			String string5 = (String)it.next();
 			int i6 = ((Integer)s_field_6037_b.get(string5)).intValue();
 			if(i6 > 0) {
 				s_field_6037_b.put(string5, i6 - 1);
@@ -397,45 +410,45 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 			}
 		}
 
-		int i9;
-		for(i9 = 0; i9 < arrayList3.size(); ++i9) {
-			s_field_6037_b.remove(arrayList3.get(i9));
+		int i;
+		for(i = 0; i < arrayList3.size(); ++i) {
+			s_field_6037_b.remove(arrayList3.get(i));
 		}
 
 		AxisAlignedBB.clearBoundingBoxPool();
 		Vec3D.initialize();
 		++this.deathTime;
 
-		for(i9 = 0; i9 < this.worldMngr.length; ++i9) {
-			long j10 = System.nanoTime();
-			if(i9 == 0 || this.propertyManagerObj.getBooleanProperty("allow-nether", true)) {
-				WorldServer worldServer7 = this.worldMngr[i9];
+		for(i = 0; i < this.worldMngr.length; ++i) {
+			long millis0 = System.nanoTime();
+			if(i == 0 || this.propertyManagerObj.getBooleanProperty("allow-nether", true)) {
+				WorldServer world = this.worldMngr[i];
 				if(this.deathTime % 20 == 0) {
-					this.configManager.sendPacketToAllPlayersInDimension(new Packet4UpdateTime(worldServer7.getWorldTime()), worldServer7.worldProvider.worldType);
+					this.configManager.sendPacketToAllPlayersInDimension(new Packet4UpdateTime(world.getWorldTime()), world.worldProvider.worldType);
+				}
+				
+				int dayOfTheYear = Seasons.dayOfTheYear;
+				world.tick();
+				if (Seasons.dayOfTheYear != dayOfTheYear) {
+					this.configManager.sendPacketToAllPlayersInDimension(new Packet95UpdateDayOfTheYear(Seasons.dayOfTheYear), world.worldProvider.worldType);
 				}
 
-				worldServer7.tick();
-
-				while(true) {
-					if(!worldServer7.updatingLighting()) {
-						worldServer7.updateEntities();
-						break;
-					}
-				}
+				world.updateEntities();
+				
 			}
 
-			this.s_field_40028_g[i9][this.deathTime % 100] = System.nanoTime() - j10;
+			this.s_field_40028_g[i][this.deathTime % 100] = System.nanoTime() - millis0;
 		}
 
 		this.networkServer.handleNetworkListenThread();
 		this.configManager.onTick();
 
-		for(i9 = 0; i9 < this.entityTracker.length; ++i9) {
-			this.entityTracker[i9].updateTrackedEntities();
+		for(i = 0; i < this.entityTracker.length; ++i) {
+			this.entityTracker[i].updateTrackedEntities();
 		}
 
-		for(i9 = 0; i9 < this.playersOnline.size(); ++i9) {
-			((IUpdatePlayerListBox)this.playersOnline.get(i9)).update();
+		for(i = 0; i < this.playersOnline.size(); ++i) {
+			((IUpdatePlayerListBox)this.playersOnline.get(i)).update();
 		}
 
 		try {
@@ -444,7 +457,7 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 			logger.log(Level.WARNING, "Unexpected exception while parsing console command", exception8);
 		}
 
-		this.s_field_40027_f[this.deathTime % 100] = System.nanoTime() - j1;
+		this.s_field_40027_f[this.deathTime % 100] = System.nanoTime() - millis;
 		this.s_field_48080_u[this.deathTime % 100] = Packet.field_48157_o - this.s_field_48074_E;
 		this.s_field_48074_E = Packet.field_48157_o;
 		this.s_field_48079_v[this.deathTime % 100] = Packet.field_48155_p - this.s_field_48075_F;

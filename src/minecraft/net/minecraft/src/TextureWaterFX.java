@@ -61,7 +61,7 @@ public class TextureWaterFX extends TextureFX {
 			float f13 = f3 * f3;
 			int i7, i8;
 			
-			if (!GameRules.colouredWater) {
+			if (!GameRules.boolRule("colouredWater")) {
 				i5 = (int)(32.0F + f13 * 32.0F);
 				i6 = (int)(50.0F + f13 * 64.0F);
 				i7 = 255;
@@ -71,15 +71,6 @@ public class TextureWaterFX extends TextureFX {
 				i6 = i5;
 				i7 = i5;
 				i8 = (int)(100.0F + f13 * 50.0F);
-			}
-			
-			if(this.anaglyphEnabled) {
-				int i9 = (i5 * 30 + i6 * 59 + i7 * 11) / 100;
-				int i10 = (i5 * 30 + i6 * 70) / 100;
-				int i11 = (i5 * 30 + i7 * 70) / 100;
-				i5 = i9;
-				i6 = i10;
-				i7 = i11;
 			}
 
 			this.imageData[i2 * 4 + 0] = (byte)i5;

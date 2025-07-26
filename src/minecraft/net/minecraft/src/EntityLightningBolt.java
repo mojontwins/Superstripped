@@ -76,10 +76,10 @@ public class EntityLightningBolt extends EntityWeatherEffect {
 	protected void entityInit() {
 	}
 
-	protected void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
+	protected void readEntityFromNBT(NBTTagCompound compoundTag) {
 	}
 
-	protected void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
+	protected void writeEntityToNBT(NBTTagCompound compoundTag) {
 	}
 
 	public boolean isInRangeToRenderVec3D(Vec3D vec3D1) {

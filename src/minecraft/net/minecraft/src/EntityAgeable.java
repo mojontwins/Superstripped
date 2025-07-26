@@ -18,14 +18,14 @@ public abstract class EntityAgeable extends EntityCreature {
 		this.dataWatcher.updateObject(12, i1);
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setInteger("Age", this.getGrowingAge());
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setInteger("Age", this.getGrowingAge());
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.setGrowingAge(nBTTagCompound1.getInteger("Age"));
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.setGrowingAge(compoundTag.getInteger("Age"));
 	}
 
 	public void onLivingUpdate() {

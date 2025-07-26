@@ -1,8 +1,8 @@
 package net.minecraft.src;
 
 public class EntityIronGolem extends EntityGolem {
-	private int field_48119_b = 0;
-	Village villageObj = null;
+	//private int field_48119_b = 0;
+	//Village villageObj = null;
 	private int field_48120_c;
 	private int field_48118_d;
 
@@ -13,7 +13,7 @@ public class EntityIronGolem extends EntityGolem {
 		this.getNavigator().setAvoidsWater(true);
 		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 0.25F, true));
 		this.tasks.addTask(2, new EntityAIMoveTowardsTarget(this, 0.22F, 32.0F));
-		this.tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.16F, true));
+		//this.tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.16F, true));
 		this.tasks.addTask(4, new EntityAIMoveTwardsRestriction(this, 0.16F));
 		this.tasks.addTask(5, new EntityAILookAtVillager(this));
 		this.tasks.addTask(6, new EntityAIWander(this, 0.16F));
@@ -34,6 +34,7 @@ public class EntityIronGolem extends EntityGolem {
 	}
 
 	protected void updateAITick() {
+		/*
 		if(--this.field_48119_b <= 0) {
 			this.field_48119_b = 70 + this.rand.nextInt(50);
 			this.villageObj = this.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 32);
@@ -44,6 +45,7 @@ public class EntityIronGolem extends EntityGolem {
 				this.setHomeArea(chunkCoordinates1.posX, chunkCoordinates1.posY, chunkCoordinates1.posZ, this.villageObj.getVillageRadius());
 			}
 		}
+		*/
 
 		super.updateAITick();
 	}
@@ -82,14 +84,14 @@ public class EntityIronGolem extends EntityGolem {
 		return this.func_48112_E_() && EntityPlayer.class.isAssignableFrom(class1) ? false : super.func_48100_a(class1);
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setBoolean("PlayerCreated", this.func_48112_E_());
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setBoolean("PlayerCreated", this.func_48112_E_());
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.setCreatedByPlayer(nBTTagCompound1.getBoolean("PlayerCreated"));
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.setCreatedByPlayer(compoundTag.getBoolean("PlayerCreated"));
 	}
 
 	public boolean attackEntityAsMob(Entity entity1) {
@@ -116,9 +118,11 @@ public class EntityIronGolem extends EntityGolem {
 
 	}
 
+	/*
 	public Village getVillage() {
 		return this.villageObj;
 	}
+	*/
 
 	public int func_48114_ab() {
 		return this.field_48120_c;

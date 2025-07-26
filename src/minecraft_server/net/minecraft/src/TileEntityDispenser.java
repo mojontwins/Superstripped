@@ -76,9 +76,9 @@ public class TileEntityDispenser extends TileEntity implements IInventory {
 		return "container.dispenser";
 	}
 
-	public void readFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readFromNBT(nBTTagCompound1);
-		NBTTagList nBTTagList2 = nBTTagCompound1.getTagList("Items");
+	public void readFromNBT(NBTTagCompound compoundTag) {
+		super.readFromNBT(compoundTag);
+		NBTTagList nBTTagList2 = compoundTag.getTagList("Items");
 		this.dispenserContents = new ItemStack[this.getSizeInventory()];
 
 		for(int i3 = 0; i3 < nBTTagList2.tagCount(); ++i3) {
@@ -91,8 +91,8 @@ public class TileEntityDispenser extends TileEntity implements IInventory {
 
 	}
 
-	public void writeToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeToNBT(nBTTagCompound1);
+	public void writeToNBT(NBTTagCompound compoundTag) {
+		super.writeToNBT(compoundTag);
 		NBTTagList nBTTagList2 = new NBTTagList();
 
 		for(int i3 = 0; i3 < this.dispenserContents.length; ++i3) {
@@ -104,7 +104,7 @@ public class TileEntityDispenser extends TileEntity implements IInventory {
 			}
 		}
 
-		nBTTagCompound1.setTag("Items", nBTTagList2);
+		compoundTag.setTag("Items", nBTTagList2);
 	}
 
 	public int getInventoryStackLimit() {

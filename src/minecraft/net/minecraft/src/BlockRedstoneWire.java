@@ -368,9 +368,9 @@ public class BlockRedstoneWire extends Block {
 			return true;
 		} else if(i5 == 0) {
 			return false;
-		} /*else if(i5 != Block.redstoneRepeaterIdle.blockID && i5 != Block.redstoneRepeaterActive.blockID) {
+		} else if(i5 != Block.redstoneRepeaterIdle.blockID && i5 != Block.redstoneRepeaterActive.blockID) {
 			return Block.blocksList[i5].canProvidePower() && i4 != -1;
-		} */else {
+		} else {
 			int i6 = iBlockAccess0.getBlockMetadata(i1, i2, i3);
 			return i4 == (i6 & 3) || i4 == Direction.footInvisibleFaceRemap[i6 & 3];
 		}
@@ -380,11 +380,11 @@ public class BlockRedstoneWire extends Block {
 		if(isPowerProviderOrWire(iBlockAccess0, i1, i2, i3, i4)) {
 			return true;
 		} else {
-			/*int i5 = iBlockAccess0.getBlockId(i1, i2, i3);
+			int i5 = iBlockAccess0.getBlockId(i1, i2, i3);
 			if(i5 == Block.redstoneRepeaterActive.blockID) {
 				int i6 = iBlockAccess0.getBlockMetadata(i1, i2, i3);
 				return i4 == (i6 & 3);
-			} else*/ {
+			} else {
 				return false;
 			}
 		}

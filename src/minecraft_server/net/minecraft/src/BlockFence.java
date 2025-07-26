@@ -16,7 +16,7 @@ public class BlockFence extends Block {
 	}
 
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-		if(GameRules.oldFences) return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+		if(GameRules.boolRule("oldFences")) return super.getCollisionBoundingBoxFromPool(world, x, y, z);
 		
 		boolean z5 = this.canConnectFenceTo(world, x, y, z - 1);
 		boolean z6 = this.canConnectFenceTo(world, x, y, z + 1);
@@ -46,7 +46,7 @@ public class BlockFence extends Block {
 	}
 
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-		if(GameRules.oldFences) {
+		if(GameRules.boolRule("oldFences")) {
 			this.setBlockBounds(0, 0, 0, 1, 1, 1);
 		} else {
 			
@@ -97,7 +97,7 @@ public class BlockFence extends Block {
 	public boolean canConnectFenceTo(IBlockAccess iBlockAccess1, int x, int y, int z) {
 		int blockID = iBlockAccess1.getBlockId(x, y, z);
 		if(blockID != this.blockID) {
-			if (!GameRules.connectFences) return false;
+			if (!GameRules.boolRule("connectFences")) return false;
 			Block block = Block.blocksList[blockID];
 			return block != null && block.blockMaterial.isOpaque() && block.renderAsNormalBlock() ? block.blockMaterial != Material.pumpkin : false;
 		} else {

@@ -13,6 +13,7 @@ public class Packet1Login extends Packet {
 	public byte difficultySetting;
 	public byte worldHeight;
 	public byte maxPlayers;
+	public boolean enableSeasons;
 
 	public Packet1Login() {
 	}
@@ -22,15 +23,16 @@ public class Packet1Login extends Packet {
 		this.protocolVersion = i2;
 	}
 
-	public Packet1Login(String string1, int i2, WorldType worldType3, int i4, int i5, byte b6, byte b7, byte b8) {
-		this.username = string1;
-		this.protocolVersion = i2;
-		this.terrainType = worldType3;
-		this.dimension = i5;
-		this.difficultySetting = b6;
-		this.serverMode = i4;
-		this.worldHeight = b7;
-		this.maxPlayers = b8;
+	public Packet1Login(String username, int protocolVersion, WorldType terrainType, int gameMode, int dimension, byte difficulty, byte worldHeight, byte maxPlayers, boolean enableSeasons) {
+		this.username = username;
+		this.protocolVersion = protocolVersion;
+		this.terrainType = terrainType;
+		this.dimension = dimension;
+		this.difficultySetting = difficulty;
+		this.serverMode = gameMode;
+		this.worldHeight = worldHeight;
+		this.maxPlayers = maxPlayers;
+		this.enableSeasons = enableSeasons;
 	}
 
 	public void readPacketData(DataInputStream dataInputStream1) throws IOException {
@@ -47,6 +49,7 @@ public class Packet1Login extends Packet {
 		this.difficultySetting = dataInputStream1.readByte();
 		this.worldHeight = dataInputStream1.readByte();
 		this.maxPlayers = dataInputStream1.readByte();
+		this.enableSeasons = dataInputStream1.readBoolean();
 	}
 
 	public void writePacketData(DataOutputStream dataOutputStream1) throws IOException {
@@ -63,6 +66,7 @@ public class Packet1Login extends Packet {
 		dataOutputStream1.writeByte(this.difficultySetting);
 		dataOutputStream1.writeByte(this.worldHeight);
 		dataOutputStream1.writeByte(this.maxPlayers);
+		dataOutputStream1.writeBoolean(this.enableSeasons);
 	}
 
 	public void processPacket(NetHandler netHandler1) {
@@ -75,6 +79,6 @@ public class Packet1Login extends Packet {
 			i1 = this.terrainType.getWorldTypeName().length();
 		}
 
-		return 4 + this.username.length() + 4 + 7 + 7 + i1;
+		return 4 + this.username.length() + 4 + 7 + 7 + i1 + 1;
 	}
 }

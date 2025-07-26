@@ -32,6 +32,9 @@ public class WorldManager implements IWorldAccess {
 		this.mcServer.configManager.markBlockNeedsUpdate(i1, i2, i3, this.world.worldProvider.worldType);
 	}
 
+	public void updateAllRenderers() {
+	}
+	
 	public void markBlockNeedsUpdate2(int i1, int i2, int i3) {
 	}
 
@@ -44,5 +47,9 @@ public class WorldManager implements IWorldAccess {
 
 	public void playAuxSFX(EntityPlayer entityPlayer1, int i2, int i3, int i4, int i5, int i6) {
 		this.mcServer.configManager.s_func_28171_a(entityPlayer1, (double)i3, (double)i4, (double)i5, 64.0D, this.world.worldProvider.worldType, new Packet61DoorChange(i2, i3, i4, i5, i6));
+	}
+	
+	public void showString(String s) {
+		this.mcServer.configManager.sendChatMessageToAllPlayers(s);
 	}
 }

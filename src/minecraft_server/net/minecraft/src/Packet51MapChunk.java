@@ -63,7 +63,7 @@ public class Packet51MapChunk extends Packet {
 		int i10;
 		for(i10 = 0; i10 < extendedBlockStorage4.length; ++i10) {
 			if(extendedBlockStorage4[i10] != null && (!z2 || !extendedBlockStorage4[i10].getIsEmpty()) && (i3 & 1 << i10) != 0) {
-				byte[] b11 = extendedBlockStorage4[i10].func_48692_g();
+				byte[] b11 = extendedBlockStorage4[i10].getBlockLSBArray();
 				System.arraycopy(b11, 0, b8, i9, b11.length);
 				i9 += b11.length;
 			}
@@ -72,7 +72,7 @@ public class Packet51MapChunk extends Packet {
 		NibbleArray nibbleArray15;
 		for(i10 = 0; i10 < extendedBlockStorage4.length; ++i10) {
 			if(extendedBlockStorage4[i10] != null && (!z2 || !extendedBlockStorage4[i10].getIsEmpty()) && (i3 & 1 << i10) != 0) {
-				nibbleArray15 = extendedBlockStorage4[i10].func_48697_j();
+				nibbleArray15 = extendedBlockStorage4[i10].getMetadataArray();
 				System.arraycopy(nibbleArray15.data, 0, b8, i9, nibbleArray15.data.length);
 				i9 += nibbleArray15.data.length;
 			}

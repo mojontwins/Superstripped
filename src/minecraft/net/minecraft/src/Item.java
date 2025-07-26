@@ -3,6 +3,7 @@ package net.minecraft.src;
 import java.util.List;
 import java.util.Random;
 
+import com.mojontwins.minecraft.worldedit.ItemMagicWand;
 import com.risugami.recipebook.ItemRecipeBook;
 
 public class Item implements ITextureProvider {
@@ -108,7 +109,7 @@ public class Item implements ITextureProvider {
 	public static Item dyePowder = (new ItemDye(95)).setIconCoord(14, 4).setItemName("dyePowder");
 	public static Item bone = (new Item(96)).setIconCoord(12, 1).setItemName("bone").setFull3D().setCreativeTab(CreativeTabs.tabMisc);
 	public static Item sugar = (new Item(97)).setIconCoord(13, 0).setItemName("sugar").setCreativeTab(CreativeTabs.tabMaterials);
-
+	public static Item redstoneRepeater = (new ItemReed(100, Block.redstoneRepeaterIdle)).setIconCoord(6, 5).setItemName("diode").setCreativeTab(CreativeTabs.tabRedstone);
 	public static Item cookie = (new ItemFood(101, 1, 0.1F, false)).setIconCoord(12, 5).setItemName("cookie");
 	public static ItemShears shears = (ItemShears)(new ItemShears(103)).setIconCoord(13, 5).setItemName("shears");
 	public static Item melon = (new ItemFood(104, 2, 0.3F, false)).setIconCoord(13, 6).setItemName("melon");
@@ -137,36 +138,42 @@ public class Item implements ITextureProvider {
 	public static Item recordWard = (new ItemRecord(2009, "ward")).setIconCoord(9, 15).setItemName("record");
 	public static Item record11 = (new ItemRecord(2010, "11")).setIconCoord(10, 15).setItemName("record");
 	
-		
+	
 	// Misc
 	public static Item recipeBook = (new ItemRecipeBook(400)).setIconIndex(237).setItemName("RecipeBook").setMaxStackSize(1).setCreativeTab(CreativeTabs.tabMisc);
-	public static Item ingotCopper = (new Item(401)).setIconIndex(234).setItemName("ingotCopper").setCreativeTab(CreativeTabs.tabMaterials);
+
+	public static Item maceDiamond = (new ItemLongSword(420, EnumToolMaterial.EMERALD)).setIconCoord(3, 9).setItemName("maceDiamond");
+	public static Item hammerDiamond = (new ItemHammer(421, EnumToolMaterial.EMERALD)).setIconCoord(3, 10).setItemName("hammerDiamond");
+	public static Item battleDiamond = (new ItemBattleAxe(422, EnumToolMaterial.EMERALD)).setIconCoord(3, 11).setItemName("battleAxeDiamond");
+	public static Item knifeDiamond = (new ItemKnife(423, EnumToolMaterial.EMERALD)).setIconCoord(3, 12).setItemName("knifeDiamond");
 	
-	public static Item netherQuartz = (new Item(406)).setIconIndex(233).setItemName("netherQuartz").setCreativeTab(CreativeTabs.tabMaterials);
+	public static Item maceGold = (new ItemLongSword(424, EnumToolMaterial.GOLD)).setIconCoord(4, 9).setItemName("maceGold");
+	public static Item hammerGold = (new ItemHammer(425, EnumToolMaterial.GOLD)).setIconCoord(4, 10).setItemName("hammerGold");
+	public static Item battleGold = (new ItemBattleAxe(426, EnumToolMaterial.GOLD)).setIconCoord(4, 11).setItemName("battleAxeGold");
+	public static Item knifeGold = (new ItemKnife(427, EnumToolMaterial.GOLD)).setIconCoord(4, 12).setItemName("knifeGold");
 	
-	public static Item maceDiamond = (new ItemLongSword(420, EnumToolMaterial.EMERALD)).setIconCoord(3, 28).setItemName("maceDiamond");
-	public static Item hammerDiamond = (new ItemHammer(421, EnumToolMaterial.EMERALD)).setIconCoord(3, 29).setItemName("hammerDiamond");
-	public static Item battleDiamond = (new ItemBattleAxe(422, EnumToolMaterial.EMERALD)).setIconCoord(3, 30).setItemName("battleAxeDiamond");
-	public static Item knifeDiamond = (new ItemKnife(423, EnumToolMaterial.EMERALD)).setIconCoord(3, 31).setItemName("knifeDiamond");
+	public static Item maceSteel = (new ItemLongSword(428, EnumToolMaterial.IRON)).setIconCoord(2, 9).setItemName("maceSteel");
+	public static Item hammerSteel = (new ItemHammer(429, EnumToolMaterial.IRON)).setIconCoord(2, 10).setItemName("hammerSteel");
+	public static Item battleSteel = (new ItemBattleAxe(430, EnumToolMaterial.IRON)).setIconCoord(2, 11).setItemName("battleAxeSteel");
+	public static Item knifeSteel = (new ItemKnife(431, EnumToolMaterial.IRON)).setIconCoord(2, 12).setItemName("knifeSteel");
 	
-	public static Item maceGold = (new ItemLongSword(424, EnumToolMaterial.GOLD)).setIconCoord(4, 28).setItemName("maceGold");
-	public static Item hammerGold = (new ItemHammer(425, EnumToolMaterial.GOLD)).setIconCoord(4, 29).setItemName("hammerGold");
-	public static Item battleGold = (new ItemBattleAxe(426, EnumToolMaterial.GOLD)).setIconCoord(4, 30).setItemName("battleAxeGold");
-	public static Item knifeGold = (new ItemKnife(427, EnumToolMaterial.GOLD)).setIconCoord(4, 31).setItemName("knifeGold");
+	public static Item maceStone = (new ItemLongSword(432, EnumToolMaterial.STONE)).setIconCoord(1, 9).setItemName("maceStone");
+	public static Item hammerStone = (new ItemHammer(433, EnumToolMaterial.STONE)).setIconCoord(1, 10).setItemName("hammerStone");
+	public static Item battleStone = (new ItemBattleAxe(434, EnumToolMaterial.STONE)).setIconCoord(1, 11).setItemName("battleAxeStone");
+	public static Item knifeStone = (new ItemKnife(435, EnumToolMaterial.STONE)).setIconCoord(1, 12).setItemName("knifeStone");
 	
-	public static Item maceSteel = (new ItemLongSword(428, EnumToolMaterial.IRON)).setIconCoord(2, 28).setItemName("maceSteel");
-	public static Item hammerSteel = (new ItemHammer(429, EnumToolMaterial.IRON)).setIconCoord(2, 29).setItemName("hammerSteel");
-	public static Item battleSteel = (new ItemBattleAxe(430, EnumToolMaterial.IRON)).setIconCoord(2, 30).setItemName("battleAxeSteel");
-	public static Item knifeSteel = (new ItemKnife(431, EnumToolMaterial.IRON)).setIconCoord(2, 31).setItemName("knifeSteel");
+	public static Item battleWood = (new ItemBattleAxe(436, EnumToolMaterial.WOOD)).setIconCoord(0, 11).setItemName("battleAxeWood");
+	public static Item knifeWood = (new ItemKnife(437, EnumToolMaterial.WOOD)).setIconCoord(0, 12).setItemName("knifeWood");
 	
-	public static Item maceStone = (new ItemLongSword(432, EnumToolMaterial.STONE)).setIconCoord(1, 28).setItemName("maceStone");
-	public static Item hammerStone = (new ItemHammer(433, EnumToolMaterial.STONE)).setIconCoord(1, 29).setItemName("hammerStone");
-	public static Item battleStone = (new ItemBattleAxe(434, EnumToolMaterial.STONE)).setIconCoord(1, 30).setItemName("battleAxeStone");
-	public static Item knifeStone = (new ItemKnife(435, EnumToolMaterial.STONE)).setIconCoord(1, 31).setItemName("knifeStone");
+	public static Item magicWand = (new ItemMagicWand(999-256)).setIconCoord(8, 12).setItemName("magic wand");
 	
-	public static Item battleWood = (new ItemBattleAxe(436, EnumToolMaterial.WOOD)).setIconCoord(0, 30).setItemName("battleAxeWood");
-	public static Item knifeWood = (new ItemKnife(437, EnumToolMaterial.WOOD)).setIconCoord(0, 31).setItemName("knifeWood");
-	
+	protected static final Item armorPieceForTier [][] = new Item[][] {
+		{ Item.helmetLeather, Item.plateLeather, Item.legsLeather, Item.bootsLeather }, 
+		{ Item.helmetChain, Item.plateChain, Item.legsChain, Item.bootsChain },
+		{ Item.helmetGold, Item.plateGold, Item.legsGold, Item.bootsGold },
+		{ Item.helmetSteel, Item.plateSteel, Item.legsSteel, Item.bootsSteel },
+		{ Item.helmetDiamond, Item.plateDiamond, Item.legsDiamond, Item.bootsDiamond }
+	};
 	
 	public final int shiftedIndex;
 	protected int maxStackSize = 64;

@@ -169,11 +169,11 @@ public abstract class Packet {
 		}
 	}
 
-	protected void writeNBTTagCompound(NBTTagCompound nBTTagCompound1, DataOutputStream dataOutputStream2) throws IOException {
-		if(nBTTagCompound1 == null) {
+	protected void writeNBTTagCompound(NBTTagCompound compoundTag, DataOutputStream dataOutputStream2) throws IOException {
+		if(compoundTag == null) {
 			dataOutputStream2.writeShort(-1);
 		} else {
-			byte[] b3 = CompressedStreamTools.compress(nBTTagCompound1);
+			byte[] b3 = CompressedStreamTools.compress(compoundTag);
 			dataOutputStream2.writeShort((short)b3.length);
 			dataOutputStream2.write(b3);
 		}
@@ -228,6 +228,8 @@ public abstract class Packet {
 		addIdClassMapping(61, true, false, Packet61DoorChange.class);
 		addIdClassMapping(70, true, false, Packet70Bed.class);
 		addIdClassMapping(71, true, false, Packet71Weather.class);
+		addIdClassMapping(91, true, true, Packet91UpdateCommandBlock.class);
+		addIdClassMapping(95, true, false, Packet95UpdateDayOfTheYear.class);
 		addIdClassMapping(100, true, false, Packet100OpenWindow.class);
 		addIdClassMapping(101, true, true, Packet101CloseWindow.class);
 		addIdClassMapping(102, false, true, Packet102WindowClick.class);

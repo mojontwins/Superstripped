@@ -10,8 +10,8 @@ public class ExtendedBlockStorage {
 	private NibbleArray blocklightArray;
 	private NibbleArray skylightArray;
 
-	public ExtendedBlockStorage(int i1) {
-		this.yBase = i1;
+	public ExtendedBlockStorage(int yBase) {
+		this.yBase = yBase;
 		this.blockLSBArray = new byte[4096];
 		this.blockMetadataArray = new NibbleArray(this.blockLSBArray.length, 4);
 		this.skylightArray = new NibbleArray(this.blockLSBArray.length, 4);
@@ -22,52 +22,52 @@ public class ExtendedBlockStorage {
 		this.skylightArray = new NibbleArray(this.blockLSBArray.length, 4);
 	}
 
-	public int getExtBlockID(int i1, int i2, int i3) {
-		int i4 = this.blockLSBArray[i2 << 8 | i3 << 4 | i1] & 255;
-		return this.blockMSBArray != null ? this.blockMSBArray.get(i1, i2, i3) << 8 | i4 : i4;
+	public int getExtBlockID(int x, int y, int z) {
+		int id = this.blockLSBArray[y << 8 | z << 4 | x] & 255;
+		return this.blockMSBArray != null ? this.blockMSBArray.get(x, y, z) << 8 | id : id;
 	}
 
-	public void setExtBlockID(int i1, int i2, int i3, int i4) {
-		int i5 = this.blockLSBArray[i2 << 8 | i3 << 4 | i1] & 255;
+	public void setExtBlockID(int x, int y, int z, int id) {
+		int prevId = this.blockLSBArray[y << 8 | z << 4 | x] & 255;
 		if(this.blockMSBArray != null) {
-			i5 |= this.blockMSBArray.get(i1, i2, i3) << 8;
+			prevId |= this.blockMSBArray.get(x, y, z) << 8;
 		}
 
-		if(i5 == 0 && i4 != 0) {
+		if(prevId == 0 && id != 0) {
 			++this.blockRefCount;
-			if(Block.blocksList[i4] != null && Block.blocksList[i4].getTickRandomly()) {
+			if(Block.blocksList[id] != null && Block.blocksList[id].getTickRandomly()) {
 				++this.tickRefCount;
 			}
-		} else if(i5 != 0 && i4 == 0) {
+		} else if(prevId != 0 && id == 0) {
 			--this.blockRefCount;
-			if(Block.blocksList[i5] != null && Block.blocksList[i5].getTickRandomly()) {
+			if(Block.blocksList[prevId] != null && Block.blocksList[prevId].getTickRandomly()) {
 				--this.tickRefCount;
 			}
-		} else if(Block.blocksList[i5] != null && Block.blocksList[i5].getTickRandomly() && (Block.blocksList[i4] == null || !Block.blocksList[i4].getTickRandomly())) {
+		} else if(Block.blocksList[prevId] != null && Block.blocksList[prevId].getTickRandomly() && (Block.blocksList[id] == null || !Block.blocksList[id].getTickRandomly())) {
 			--this.tickRefCount;
-		} else if((Block.blocksList[i5] == null || !Block.blocksList[i5].getTickRandomly()) && Block.blocksList[i4] != null && Block.blocksList[i4].getTickRandomly()) {
+		} else if((Block.blocksList[prevId] == null || !Block.blocksList[prevId].getTickRandomly()) && Block.blocksList[id] != null && Block.blocksList[id].getTickRandomly()) {
 			++this.tickRefCount;
 		}
 
-		this.blockLSBArray[i2 << 8 | i3 << 4 | i1] = (byte)(i4 & 255);
-		if(i4 > 255) {
+		this.blockLSBArray[y << 8 | z << 4 | x] = (byte)(id & 255);
+		if(id > 255) {
 			if(this.blockMSBArray == null) {
 				this.blockMSBArray = new NibbleArray(this.blockLSBArray.length, 4);
 			}
 
-			this.blockMSBArray.set(i1, i2, i3, (i4 & 3840) >> 8);
+			this.blockMSBArray.set(x, y, z, (id & 3840) >> 8);
 		} else if(this.blockMSBArray != null) {
-			this.blockMSBArray.set(i1, i2, i3, 0);
+			this.blockMSBArray.set(x, y, z, 0);
 		}
 
 	}
 
-	public int getExtBlockMetadata(int i1, int i2, int i3) {
-		return this.blockMetadataArray.get(i1, i2, i3);
+	public int getExtBlockMetadata(int x, int y, int z) {
+		return this.blockMetadataArray.get(x, y, z);
 	}
 
-	public void setExtBlockMetadata(int i1, int i2, int i3, int i4) {
-		this.blockMetadataArray.set(i1, i2, i3, i4);
+	public void setExtBlockMetadata(int x, int y, int z, int id) {
+		this.blockMetadataArray.set(x, y, z, id);
 	}
 
 	public boolean getIsEmpty() {
@@ -82,39 +82,39 @@ public class ExtendedBlockStorage {
 		return this.yBase;
 	}
 
-	public void setExtSkylightValue(int i1, int i2, int i3, int i4) {
-		this.skylightArray.set(i1, i2, i3, i4);
+	public void setExtSkylightValue(int x, int y, int z, int id) {
+		this.skylightArray.set(x, y, z, id);
 	}
 
-	public int getExtSkylightValue(int i1, int i2, int i3) {
-		return this.skylightArray.get(i1, i2, i3);
+	public int getExtSkylightValue(int x, int y, int z) {
+		return this.skylightArray.get(x, y, z);
 	}
 
-	public void setExtBlocklightValue(int i1, int i2, int i3, int i4) {
-		this.blocklightArray.set(i1, i2, i3, i4);
+	public void setExtBlocklightValue(int x, int y, int z, int id) {
+		this.blocklightArray.set(x, y, z, id);
 	}
 
-	public int getExtBlocklightValue(int i1, int i2, int i3) {
-		return this.blocklightArray.get(i1, i2, i3);
+	public int getExtBlocklightValue(int x, int y, int z) {
+		return this.blocklightArray.get(x, y, z);
 	}
 
-	public void func_48708_d() {
+	public void cleanupAndUpdateCounters() {
 		this.blockRefCount = 0;
 		this.tickRefCount = 0;
 
-		for(int i1 = 0; i1 < 16; ++i1) {
-			for(int i2 = 0; i2 < 16; ++i2) {
-				for(int i3 = 0; i3 < 16; ++i3) {
-					int i4 = this.getExtBlockID(i1, i2, i3);
-					if(i4 > 0) {
-						if(Block.blocksList[i4] == null) {
-							this.blockLSBArray[i2 << 8 | i3 << 4 | i1] = 0;
+		for(int x = 0; x < 16; ++x) {
+			for(int y = 0; y < 16; ++y) {
+				for(int z = 0; z < 16; ++z) {
+					int id = this.getExtBlockID(x, y, z);
+					if(id > 0) {
+						if(Block.blocksList[id] == null) {
+							this.blockLSBArray[y << 8 | z << 4 | x] = 0;
 							if(this.blockMSBArray != null) {
-								this.blockMSBArray.set(i1, i2, i3, 0);
+								this.blockMSBArray.set(x, y, z, 0);
 							}
 						} else {
 							++this.blockRefCount;
-							if(Block.blocksList[i4].getTickRandomly()) {
+							if(Block.blocksList[id].getTickRandomly()) {
 								++this.tickRefCount;
 							}
 						}
@@ -125,18 +125,18 @@ public class ExtendedBlockStorage {
 
 	}
 
-	public void func_48711_e() {
+	public void whoKnows() {
 	}
 
-	public int func_48700_f() {
+	public int blockCount() {
 		return this.blockRefCount;
 	}
 
-	public byte[] func_48692_g() {
+	public byte[] getBlockLSBArray() {
 		return this.blockLSBArray;
 	}
 
-	public void func_48715_h() {
+	public void resetMSBarray() {
 		this.blockMSBArray = null;
 	}
 
@@ -144,7 +144,7 @@ public class ExtendedBlockStorage {
 		return this.blockMSBArray;
 	}
 
-	public NibbleArray func_48697_j() {
+	public NibbleArray getMetadataArray() {
 		return this.blockMetadataArray;
 	}
 
@@ -160,20 +160,20 @@ public class ExtendedBlockStorage {
 		this.blockLSBArray = b1;
 	}
 
-	public void setBlockMSBArray(NibbleArray nibbleArray1) {
-		this.blockMSBArray = nibbleArray1;
+	public void setBlockMSBArray(NibbleArray nibbleArray) {
+		this.blockMSBArray = nibbleArray;
 	}
 
-	public void setBlockMetadataArray(NibbleArray nibbleArray1) {
-		this.blockMetadataArray = nibbleArray1;
+	public void setBlockMetadataArray(NibbleArray nibbleArray) {
+		this.blockMetadataArray = nibbleArray;
 	}
 
-	public void setBlocklightArray(NibbleArray nibbleArray1) {
-		this.blocklightArray = nibbleArray1;
+	public void setBlocklightArray(NibbleArray nibbleArray) {
+		this.blocklightArray = nibbleArray;
 	}
 
-	public void setSkylightArray(NibbleArray nibbleArray1) {
-		this.skylightArray = nibbleArray1;
+	public void setSkylightArray(NibbleArray nibbleArray) {
+		this.skylightArray = nibbleArray;
 	}
 
 	public NibbleArray createBlockMSBArray() {

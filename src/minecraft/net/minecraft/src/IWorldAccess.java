@@ -18,4 +18,8 @@ public interface IWorldAccess {
 	void doNothingWithTileEntity(int i1, int i2, int i3, TileEntity tileEntity4);
 
 	void playAuxSFX(EntityPlayer entityPlayer1, int i2, int i3, int i4, int i5, int i6);
+
+	void updateAllRenderers();
+
+	void showString(String string);
 }

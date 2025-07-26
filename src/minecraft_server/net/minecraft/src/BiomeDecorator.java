@@ -10,6 +10,7 @@ public class BiomeDecorator {
 	protected BiomeGenBase biome;
 	protected WorldGenerator clayGen = new WorldGenClay(4);
 	protected WorldGenerator sandGen = new WorldGenSand(7, Block.sand.blockID);
+	protected WorldGenerator surfaceSandGen = new WorldGenSandSurface(8, Block.sand.blockID);
 	protected WorldGenerator gravelAsSandGen = new WorldGenSand(6, Block.gravel.blockID);
 	protected WorldGenerator dirtGen = new WorldGenMinable(Block.dirt.blockID, 32);
 	protected WorldGenerator gravelGen = new WorldGenMinable(Block.gravel.blockID, 32);
@@ -37,6 +38,7 @@ public class BiomeDecorator {
 	public int cactiPerChunk = 0;
 	public int sandPerChunk = 1;
 	public int sandPerChunk2 = 3;
+	public int surfaceSandChancePerChunk = 4;
 	public int clayPerChunk = 1;
 	public int bigMushroomsPerChunk = 0;
 	public int pumpkinChance = 32;
@@ -44,6 +46,8 @@ public class BiomeDecorator {
 	public boolean hadFeature = false;
 	
 	public int maxTerrainHeight = 128;
+	
+	public boolean skyDecorator = false;
 	
 	public NoiseGeneratorOctavesAlpha mobSpawnerNoise = null;
 
@@ -68,11 +72,16 @@ public class BiomeDecorator {
 			this.currentWorld = null;
 			this.randomGenerator = null;
 			this.maxTerrainHeight = world1.getWorldInfo().getTerrainType().getMaxTerrainHeight(world1);
+			this.skyDecorator = world1.worldProvider instanceof WorldProviderSkyClassic;
 		}
 	}
 
 	protected void decorate() {
-		this.generateOres();
+		if(this.skyDecorator) {
+			this.generateOresSky();
+		} else {
+			this.generateOres();
+		}
 		
 		int i1;
 		int i2;
@@ -102,7 +111,7 @@ public class BiomeDecorator {
 			// Here : Add tree noise, if needed (alpha/beta population).
 			// For pure Alpha tree density leave extraTreesPerChunk = 0
 			
-			if(GameRules.noiseTreeDensity) {
+			if(GameRules.boolRule("noiseTreeDensity")) {
 				double noiseScaler = 0.5D;
 				int treeBaseAttempts = (int)((this.mobSpawnerNoise.generateNoiseOctaves((double)this.chunk_X * noiseScaler, (double)this.chunk_Z * noiseScaler) / 8.0D + this.randomGenerator.nextDouble() * 4.0D + 4.0D) / 3.0D);
 				if(treeBaseAttempts < 0) {
@@ -277,6 +286,24 @@ public class BiomeDecorator {
 		this.genStandardOre1(2, this.goldGen, 0, 32);
 		this.genStandardOre1(8, this.redstoneGen, 0, 16);
 		this.genStandardOre1(1, this.diamondGen, 0, 16);
-		if(GameRules.generateLapislazuli) this.genStandardOre2(1, this.lapisGen, 16, 16);
+		if(GameRules.boolRule("generateLapislazuli")) this.genStandardOre2(1, this.lapisGen, 16, 16);
+	}
+	
+	protected void generateOresSky() {
+		if(this.randomGenerator.nextInt(this.surfaceSandChancePerChunk) == 0) {
+			int x = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
+			int z = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
+			this.surfaceSandGen.generate(this.currentWorld, this.randomGenerator, x, this.currentWorld.getTopSolidOrLiquidBlock(x, z), z);
+		}
+		
+		this.genStandardOre1(20, this.dirtGen, 0, 128);
+		this.genStandardOre1(10, this.gravelGen, 0, 128);
+		this.genStandardOre1(20, this.sandGen, 0, 128);
+		this.genStandardOre1(20, this.coalGen, 0, 128);
+		this.genStandardOre1(20, this.ironGen, 0, 72);
+		this.genStandardOre1(2, this.goldGen, 0, 32);
+		this.genStandardOre1(8, this.redstoneGen, 0, 32);
+		this.genStandardOre1(2, this.diamondGen, 0, 32);
+		if(GameRules.boolRule("generateLapislazuli")) this.genStandardOre2(1, this.lapisGen, 16, 16);
 	}
 }

@@ -40,7 +40,6 @@ public final class ItemStack {
 	}
 
 	public ItemStack(int i1, int i2, int i3) {
-		this.stackSize = 0;
 		this.itemID = i1;
 		this.stackSize = i2;
 		this.itemDamage = i3;
@@ -92,23 +91,23 @@ public final class ItemStack {
 		return this.getItem().onFoodEaten(this, world1, entityPlayer2);
 	}
 
-	public NBTTagCompound writeToNBT(NBTTagCompound nBTTagCompound1) {
-		nBTTagCompound1.setShort("id", (short)this.itemID);
-		nBTTagCompound1.setByte("Count", (byte)this.stackSize);
-		nBTTagCompound1.setShort("Damage", (short)this.itemDamage);
+	public NBTTagCompound writeToNBT(NBTTagCompound compoundTag) {
+		compoundTag.setShort("id", (short)this.itemID);
+		compoundTag.setByte("Count", (byte)this.stackSize);
+		compoundTag.setShort("Damage", (short)this.itemDamage);
 		if(this.stackTagCompound != null) {
-			nBTTagCompound1.setTag("tag", this.stackTagCompound);
+			compoundTag.setTag("tag", this.stackTagCompound);
 		}
 
-		return nBTTagCompound1;
+		return compoundTag;
 	}
 
-	public void readFromNBT(NBTTagCompound nBTTagCompound1) {
-		this.itemID = nBTTagCompound1.getShort("id");
-		this.stackSize = nBTTagCompound1.getByte("Count");
-		this.itemDamage = nBTTagCompound1.getShort("Damage");
-		if(nBTTagCompound1.hasKey("tag")) {
-			this.stackTagCompound = nBTTagCompound1.getCompoundTag("tag");
+	public void readFromNBT(NBTTagCompound compoundTag) {
+		this.itemID = compoundTag.getShort("id");
+		this.stackSize = compoundTag.getByte("Count");
+		this.itemDamage = compoundTag.getShort("Damage");
+		if(compoundTag.hasKey("tag")) {
+			this.stackTagCompound = compoundTag.getCompoundTag("tag");
 		}
 
 	}
@@ -280,8 +279,8 @@ public final class ItemStack {
 		return this.stackTagCompound == null ? null : (NBTTagList)this.stackTagCompound.getTag("ench");
 	}
 
-	public void setTagCompound(NBTTagCompound nBTTagCompound1) {
-		this.stackTagCompound = nBTTagCompound1;
+	public void setTagCompound(NBTTagCompound compoundTag) {
+		this.stackTagCompound = compoundTag;
 	}
 
 	public List<String> getItemNameandInformation() {

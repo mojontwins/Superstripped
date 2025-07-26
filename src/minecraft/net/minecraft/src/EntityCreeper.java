@@ -32,17 +32,17 @@ public class EntityCreeper extends EntityMob implements IMob {
 		this.dataWatcher.addObject(17, (byte)0);
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
 		if(this.dataWatcher.getWatchableObjectByte(17) == 1) {
-			nBTTagCompound1.setBoolean("powered", true);
+			compoundTag.setBoolean("powered", true);
 		}
 
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.dataWatcher.updateObject(17, (byte)(nBTTagCompound1.getBoolean("powered") ? 1 : 0));
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.dataWatcher.updateObject(17, (byte)(compoundTag.getBoolean("powered") ? 1 : 0));
 	}
 
 	public void onUpdate() {

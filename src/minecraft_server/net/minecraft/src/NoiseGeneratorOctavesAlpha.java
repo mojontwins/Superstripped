@@ -28,8 +28,6 @@ public class NoiseGeneratorOctavesAlpha extends NoiseGenerator {
 		return d5;
 	}
 
-	// P
-	
 	public double[] generateNoiseOctaves(double[] data, double d2, double d4, double d6, int x, int y, int z, double d11, double d13, double d15) {
 		if(data == null) {
 			data = new double[x * y * z];

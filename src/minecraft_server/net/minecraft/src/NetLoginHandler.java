@@ -79,28 +79,45 @@ public class NetLoginHandler extends NetHandler {
 		}
 	}
 
-	public void doLogin(Packet1Login packet1Login1) {
-		EntityPlayerMP entityPlayerMP2 = this.mcServer.configManager.login(this, packet1Login1.username);
-		if(entityPlayerMP2 != null) {
-			this.mcServer.configManager.readPlayerDataFromFile(entityPlayerMP2);
-			entityPlayerMP2.setWorld(this.mcServer.getWorldManager(entityPlayerMP2.dimension));
-			entityPlayerMP2.itemInWorldManager.setWorld((WorldServer)entityPlayerMP2.worldObj);
-			logger.info(this.getUserAndIPString() + " logged in with entity id " + entityPlayerMP2.entityId + " at (" + entityPlayerMP2.posX + ", " + entityPlayerMP2.posY + ", " + entityPlayerMP2.posZ + ")");
-			WorldServer worldServer3 = this.mcServer.getWorldManager(entityPlayerMP2.dimension);
-			ChunkCoordinates chunkCoordinates4 = worldServer3.getSpawnPoint();
-			entityPlayerMP2.itemInWorldManager.s_func_35695_b(worldServer3.getWorldInfo().getGameType());
-			NetServerHandler netServerHandler5 = new NetServerHandler(this.mcServer, this.netManager, entityPlayerMP2);
-			netServerHandler5.sendPacket(new Packet1Login("", entityPlayerMP2.entityId, worldServer3.getWorldInfo().getTerrainType(), entityPlayerMP2.itemInWorldManager.getGameType(), worldServer3.worldProvider.worldType, (byte)worldServer3.difficultySetting, (byte)worldServer3.getHeight(), (byte)this.mcServer.configManager.getMaxPlayers()));
-			netServerHandler5.sendPacket(new Packet6SpawnPosition(chunkCoordinates4.posX, chunkCoordinates4.posY, chunkCoordinates4.posZ));
-			netServerHandler5.sendPacket(new Packet202PlayerAbilities(entityPlayerMP2.capabilities));
-			this.mcServer.configManager.updateTimeAndWeather(entityPlayerMP2, worldServer3);
-			this.mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat("\u00a7e" + entityPlayerMP2.username + " joined the game."));
-			this.mcServer.configManager.playerLoggedIn(entityPlayerMP2);
-			netServerHandler5.teleportTo(entityPlayerMP2.posX, entityPlayerMP2.posY, entityPlayerMP2.posZ, entityPlayerMP2.rotationYaw, entityPlayerMP2.rotationPitch);
-			this.mcServer.networkServer.addPlayer(netServerHandler5);
-			netServerHandler5.sendPacket(new Packet4UpdateTime(worldServer3.getWorldTime()));
+	public void doLogin(Packet1Login packet) {
+		EntityPlayerMP thePlayer = this.mcServer.configManager.login(this, packet.username);
 
-			entityPlayerMP2.s_func_20057_k();
+		if(thePlayer != null) {
+			this.mcServer.configManager.readPlayerDataFromFile(thePlayer);
+			thePlayer.setWorld(this.mcServer.getWorldManager(thePlayer.dimension));
+			thePlayer.itemInWorldManager.setWorld((WorldServer)thePlayer.worldObj);
+
+			logger.info(this.getUserAndIPString() + " logged in with entity id " + thePlayer.entityId + " at (" + thePlayer.posX + ", " + thePlayer.posY + ", " + thePlayer.posZ + ")");
+
+			WorldServer theWorld = this.mcServer.getWorldManager(thePlayer.dimension);
+			ChunkCoordinates chunkCoordinates4 = theWorld.getSpawnPoint();
+
+			thePlayer.itemInWorldManager.setGameMode(theWorld.getWorldInfo().getGameType());
+			
+			NetServerHandler netHandler = new NetServerHandler(this.mcServer, this.netManager, thePlayer);
+			netHandler.sendPacket(new Packet1Login(
+					"", 
+					thePlayer.entityId, 
+					theWorld.getWorldInfo().getTerrainType(), 
+					thePlayer.itemInWorldManager.getGameType(), 
+					theWorld.worldProvider.worldType, 
+					(byte)theWorld.difficultySetting, 
+					(byte)theWorld.getHeight(), 
+					(byte)this.mcServer.configManager.getMaxPlayers(),
+					theWorld.getWorldInfo().isEnableSeasons()));
+			netHandler.sendPacket(new Packet6SpawnPosition(chunkCoordinates4.posX, chunkCoordinates4.posY, chunkCoordinates4.posZ));
+			netHandler.sendPacket(new Packet202PlayerAbilities(thePlayer.capabilities));
+
+			this.mcServer.configManager.updateTimeAndWeather(thePlayer, theWorld);
+			this.mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat("\u00a7e" + thePlayer.username + " joined the game."));
+			this.mcServer.configManager.playerLoggedIn(thePlayer);
+			
+			netHandler.teleportTo(thePlayer.posX, thePlayer.posY, thePlayer.posZ, thePlayer.rotationYaw, thePlayer.rotationPitch);
+			this.mcServer.networkServer.addPlayer(netHandler);
+			netHandler.sendPacket(new Packet4UpdateTime(theWorld.getWorldTime()));
+			netHandler.sendPacket(new Packet95UpdateDayOfTheYear(Seasons.dayOfTheYear));
+
+			thePlayer.s_func_20057_k();
 		}
 
 		this.finishedProcessing = true;

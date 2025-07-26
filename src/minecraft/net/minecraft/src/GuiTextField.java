@@ -16,7 +16,9 @@ public class GuiTextField extends Gui {
 	private boolean enableBackgroundDrawing = true;
 	private boolean canLoseFocus = true;
 	private boolean isFocused = false;
-	private boolean isEnabled = true;
+	public boolean isEnabled = true;
+
+	private GuiScreen parentGuiScreen;
 
 	private int field_50041_n = 0;
 	private int cursorPosition = 0;
@@ -24,13 +26,19 @@ public class GuiTextField extends Gui {
 	private int enabledColor = 14737632;
 	private int disabledColor = 7368816;
 	private boolean field_73823_s = true;
+	
+	public GuiTextField(GuiScreen guiScreen, FontRenderer fontRenderer, int x, int y, int w, int h) {
+		this(guiScreen, fontRenderer, x, y, w, h, "");
+	}
 
-	public GuiTextField(FontRenderer fontRenderer1, int i2, int i3, int i4, int i5) {
+	public GuiTextField(GuiScreen guiScreen, FontRenderer fontRenderer1, int x, int y, int w, int h, String s) {
+		this.parentGuiScreen = guiScreen;
 		this.fontRenderer = fontRenderer1;
-		this.xPos = i2;
-		this.yPos = i3;
-		this.width = i4;
-		this.height = i5;
+		this.xPos = x;
+		this.yPos = y;
+		this.width = w;
+		this.height = h;
+		this.setText(s);
 	}
 
 	public void updateCursorCounter() {
@@ -189,6 +197,9 @@ public class GuiTextField extends Gui {
 				return true;
 			case '\u0003':
 				GuiScreen.func_50050_a(this.func_50039_c());
+				return true;
+			case 9:
+				this.parentGuiScreen.selectNextField();
 				return true;
 			case '\u0016':
 				this.func_50031_b(GuiScreen.getClipboardString());

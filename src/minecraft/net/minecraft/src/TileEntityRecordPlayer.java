@@ -3,15 +3,15 @@ package net.minecraft.src;
 public class TileEntityRecordPlayer extends TileEntity {
 	public int record;
 
-	public void readFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readFromNBT(nBTTagCompound1);
-		this.record = nBTTagCompound1.getInteger("Record");
+	public void readFromNBT(NBTTagCompound compoundTag) {
+		super.readFromNBT(compoundTag);
+		this.record = compoundTag.getInteger("Record");
 	}
 
-	public void writeToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeToNBT(nBTTagCompound1);
+	public void writeToNBT(NBTTagCompound compoundTag) {
+		super.writeToNBT(compoundTag);
 		if(this.record > 0) {
-			nBTTagCompound1.setInteger("Record", this.record);
+			compoundTag.setInteger("Record", this.record);
 		}
 
 	}

@@ -339,14 +339,14 @@ public class BlockChest extends BlockContainer {
 			return true;
 		} else if(world1.isBlockNormalCube(i2, i3 + 1, i4)) {
 			return true;
-		} else if(func_50075_j(world1, i2, i3, i4)) {
+		} else if(makeCatWantThis(world1, i2, i3, i4)) {
 			return true;
-		} else if(world1.getBlockId(i2 - 1, i3, i4) == this.blockID && (world1.isBlockNormalCube(i2 - 1, i3 + 1, i4) || func_50075_j(world1, i2 - 1, i3, i4))) {
+		} else if(world1.getBlockId(i2 - 1, i3, i4) == this.blockID && (world1.isBlockNormalCube(i2 - 1, i3 + 1, i4) || makeCatWantThis(world1, i2 - 1, i3, i4))) {
 			return true;
-		} else if(world1.getBlockId(i2 + 1, i3, i4) == this.blockID && (world1.isBlockNormalCube(i2 + 1, i3 + 1, i4) || func_50075_j(world1, i2 + 1, i3, i4))) {
+		} else if(world1.getBlockId(i2 + 1, i3, i4) == this.blockID && (world1.isBlockNormalCube(i2 + 1, i3 + 1, i4) || makeCatWantThis(world1, i2 + 1, i3, i4))) {
 			return true;
-		} else if(world1.getBlockId(i2, i3, i4 - 1) != this.blockID || !world1.isBlockNormalCube(i2, i3 + 1, i4 - 1) && !func_50075_j(world1, i2, i3, i4 - 1)) {
-			if(world1.getBlockId(i2, i3, i4 + 1) != this.blockID || !world1.isBlockNormalCube(i2, i3 + 1, i4 + 1) && !func_50075_j(world1, i2, i3, i4 + 1)) {
+		} else if(world1.getBlockId(i2, i3, i4 - 1) != this.blockID || !world1.isBlockNormalCube(i2, i3 + 1, i4 - 1) && !makeCatWantThis(world1, i2, i3, i4 - 1)) {
+			if(world1.getBlockId(i2, i3, i4 + 1) != this.blockID || !world1.isBlockNormalCube(i2, i3 + 1, i4 + 1) && !makeCatWantThis(world1, i2, i3, i4 + 1)) {
 				if(world1.getBlockId(i2 - 1, i3, i4) == this.blockID) {
 					object6 = new InventoryLargeChest("Large chest", (TileEntityChest)world1.getBlockTileEntity(i2 - 1, i3, i4), (IInventory)object6);
 				}
@@ -381,7 +381,7 @@ public class BlockChest extends BlockContainer {
 		return new TileEntityChest();
 	}
 
-	private static boolean func_50075_j(World world0, int i1, int i2, int i3) {
+	private static boolean makeCatWantThis(World world0, int i1, int i2, int i3) {
 		Iterator<Entity> iterator4 = world0.getEntitiesWithinAABB(EntityOcelot.class, AxisAlignedBB.getBoundingBoxFromPool((double)i1, (double)(i2 + 1), (double)i3, (double)(i1 + 1), (double)(i2 + 2), (double)(i3 + 1))).iterator();
 
 		EntityOcelot entityOcelot6;

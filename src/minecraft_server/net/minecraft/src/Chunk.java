@@ -890,7 +890,7 @@ public class Chunk {
 		for(int i3 = 0; i3 < i2; ++i3) {
 			ExtendedBlockStorage extendedBlockStorage4 = extendedBlockStorage1[i3];
 			if(extendedBlockStorage4 != null) {
-				extendedBlockStorage4.func_48711_e();
+				extendedBlockStorage4.whoKnows();
 			}
 		}
 
@@ -978,7 +978,7 @@ public class Chunk {
 					this.storageArrays[i6] = new ExtendedBlockStorage(i6 << 4);
 				}
 
-				byte[] b7 = this.storageArrays[i6].func_48692_g();
+				byte[] b7 = this.storageArrays[i6].getBlockLSBArray();
 				System.arraycopy(b1, i5, b7, 0, b7.length);
 				i5 += b7.length;
 			} else if(z4 && this.storageArrays[i6] != null) {
@@ -989,7 +989,7 @@ public class Chunk {
 		NibbleArray nibbleArray8;
 		for(i6 = 0; i6 < this.storageArrays.length; ++i6) {
 			if((i2 & 1 << i6) != 0 && this.storageArrays[i6] != null) {
-				nibbleArray8 = this.storageArrays[i6].func_48697_j();
+				nibbleArray8 = this.storageArrays[i6].getMetadataArray();
 				System.arraycopy(b1, i5, nibbleArray8.data, 0, nibbleArray8.data.length);
 				i5 += nibbleArray8.data.length;
 			}
@@ -1025,7 +1025,7 @@ public class Chunk {
 					i5 += nibbleArray8.data.length;
 				}
 			} else if(z4 && this.storageArrays[i6] != null && this.storageArrays[i6].getBlockMSBArray() != null) {
-				this.storageArrays[i6].func_48715_h();
+				this.storageArrays[i6].resetMSBarray();
 			}
 		}
 
@@ -1035,7 +1035,7 @@ public class Chunk {
 
 		for(i6 = 0; i6 < this.storageArrays.length; ++i6) {
 			if(this.storageArrays[i6] != null && (i2 & 1 << i6) != 0) {
-				this.storageArrays[i6].func_48708_d();
+				this.storageArrays[i6].cleanupAndUpdateCounters();
 			}
 		}
 

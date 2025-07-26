@@ -22,6 +22,8 @@ import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
 
 import com.misc.moreresources.MoreResourcesInstaller;
+import com.mojontwins.minecraft.commands.CommandProcessor;
+import com.mojontwins.minecraft.worldedit.WorldEdit;
 
 import net.minecraft.src.AnvilSaveConverter;
 import net.minecraft.src.AxisAlignedBB;
@@ -104,7 +106,6 @@ import net.minecraft.src.TexturePackList;
 import net.minecraft.src.TextureWatchFX;
 import net.minecraft.src.TextureWaterFX;
 import net.minecraft.src.TextureWaterFlowFX;
-import net.minecraft.src.ThreadCheckHasPaid;
 import net.minecraft.src.ThreadClientSleep;
 import net.minecraft.src.ThreadDownloadResources;
 import net.minecraft.src.Timer;
@@ -143,7 +144,7 @@ public abstract class Minecraft implements Runnable {
 	public LoadingScreenRenderer loadingScreen;
 	public EntityRenderer entityRenderer;
 	private ThreadDownloadResources downloadResourcesThread;
-	private int ticksRan = 0;
+	public int ticksRan = 0;
 	private int leftClickCounter = 0;
 	private int tempDisplayWidth;
 	private int tempDisplayHeight;
@@ -275,6 +276,10 @@ public abstract class Minecraft implements Runnable {
 		ColorizerFoliage.setFoliageBiomeColorizer(this.renderEngine.getTextureContents("/misc/foliagecolor.png"));
 		ColorizerFog.setFogBiomeColorizer(this.renderEngine.getTextureContents("/misc/fogcolor.png"));
 
+		// Init commands
+		CommandProcessor.registerCommands();
+		WorldEdit.registerCommands();
+		
 		this.entityRenderer = new EntityRenderer(this);
 		RenderManager.instance.itemRenderer = new ItemRenderer(this);
 		
@@ -590,10 +595,6 @@ public abstract class Minecraft implements Runnable {
 
 			this.sndManager.setListener(this.thePlayer, this.timer.renderPartialTicks);
 
-			if(this.theWorld != null) {
-				this.theWorld.updatingLighting();
-			}
-
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			if(!Keyboard.isKeyDown(Keyboard.KEY_F7)) {
 				Display.update();
@@ -890,18 +891,22 @@ public abstract class Minecraft implements Runnable {
 
 	}
 
+	/*
 	private void startThreadCheckHasPaid() {
 		(new ThreadCheckHasPaid(this)).start();
 	}
+	*/
 
 	public void runTick() {
 		if(this.rightClickDelayTimer > 0) {
 			--this.rightClickDelayTimer;
 		}
 
+		/*
 		if(this.ticksRan == 6000) {
 			this.startThreadCheckHasPaid();
 		}
+		*/
 
 		if(!this.isGamePaused) {
 			this.ingameGUI.updateTick();
@@ -1180,12 +1185,12 @@ public abstract class Minecraft implements Runnable {
 			}
 
 			ISaveHandler saveHandler = this.saveLoader.getSaveLoader(saveName, false);
-			
+
 			World world = null;
 			
 			// When loading a world from disk, worldSettings == null!
 			world = new World(saveHandler, displayName, worldSettings);
-			
+		
 			if(world.isNewWorld) {
 				this.changeWorld2(world, Translator.translateToLocal("menu.generatingLevel"));
 			} else {
@@ -1286,20 +1291,20 @@ public abstract class Minecraft implements Runnable {
 		this.startWorld(string1, string2, new WorldSettings(0L, 0, true, false, false, WorldType.DEFAULT));
 	}
 
-	private void preloadWorld(String string1) {
+	private void preloadWorld(String message) {
 		if(this.loadingScreen != null) {
-			this.loadingScreen.printText(string1);
+			this.loadingScreen.printText(message);
 			this.loadingScreen.displayLoadingString(Translator.translateToLocal("menu.generatingTerrain"));
 		}
 
-		short s2 = 128;
+		short radius = 128;
 		if(this.playerController.func_35643_e()) {
-			s2 = 64;
+			radius = 64;
 		}
 
-		int i3 = 0;
-		int i4 = s2 * 2 / 16 + 1;
-		i4 *= i4;
+		int progress = 0;
+		int maxChunks = radius * 2 / 16 + 1;
+		maxChunks *= maxChunks;
 		ChunkCoordinates chunkCoordinates6 = this.theWorld.getSpawnPoint();
 		
 		// Make sure the spawn chunk loads FIRST
@@ -1310,17 +1315,14 @@ public abstract class Minecraft implements Runnable {
 			chunkCoordinates6.posZ = (int)this.thePlayer.posZ;
 		}
 
-		for(int i10 = -s2; i10 <= s2; i10 += 16) {
-			for(int i8 = -s2; i8 <= s2; i8 += 16) {
+		for(int dx = -radius; dx <= radius; dx += 16) {
+			for(int dz = -radius; dz <= radius; dz += 16) {
 				if(this.loadingScreen != null) {
-					this.loadingScreen.setLoadingProgress(i3++ * 100 / i4);
+					this.loadingScreen.setLoadingProgress(progress++ * 100 / maxChunks);
 				}
 
-				this.theWorld.getBlockId(chunkCoordinates6.posX + i10, 64, chunkCoordinates6.posZ + i8);
-				if(!this.playerController.func_35643_e()) {
-					while(this.theWorld.updatingLighting()) {
-					}
-				}
+				this.theWorld.getBlockId(chunkCoordinates6.posX + dx, 64, chunkCoordinates6.posZ + dz);
+				
 			}
 		}
 

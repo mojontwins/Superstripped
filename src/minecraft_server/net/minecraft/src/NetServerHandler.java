@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import com.mojontwins.minecraft.commands.TileEntityCommandBlock;
+
 import net.minecraft.server.MinecraftServer;
 
 public class NetServerHandler extends NetHandler implements ICommandListener {
@@ -693,5 +695,25 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
 	public void func_50100_a(Packet202PlayerAbilities packet202PlayerAbilities1) {
 		this.playerEntity.capabilities.isFlying = packet202PlayerAbilities1.isFlying && this.playerEntity.capabilities.allowFlying;
+	}
+	
+	@Override
+	public void handleUpdateCommandBlock(Packet91UpdateCommandBlock packet) {
+		WorldServer worldServer = this.mcServer.getWorldManager(this.playerEntity.dimension);
+		
+		int x = packet.x; 
+		int y = packet.y;
+		int z = packet.z;
+		
+		if(worldServer.blockExists(x, y, z)) {
+			TileEntity tileEntity = worldServer.getBlockTileEntity(x, y, z);
+			if(tileEntity instanceof TileEntityCommandBlock) {
+				TileEntityCommandBlock tileEntityCommandBlock = (TileEntityCommandBlock) tileEntity;
+				tileEntityCommandBlock.command = packet.command;
+				
+				tileEntityCommandBlock.onInventoryChanged();
+				worldServer.markBlockNeedsUpdate(x, y, z);
+			}
+		}
 	}
 }

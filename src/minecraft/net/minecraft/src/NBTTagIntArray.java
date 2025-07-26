@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class NBTTagIntArray extends NBTBase {
-	public int[] field_48181_a;
+	public int[] intArray;
 
 	public NBTTagIntArray(String string1) {
 		super(string1);
@@ -14,24 +14,24 @@ public class NBTTagIntArray extends NBTBase {
 
 	public NBTTagIntArray(String string1, int[] i2) {
 		super(string1);
-		this.field_48181_a = i2;
+		this.intArray = i2;
 	}
 
 	void write(DataOutput dataOutput1) throws IOException {
-		dataOutput1.writeInt(this.field_48181_a.length);
+		dataOutput1.writeInt(this.intArray.length);
 
-		for(int i2 = 0; i2 < this.field_48181_a.length; ++i2) {
-			dataOutput1.writeInt(this.field_48181_a[i2]);
+		for(int i2 = 0; i2 < this.intArray.length; ++i2) {
+			dataOutput1.writeInt(this.intArray[i2]);
 		}
 
 	}
 
 	void load(DataInput dataInput1) throws IOException {
 		int i2 = dataInput1.readInt();
-		this.field_48181_a = new int[i2];
+		this.intArray = new int[i2];
 
 		for(int i3 = 0; i3 < i2; ++i3) {
-			this.field_48181_a[i3] = dataInput1.readInt();
+			this.intArray[i3] = dataInput1.readInt();
 		}
 
 	}
@@ -41,12 +41,12 @@ public class NBTTagIntArray extends NBTBase {
 	}
 
 	public String toString() {
-		return "[" + this.field_48181_a.length + " bytes]";
+		return "[" + this.intArray.length + " bytes]";
 	}
 
 	public NBTBase copy() {
-		int[] i1 = new int[this.field_48181_a.length];
-		System.arraycopy(this.field_48181_a, 0, i1, 0, this.field_48181_a.length);
+		int[] i1 = new int[this.intArray.length];
+		System.arraycopy(this.intArray, 0, i1, 0, this.intArray.length);
 		return new NBTTagIntArray(this.getName(), i1);
 	}
 
@@ -55,11 +55,11 @@ public class NBTTagIntArray extends NBTBase {
 			return false;
 		} else {
 			NBTTagIntArray nBTTagIntArray2 = (NBTTagIntArray)object1;
-			return this.field_48181_a == null && nBTTagIntArray2.field_48181_a == null || this.field_48181_a != null && this.field_48181_a.equals(nBTTagIntArray2.field_48181_a);
+			return this.intArray == null && nBTTagIntArray2.intArray == null || this.intArray != null && this.intArray.equals(nBTTagIntArray2.intArray);
 		}
 	}
 
 	public int hashCode() {
-		return super.hashCode() ^ Arrays.hashCode(this.field_48181_a);
+		return super.hashCode() ^ Arrays.hashCode(this.intArray);
 	}
 }

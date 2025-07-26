@@ -12,8 +12,8 @@ public class WorldServer extends World {
 	private MinecraftServer mcServer;
 	private IntHashMap entityInstanceIdMap;
 
-	public WorldServer(MinecraftServer minecraftServer1, ISaveHandler iSaveHandler2, String string3, int i4, WorldSettings worldSettings5) {
-		super(iSaveHandler2, string3, worldSettings5, WorldProvider.getProviderForDimension(i4));
+	public WorldServer(MinecraftServer minecraftServer1, ISaveHandler iSaveHandler2, String string3, int i4, WorldSettings worldSettings5, WorldType worldType) {
+		super(iSaveHandler2, string3, worldSettings5, WorldProvider.getProviderForDimension(i4, worldType));
 		this.mcServer = minecraftServer1;
 		if(this.entityInstanceIdMap == null) {
 			this.entityInstanceIdMap = new IntHashMap();
@@ -138,23 +138,16 @@ public class WorldServer extends World {
 	}
 
 	protected void updateWeather() {
-		boolean z1 = this.isRaining();
-		boolean z2 = this.isSandstorming();
+		boolean snowing = this.worldInfo.isSnowing();
+		boolean raining = this.worldInfo.isRaining();
+		boolean thundering = this.worldInfo.isThundering();
+		
 		super.updateWeather();
-		if(z1 != this.isRaining()) {
-			if(z1) {
-				this.mcServer.configManager.sendPacketToAllPlayers(new Packet70Bed(2, 0));
-			} else {
-				this.mcServer.configManager.sendPacketToAllPlayers(new Packet70Bed(1, 0));
-			}
-		}
-		if(z2 != this.isSandstorming()) {
-			if(z2) {
-				this.mcServer.configManager.sendPacketToAllPlayers(new Packet70Bed(102, 0));
-			} else {
-				this.mcServer.configManager.sendPacketToAllPlayers(new Packet70Bed(101, 0));
-			}
+
+		if (snowing != this.worldInfo.isSnowing() || raining != this.worldInfo.isRaining() || thundering != this.worldInfo.isThundering()) {
+			this.mcServer.configManager.sendPacketToAllPlayers(new Packet70Bed(this.worldInfo.isRaining(), this.worldInfo.isSnowing(), this.worldInfo.isThundering()));
 		}
 
 	}
+	
 }

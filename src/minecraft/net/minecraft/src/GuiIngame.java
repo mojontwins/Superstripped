@@ -18,9 +18,10 @@ public class GuiIngame extends Gui {
 	private Random rand = new Random();
 	private Minecraft mc;
 	private int updateCounter = 0;
-	private String recordPlaying = "";
-	private int recordPlayingUpFor = 0;
-	private boolean recordIsPlaying = false;
+	private String onScreenMessage = "";
+	private int onScreenMessageTimeout = 0;
+	private boolean fancyText = false;
+	
 	private int field_50017_n = 0;
 	private boolean field_50018_o = false;
 	public float damageGuiPartialTime;
@@ -58,7 +59,7 @@ public class GuiIngame extends Gui {
 		int i19;
 		int i20;
 		int i22;
-		int i23;
+		int armorValue;
 		int i45;
 		if(!this.mc.playerController.func_35643_e()) {
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -96,7 +97,7 @@ public class GuiIngame extends Gui {
 				
 				i22 = i45 - 10;
 				
-				i23 = this.mc.thePlayer.getTotalArmorValue();
+				armorValue = this.mc.thePlayer.getTotalArmorValue();
 				int i24 = -1;
 				
 				// TODO: A means of regeneration
@@ -111,18 +112,35 @@ public class GuiIngame extends Gui {
 				int i28;
 				int i29;
 				for(i25 = 0; i25 < 10; ++i25) {
-					if(i23 > 0) {
-						i26 = i18 + i25 * 8;
-						if(i25 * 2 + 1 < i23) {
-							this.drawTexturedModalRect(i26, i22, 34, 9, 9, 9);
-						}
+					i29 = i45;
+					
+					if(armorValue > 0) {
+						if(GameRules.boolRule("enableHunger")) {						
+							i26 = i18 + i25 * 8;
+							if(i25 * 2 + 1 < armorValue) {
+								this.drawTexturedModalRect(i26, i22, 34, 9, 9, 9);
+							}
+	
+							if(i25 * 2 + 1 == armorValue) {
+								this.drawTexturedModalRect(i26, i22, 25, 9, 9, 9);
+							}
+	
+							if(i25 * 2 + 1 > armorValue) {
+								this.drawTexturedModalRect(i26, i22, 16, 9, 9, 9);
+							}
+						} else {
+							i26 = i6 / 2 + 91 - i25 * 8 - 9;
+							if(i25 * 2 + 1 < armorValue) {
+								this.drawTexturedModalRect(i26, i29, 36+34, 9, 9, 9);
+							}
 
-						if(i25 * 2 + 1 == i23) {
-							this.drawTexturedModalRect(i26, i22, 25, 9, 9, 9);
-						}
+							if(i25 * 2 + 1 == armorValue) {
+								this.drawTexturedModalRect(i26, i29, 36+25, 9, 9, 9);
+							}
 
-						if(i25 * 2 + 1 > i23) {
-							this.drawTexturedModalRect(i26, i22, 16, 9, 9, 9);
+							if(i25 * 2 + 1 > armorValue) {
+								this.drawTexturedModalRect(i26, i29, 36+16, 9, 9, 9);
+							}
 						}
 					}
 
@@ -140,7 +158,7 @@ public class GuiIngame extends Gui {
 					}
 
 					i28 = i18 + i25 * 8;
-					i29 = i45;
+					
 					if(i12 <= 4) {
 						i29 = i45 + this.rand.nextInt(2);
 					}
@@ -175,7 +193,7 @@ public class GuiIngame extends Gui {
 				}
 
 				int i51;
-				if(GameRules.enableHunger) {
+				if(GameRules.boolRule("enableHunger")) {
 					for(i25 = 0; i25 < 10; ++i25) {
 						i26 = i45;
 						i51 = 16;
@@ -217,9 +235,7 @@ public class GuiIngame extends Gui {
 							this.drawTexturedModalRect(i29, i26, i51 + 45, 27, 9, 9);
 						}
 					}
-				} else {
-					i22 = i45;
-				}
+				} 
 
 				if(this.mc.thePlayer.isInsideOfMaterial(Material.water)) {
 					i25 = this.mc.thePlayer.getAir();
@@ -227,10 +243,18 @@ public class GuiIngame extends Gui {
 					i51 = (int)Math.ceil((double)i25 * 10.0D / 300.0D) - i26;
 
 					for(i28 = 0; i28 < i26 + i51; ++i28) {
-						if(i28 < i26) {
-							this.drawTexturedModalRect(i19 - i28 * 8 - 9, i22, 16, 18, 9, 9);
+						if(GameRules.boolRule("enableHunger")) {
+							if(i28 < i26) {
+								this.drawTexturedModalRect(i19 - i28 * 8 - 9, i22, 16, 18, 9, 9);
+							} else {
+								this.drawTexturedModalRect(i19 - i28 * 8 - 9, i22, 25, 18, 9, 9);
+							}
 						} else {
-							this.drawTexturedModalRect(i19 - i28 * 8 - 9, i22, 25, 18, 9, 9);
+							if(i28 < i26) {
+								this.drawTexturedModalRect(i18 + i28 * 8, i22, 16, 18, 9, 9);
+							} else {
+								this.drawTexturedModalRect(i18 + i28 * 8, i22, 25, 18, 9, 9);
+							}
 						}
 					}
 				}
@@ -304,12 +328,6 @@ public class GuiIngame extends Gui {
 			string44 = "Allocated: " + j36 * 100L / j35 + "% (" + j36 / 1024L / 1024L + "MB)";
 			this.drawString(fontRenderer8, string44, i6 - fontRenderer8.getStringWidth(string44) - 2, 12, 14737632);
 			
-			/*
-			this.drawString(fontRenderer8, "x: " + this.mc.thePlayer.posX, 2, 64, 14737632);
-			this.drawString(fontRenderer8, "y: " + this.mc.thePlayer.posY, 2, 72, 14737632);
-			this.drawString(fontRenderer8, "z: " + this.mc.thePlayer.posZ, 2, 80, 14737632);
-			this.drawString(fontRenderer8, "f: " + (MathHelper.floor_double((double)(this.mc.thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3), 2, 88, 14737632);
-			*/
 			fontRenderer8.drawStringWithShadow(
 					"Pos: " + (int)this.mc.thePlayer.posX + 
 					", " + (int)this.mc.thePlayer.posY +
@@ -318,38 +336,41 @@ public class GuiIngame extends Gui {
 				, 2, 42, 0xFFFFFF);
 			
 			
-			fontRenderer8.drawStringWithShadow("DS: " + this.mc.theWorld.getWorldInfo().getSandstormingTime(), 2, 52, 0xFFFFFF);
+			if(this.mc.thePlayer.inventory.hasItem(Item.pocketSundial.shiftedIndex)) {
+				float timeAdjusted = (float) (this.mc.theWorld.worldInfo.getWorldTime() % 24000);
+				fontRenderer8.drawStringWithShadow("Time: " + this.twoDigits((int)((timeAdjusted / 1000.0F) + 6) % 24) + ":" + this.twoDigits((int)((timeAdjusted % 1000.0F) * 60 / 1000)) + " [" + ((float)((int)(this.mc.theWorld.getCelestialAngle(f1) * 100)) / 100F)  + "]", 2, 52, 0xFFFFFF);
+			} else {
+				fontRenderer8.drawStringWithShadow("Time: You have no clock!", 2, 52, 0xFFFFFF);
+			}
 			
 			i45 = MathHelper.floor_double(this.mc.thePlayer.posX);
 			i22 = MathHelper.floor_double(this.mc.thePlayer.posY);
-			i23 = MathHelper.floor_double(this.mc.thePlayer.posZ);
-			
-			/*
-			if(this.mc.theWorld != null && this.mc.theWorld.blockExists(i45, i22, i23)) {
-				Chunk chunk48 = this.mc.theWorld.getChunkFromBlockCoords(i45, i23);
-				this.drawString(fontRenderer8, "lc: " + (chunk48.getTopFilledSegment() + 15) + " b: " + chunk48.getBiomeForCoords(i45 & 15, i23 & 15, this.mc.theWorld.getWorldChunkManager()).biomeName + " bl: " + chunk48.getSavedLightValue(EnumSkyBlock.Block, i45 & 15, i22, i23 & 15) + " sl: " + chunk48.getSavedLightValue(EnumSkyBlock.Sky, i45 & 15, i22, i23 & 15) + " rl: " + chunk48.getBlockLightValue(i45 & 15, i22, i23 & 15, 0), 2, 96, 14737632);
-			}
-			*/
+			armorValue = MathHelper.floor_double(this.mc.thePlayer.posZ);
 			
 			if(!this.mc.theWorld.isRemote) {
-				//this.drawString(fontRenderer8, "Seed: " + this.mc.theWorld.getSeed(), 2, 112, 14737632);
+				
 				string21 = "Seed: " + this.mc.theWorld.getSeed();
 				this.drawString(fontRenderer8, string21, i6 - fontRenderer8.getStringWidth(string21) - 2, 32, 14737632);
 			}
 			
-			if(this.mc.theWorld != null && this.mc.theWorld.blockExists(i45, i22, i23)) {
-				Chunk chunk48 = this.mc.theWorld.getChunkFromBlockCoords(i45, i23);
-				string21 = "Biome: " + chunk48.getBiomeForCoords(i45 & 15, i23 & 15, this.mc.theWorld.getWorldChunkManager()).biomeName ;
+			if(this.mc.theWorld != null && this.mc.theWorld.blockExists(i45, i22, armorValue)) {
+				Chunk chunk48 = this.mc.theWorld.getChunkFromBlockCoords(i45, armorValue);
+				string21 = "Biome: " + chunk48.getBiomeForCoords(i45 & 15, armorValue & 15, this.mc.theWorld.getWorldChunkManager()).biomeName ;
 				this.drawString(fontRenderer8, string21, i6 - fontRenderer8.getStringWidth(string21) - 2, 42, 14737632);
 			}
-
+			
+			if(Seasons.activated()) {
+				string21 = Seasons.getStringForGui() ;
+				this.drawString(fontRenderer8, string21, i6 - fontRenderer8.getStringWidth(string21) - 2, 52, 14737632);
+			}
+				
 			GL11.glPopMatrix();
 		} else {
 			fontRenderer8.drawStringWithShadow("Minecraft " + Version.getVersion(), 2, 2, 0xFFFFFF);
 		}
 
-		if(this.recordPlayingUpFor > 0) {
-			f33 = (float)this.recordPlayingUpFor - f1;
+		if(this.onScreenMessageTimeout > 0) {
+			f33 = (float)this.onScreenMessageTimeout - f1;
 			i12 = (int)(f33 * 256.0F / 20.0F);
 			if(i12 > 255) {
 				i12 = 255;
@@ -361,11 +382,11 @@ public class GuiIngame extends Gui {
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				i13 = 0xFFFFFF;
-				if(this.recordIsPlaying) {
+				if(this.fancyText) {
 					i13 = Color.HSBtoRGB(f33 / 50.0F, 0.7F, 0.6F) & 0xFFFFFF;
 				}
 
-				fontRenderer8.drawString(this.recordPlaying, -fontRenderer8.getStringWidth(this.recordPlaying) / 2, -4, i13 + (i12 << 24));
+				fontRenderer8.drawString(this.onScreenMessage, -fontRenderer8.getStringWidth(this.onScreenMessage) / 2, -4, i13 + (i12 << 24));
 				GL11.glDisable(GL11.GL_BLEND);
 				GL11.glPopMatrix();
 			}
@@ -572,8 +593,8 @@ public class GuiIngame extends Gui {
 	}
 
 	public void updateTick() {
-		if(this.recordPlayingUpFor > 0) {
-			--this.recordPlayingUpFor;
+		if(this.onScreenMessageTimeout > 0) {
+			--this.onScreenMessageTimeout;
 		}
 
 		++this.updateCounter;
@@ -660,9 +681,15 @@ public class GuiIngame extends Gui {
 	}
 
 	public void setRecordPlayingMessage(String string1) {
-		this.recordPlaying = "Now playing: " + string1;
-		this.recordPlayingUpFor = 60;
-		this.recordIsPlaying = true;
+		this.onScreenMessage = "Now playing: " + string1;
+		this.onScreenMessageTimeout = 60;
+		this.fancyText = true;
+	}
+	
+	public void showString (String s) {
+		this.onScreenMessage = s;
+		this.onScreenMessageTimeout = 60;
+		this.fancyText = true;
 	}
 
 	public boolean isChatOpen() {

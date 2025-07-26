@@ -61,6 +61,10 @@ public class ChunkCoordinates implements Comparable<Object> {
 		int i6 = this.posZ - i3;
 		return (float)(i4 * i4 + i5 * i5 + i6 * i6);
 	}
+	
+	public float getDistanceSquaredToChunkCoordinates(ChunkCoordinates var1) {
+		return (float) this.getDistanceSquared(var1.posX, var1.posY, var1.posZ);
+	}
 
 	public int compareTo(Object object1) {
 		return this.compareChunkCoordinate((ChunkCoordinates)object1);

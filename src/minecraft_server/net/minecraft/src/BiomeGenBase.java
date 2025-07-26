@@ -55,17 +55,14 @@ public abstract class BiomeGenBase {
 		this.spawnableCreatureList.add(new SpawnListEntry(EntityCow.class, 8, 4, 4));
 		
 		this.spawnableMonsterList.add(new SpawnListEntry(EntitySpider.class, 10, 4, 4));
-		if(GameRules.smarterMobs) {
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityZombie.class, 10, 4, 4));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntitySkeleton.class, 10, 4, 4));
-		} else {
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityClassicZombie.class, 10, 4, 4));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityClassicSkeleton.class, 10, 4, 4));
-		}
+		
+		this.spawnableMonsterList.add(new SpawnListEntry(EntityZombie.class, 10, 4, 4));
+		this.spawnableMonsterList.add(new SpawnListEntry(EntitySkeleton.class, 10, 4, 4));
+
 		this.spawnableMonsterList.add(new SpawnListEntry(EntityCreeper.class, 10, 4, 4));
 		this.spawnableMonsterList.add(new SpawnListEntry(EntitySlime.class, 10, 4, 4));
 
-		if(GameRules.enableSquids) {
+		if(GameRules.boolRule("enableSquids")) {
 			this.spawnableWaterCreatureList.add(new SpawnListEntry(EntitySquid.class, 10, 4, 4));
 		}
 		
@@ -310,7 +307,7 @@ public abstract class BiomeGenBase {
 		for(int y = 127; y >= 0; --y) {
 			int index = x << 11 | z << 7 | y; // (x * 16 + z) * 128 + y;
 			
-			if(y <= 0 + rand.nextInt(5)) {
+			if(y <= 0 + rand.nextInt(5) && !(generator instanceof ChunkProviderSky)) {
 				blocks[index] = (byte)Block.bedrock.blockID;
 			} else {
 				byte blockID = blocks[index];
@@ -359,5 +356,17 @@ public abstract class BiomeGenBase {
 	
 	public byte sandstoneGenBlock() {
 		return (byte)Block.sandStone.blockID;
+	}
+
+	public String getPreferedSpawner() {
+		return null;
+	}
+
+	public int getPreferedSpawnerChance() {
+		return 0;
+	}
+
+	public int getPreferedSpawnerChanceOffset() {
+		return 0;
 	}
 }

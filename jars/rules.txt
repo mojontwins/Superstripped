@@ -1,20 +1,22 @@
 #Minecraft Game Rules
-#Fri Jul 18 16:16:54 CEST 2025
+#Sat Jul 26 09:52:34 CEST 2025
 edibleCows=true
 noiseTreeDensity=true
 enableSquids=true
 stackableFood=false
 classicHurtSound=true
-colouredFog=false
+colouredFog=true
 enableHunger=false
 classicBow=true
 edibleChicken=true
 connectFences=false
 enableSprinting=false
+renderAllBlocksStraight=false
 skeletonsWithBows=true
 smarterMobs=true
 oldFences=false
 hasSunriseSunset=false
+snowPilesUp=false
 generateLapislazuli=true
 colouredWater=false
 canBreedAnimals=true

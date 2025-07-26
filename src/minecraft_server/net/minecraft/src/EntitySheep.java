@@ -24,7 +24,7 @@ public class EntitySheep extends EntityAnimal implements IDyeableEntity {
 		this.getNavigator().setAvoidsWater(true);
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 0.38F));
-		if (GameRules.canBreedAnimals) {
+		if (GameRules.boolRule("canBreedAnimals")) {
 			this.tasks.addTask(2, new EntityAIMate(this, f2));
 		}
 		this.tasks.addTask(3, new EntityAITempt(this, 0.25F, Item.wheat.shiftedIndex, false));
@@ -136,16 +136,16 @@ public class EntitySheep extends EntityAnimal implements IDyeableEntity {
 		return super.interact(entityPlayer1);
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setBoolean("Sheared", this.getSheared());
-		nBTTagCompound1.setByte("Color", (byte)this.getFleeceColor());
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setBoolean("Sheared", this.getSheared());
+		compoundTag.setByte("Color", (byte)this.getFleeceColor());
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.setSheared(nBTTagCompound1.getBoolean("Sheared"));
-		this.setFleeceColor(nBTTagCompound1.getByte("Color"));
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.setSheared(compoundTag.getBoolean("Sheared"));
+		this.setFleeceColor(compoundTag.getByte("Color"));
 	}
 
 	protected String getLivingSound() {

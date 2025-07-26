@@ -114,9 +114,15 @@ public final class SpawnerAnimals {
 										if(dSq >= 576.0F) {
 											if(spawnClass == null) {
 												spawnClass = world.getRandomMob(creatureType, cX, cY, cZ);
-
+											
 												if(spawnClass == null) {
 													break;
+												}
+												
+												// AI based skeletons & zombies?
+												if(!GameRules.boolRule("smarterMobs")) {
+													if(spawnClass.entityClass == EntityZombie.class) spawnClass.entityClass = EntityClassicZombie.class;
+													else if(spawnClass.entityClass == EntitySkeleton.class) spawnClass.entityClass = EntityClassicSkeleton.class; 
 												}
 											}
 

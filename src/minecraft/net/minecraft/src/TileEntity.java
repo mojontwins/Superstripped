@@ -24,21 +24,21 @@ public class TileEntity {
 		}
 	}
 
-	public void readFromNBT(NBTTagCompound nBTTagCompound1) {
-		this.xCoord = nBTTagCompound1.getInteger("x");
-		this.yCoord = nBTTagCompound1.getInteger("y");
-		this.zCoord = nBTTagCompound1.getInteger("z");
+	public void readFromNBT(NBTTagCompound compoundTag) {
+		this.xCoord = compoundTag.getInteger("x");
+		this.yCoord = compoundTag.getInteger("y");
+		this.zCoord = compoundTag.getInteger("z");
 	}
 
-	public void writeToNBT(NBTTagCompound nBTTagCompound1) {
+	public void writeToNBT(NBTTagCompound compoundTag) {
 		String string2 = (String)classToNameMap.get(this.getClass());
 		if(string2 == null) {
 			throw new RuntimeException(this.getClass() + " is missing a mapping! This is a bug!");
 		} else {
-			nBTTagCompound1.setString("id", string2);
-			nBTTagCompound1.setInteger("x", this.xCoord);
-			nBTTagCompound1.setInteger("y", this.yCoord);
-			nBTTagCompound1.setInteger("z", this.zCoord);
+			compoundTag.setString("id", string2);
+			compoundTag.setInteger("x", this.xCoord);
+			compoundTag.setInteger("y", this.yCoord);
+			compoundTag.setInteger("z", this.zCoord);
 		}
 	}
 

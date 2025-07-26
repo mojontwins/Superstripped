@@ -37,14 +37,14 @@ public class EntitySlime extends EntityLiving implements IMob {
 		return this.dataWatcher.getWatchableObjectByte(16);
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setInteger("Size", this.getSlimeSize() - 1);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setInteger("Size", this.getSlimeSize() - 1);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.setSlimeSize(nBTTagCompound1.getInteger("Size") + 1);
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.setSlimeSize(compoundTag.getInteger("Size") + 1);
 	}
 
 	protected String getSlimeParticle() {

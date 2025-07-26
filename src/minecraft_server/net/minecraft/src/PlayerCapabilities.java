@@ -6,18 +6,18 @@ public class PlayerCapabilities {
 	public boolean allowFlying = false;
 	public boolean isCreativeMode = false;
 
-	public void writeCapabilitiesToNBT(NBTTagCompound nBTTagCompound1) {
+	public void writeCapabilitiesToNBT(NBTTagCompound compoundTag) {
 		NBTTagCompound nBTTagCompound2 = new NBTTagCompound();
 		nBTTagCompound2.setBoolean("invulnerable", this.disableDamage);
 		nBTTagCompound2.setBoolean("flying", this.isFlying);
 		nBTTagCompound2.setBoolean("mayfly", this.allowFlying);
 		nBTTagCompound2.setBoolean("instabuild", this.isCreativeMode);
-		nBTTagCompound1.setTag("abilities", nBTTagCompound2);
+		compoundTag.setTag("abilities", nBTTagCompound2);
 	}
 
-	public void readCapabilitiesFromNBT(NBTTagCompound nBTTagCompound1) {
-		if(nBTTagCompound1.hasKey("abilities")) {
-			NBTTagCompound nBTTagCompound2 = nBTTagCompound1.getCompoundTag("abilities");
+	public void readCapabilitiesFromNBT(NBTTagCompound compoundTag) {
+		if(compoundTag.hasKey("abilities")) {
+			NBTTagCompound nBTTagCompound2 = compoundTag.getCompoundTag("abilities");
 			this.disableDamage = nBTTagCompound2.getBoolean("invulnerable");
 			this.isFlying = nBTTagCompound2.getBoolean("flying");
 			this.allowFlying = nBTTagCompound2.getBoolean("mayfly");

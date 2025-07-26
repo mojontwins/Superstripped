@@ -120,28 +120,32 @@ public class Block implements ITextureProvider {
 	// 90
 	public static final Block pumpkinLantern = (new BlockPumpkin(91, 102, true)).setHardness(1.0F).setStepSound(soundWoodFootstep).setLightValue(1.0F).setBlockName("litpumpkin").setRequiresSelfNotify();	
 	// 92
-	// 93
-	// 94
+	public static final Block redstoneRepeaterIdle = (new BlockRedstoneRepeater(93, false)).setHardness(0.0F).setStepSound(soundWoodFootstep).setBlockName("diode").disableStats().setRequiresSelfNotify();
+	public static final Block redstoneRepeaterActive = (new BlockRedstoneRepeater(94, true)).setHardness(0.0F).setLightValue(0.625F).setStepSound(soundWoodFootstep).setBlockName("diode").disableStats().setRequiresSelfNotify();	
 	// 95
 	// 96
 	// 97
 	// 98
 	// 99
 	// 100
-	// 101
-	// 102
+	public static final Block fenceIron = (new BlockPane(101, 85, 85, Material.iron, true)).setHardness(5.0F).setResistance(10.0F).setStepSound(soundMetalFootstep).setBlockName("fenceIron");
+	public static final Block thinGlass = (new BlockPane(102, 49, 148, Material.glass, false)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("thinGlass");
 	// 103
 	// 104
 	// 105
 	// 106
 	// 107
 	public static final Block stairsBrick = (new BlockStairs(108, brick)).setBlockName("stairsBrick").setRequiresSelfNotify();
-	//
-	// 109 - 135
+	// 109 
+	// 110
+	public static final Block waterlily = (new BlockLilypad(111, 60)).setHardness(0.0F).setStepSound(soundGrassFootstep).setBlockName("waterlily");
+	// 112 - 135
 	public static final Block mobSpawnerOneshot = (new BlockMobSpawner(136, 65, true)).setHardness(5.0F).setStepSound(soundMetalFootstep);
 	public static final Block blockCoal = (new Block(137, 12 * 16 + 10, Material.rock)).setHardness(1.5F).setResistance(10.0F).setStepSound(soundStoneFootstep).setCreativeTab(CreativeTabs.tabBlock).setBlockName("blockCoal");	
 	//
-	// 138 - 208
+	// 138 - 167 
+	public static final Block leafPile = (new BlockLeafPile(168)).setHardness(0.1F).setResistance(0.1F).setStepSound(soundGrassFootstep).setBlockName("leafPile");
+	// 169 - 208
 	public static final Block cryingObsidian = (new BlockCryingObsidian(209, 11*16+8)).setHardness(10.0F).setResistance(2000.0F).setStepSound(soundStoneFootstep).setBlockName("cryingObsidian");
 	
 	public int blockIndexInTexture;
@@ -368,10 +372,14 @@ public class Block implements ITextureProvider {
 		return AxisAlignedBB.getBoundingBoxFromPool((double)i2 + this.minX, (double)i3 + this.minY, (double)i4 + this.minZ, (double)i2 + this.maxX, (double)i3 + this.maxY, (double)i4 + this.maxZ);
 	}
 
-	public void getCollidingBoundingBoxes(World world1, int i2, int i3, int i4, AxisAlignedBB axisAlignedBB5, ArrayList<AxisAlignedBB> arrayList6) {
-		AxisAlignedBB axisAlignedBB7 = this.getCollisionBoundingBoxFromPool(world1, i2, i3, i4);
-		if(axisAlignedBB7 != null && axisAlignedBB5.intersectsWith(axisAlignedBB7)) {
-			arrayList6.add(axisAlignedBB7);
+	public void getCollidingBoundingBoxes(World world, int x, int y, int z, AxisAlignedBB bb, ArrayList<AxisAlignedBB> bbArray, Entity entity) {
+		this.getCollidingBoundingBoxes(world, x, y, z, bb, bbArray);
+	}
+	
+	public void getCollidingBoundingBoxes(World world, int x, int y, int z, AxisAlignedBB bb, ArrayList<AxisAlignedBB> bbArray) {
+		AxisAlignedBB axisAlignedBB7 = this.getCollisionBoundingBoxFromPool(world, x, y, z);
+		if(axisAlignedBB7 != null && bb.intersectsWith(axisAlignedBB7)) {
+			bbArray.add(axisAlignedBB7);
 		}
 
 	}
@@ -696,22 +704,25 @@ public class Block implements ITextureProvider {
 	public void setBlockBoundsForItemRender() {
 	}
 
-	public void harvestBlock(World world1, EntityPlayer entityPlayer2, int i3, int i4, int i5, int i6) {
-		entityPlayer2.addExhaustion(0.025F);
-		if(this.canBeSilkTouched()) {
-			Item inHand = entityPlayer2.getHeldItem().getItem();
-			if(inHand != null && (inHand instanceof ItemTool)) {
-				ItemTool tool = (ItemTool)inHand;
-				if (tool.canHarvestBlock(this) && tool.toolMaterial == EnumToolMaterial.GOLD) { 
-					ItemStack itemStack8 = this.createStackedBlock(i6);
-					if(itemStack8 != null) {
-						this.dropBlockAsItem_do(world1, i3, i4, i5, itemStack8);
-					}
-				}
+	public void harvestBlock(World world, EntityPlayer entityPlayer, int x, int y, int z, int meta) {
+		entityPlayer.addExhaustion(0.025F);
+		Item inHand = null;
+		ItemStack inHandIS = entityPlayer.inventory.getStackInSlot(entityPlayer.inventory.currentItem);
+		if(inHandIS != null) inHand = inHandIS.getItem();
+		
+		if(
+				this.canBeSilkTouched() && 
+				inHand != null && (inHand instanceof ItemTool) && 
+				inHand.canHarvestBlock(this) && 
+				((ItemTool)inHand).toolMaterial == EnumToolMaterial.GOLD
+		) {
+			ItemStack newStack = this.createStackedBlock(meta);
+			if(newStack != null) {
+				this.dropBlockAsItem_do(world, x, y, z, newStack);
 			}
 		} else {
 			int i7 = 0; // TODO: add fortune
-			this.dropBlockAsItem(world1, i3, i4, i5, i6, i7);
+			this.dropBlockAsItem(world, x, y, z, meta, i7);
 		}
 
 	}

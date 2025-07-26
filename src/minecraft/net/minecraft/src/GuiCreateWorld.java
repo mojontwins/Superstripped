@@ -49,12 +49,12 @@ public class GuiCreateWorld extends GuiScreen {
 		this.generateStructuresButton.drawButton = false;
 		this.controlList.add(this.worldTypeButton = new GuiButton(5, this.width / 2 + 5, 100, 150, 20, stringTranslate1.translateKey("selectWorld.mapType")));
 		this.worldTypeButton.drawButton = false;
-		this.textboxWorldName = new GuiTextField(this.fontRenderer, this.width / 2 - 100, 60, 200, 20);
+		this.textboxWorldName = new GuiTextField(this, this.fontRenderer, this.width / 2 - 100, 60, 200, 20);
 		this.textboxWorldName.setFocused(true);
 		this.controlList.add(this.enableCheatsButton = new GuiButton(6, this.width / 2 - 155, 124, 150, 20, stringTranslate1.translateKey("selectWorld.enableCheats")));
 		this.enableCheatsButton.drawButton = false;
 		this.textboxWorldName.setText(this.localizedNewWorldText);
-		this.textboxSeed = new GuiTextField(this.fontRenderer, this.width / 2 - 100, 60, 200, 20);
+		this.textboxSeed = new GuiTextField(this, this.fontRenderer, this.width / 2 - 100, 60, 200, 20);
 		this.textboxSeed.setText(this.seed);
 		this.makeUseableName();
 		this.updateCaptions();

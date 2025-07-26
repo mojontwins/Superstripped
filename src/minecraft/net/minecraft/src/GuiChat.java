@@ -8,39 +8,39 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.mojontwins.minecraft.commands.CommandProcessor;
+
 import net.minecraft.client.Minecraft;
 
-public class GuiChat extends GuiScreen {
+public class GuiChat extends GuiScreen implements ICommandSender {
 	private String field_50062_b = "";
-	private int field_50063_c = -1;
+	private int numMessages = -1;
 	private boolean field_50060_d = false;
 	private String field_50061_e = "";
 	private String field_50059_f = "";
 	private int field_50067_h = 0;
 	private List<GuiPlayerInfo> field_50068_i = new ArrayList<GuiPlayerInfo>();
 	private URI field_50065_j = null;
-	protected GuiTextField field_50064_a;
-	private String field_50066_k = "";
-	private SinglePlayerCommands singlePlayerCommands;
-
+	protected GuiTextField textInput;
+	private String messageText = "";
+	
 	public GuiChat(Minecraft mc) {
 		this.mc = mc;
-		this.singlePlayerCommands = new SinglePlayerCommands(this.mc);
 	}
 
 	public GuiChat(String string1) {
-		this.field_50066_k = string1;
+		this.messageText = string1;
 	}
 
 	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
-		this.field_50063_c = this.mc.ingameGUI.getMessageList().size();
-		this.field_50064_a = new GuiTextField(this.fontRenderer, 4, this.height - 12, this.width - 4, 12);
-		this.field_50064_a.setMaxStringLength(100);
-		this.field_50064_a.setEnableBackgroundDrawing(false);
-		this.field_50064_a.setFocused(true);
-		this.field_50064_a.setText(this.field_50066_k);
-		this.field_50064_a.setCanLoseFocus(false);
+		this.numMessages = this.mc.ingameGUI.getMessageList().size();
+		this.textInput = new GuiTextField(this, this.fontRenderer, 4, this.height - 12, this.width - 4, 12);
+		this.textInput.setMaxStringLength(256);
+		this.textInput.setEnableBackgroundDrawing(false);
+		this.textInput.setFocused(true);
+		this.textInput.setText(this.messageText);
+		this.textInput.setCanLoseFocus(false);
 	}
 
 	public void onGuiClosed() {
@@ -49,39 +49,40 @@ public class GuiChat extends GuiScreen {
 	}
 
 	public void updateScreen() {
-		this.field_50064_a.updateCursorCounter();
+		this.textInput.updateCursorCounter();
 	}
 
-	protected void keyTyped(char c1, int i2) {
-		if(i2 == 15) {
+	protected void keyTyped(char keyAsc, int scanCode) {
+		if(scanCode == 15) {
 			if(this.mc.isMultiplayerWorld()) this.completePlayerName();
 		} else {
 			this.field_50060_d = false;
 		}
 
-		if(i2 == 1) {
+		if(scanCode == 1) {
 			this.mc.displayGuiScreen((GuiScreen)null);
-		} else if(i2 == 28) {
-			String string3 = this.field_50064_a.getText().trim();
+		} else if(scanCode == 28) {
+			String string3 = this.textInput.getText().trim();
 			if(this.mc.isMultiplayerWorld()) {
 				if(string3.length() > 0 && !this.mc.lineIsCommand(string3)) {
 					this.mc.thePlayer.sendChatMessage(string3);
 				}
 			} else {
-				this.singlePlayerCommands.executeCommand(string3);
+				CommandProcessor.withCommandSender(this);
+				CommandProcessor.executeCommand(this.textInput.getText().trim(), this.mc.theWorld, null, this.mc.thePlayer, this.mc.thePlayer.getPlayerCoordinates());
 			}
 
 			this.mc.displayGuiScreen((GuiScreen)null);
-		} else if(i2 == 200) {
+		} else if(scanCode == 200) {
 			this.func_50058_a(-1);
-		} else if(i2 == 208) {
+		} else if(scanCode == 208) {
 			this.func_50058_a(1);
-		} else if(i2 == 201) {
+		} else if(scanCode == 201) {
 			this.mc.ingameGUI.func_50011_a(19);
-		} else if(i2 == 209) {
+		} else if(scanCode == 209) {
 			this.mc.ingameGUI.func_50011_a(-19);
 		} else {
-			this.field_50064_a.textboxKeyTyped(c1, i2);
+			this.textInput.textboxKeyTyped(keyAsc, scanCode);
 		}
 
 	}
@@ -120,7 +121,7 @@ public class GuiChat extends GuiScreen {
 			}
 		}
 
-		this.field_50064_a.mouseClicked(i1, i2, i3);
+		this.textInput.mouseClicked(i1, i2, i3);
 		super.mouseClicked(i1, i2, i3);
 	}
 
@@ -146,18 +147,18 @@ public class GuiChat extends GuiScreen {
 		Iterator<GuiPlayerInfo> iterator2;
 		GuiPlayerInfo guiPlayerInfo3;
 		if(this.field_50060_d) {
-			this.field_50064_a.func_50021_a(-1);
+			this.textInput.func_50021_a(-1);
 			if(this.field_50067_h >= this.field_50068_i.size()) {
 				this.field_50067_h = 0;
 			}
 		} else {
-			int i1 = this.field_50064_a.func_50028_c(-1);
-			if(this.field_50064_a.getCursorPosition() - i1 < 1) {
+			int i1 = this.textInput.func_50028_c(-1);
+			if(this.textInput.getCursorPosition() - i1 < 1) {
 				return;
 			}
 
 			this.field_50068_i.clear();
-			this.field_50061_e = this.field_50064_a.getText().substring(i1);
+			this.field_50061_e = this.textInput.getText().substring(i1);
 			this.field_50059_f = this.field_50061_e.toLowerCase();
 			iterator2 = ((EntityClientPlayerMP)this.mc.thePlayer).sendQueue.playerNames.iterator();
 
@@ -174,7 +175,7 @@ public class GuiChat extends GuiScreen {
 
 			this.field_50060_d = true;
 			this.field_50067_h = 0;
-			this.field_50064_a.func_50020_b(i1 - this.field_50064_a.getCursorPosition());
+			this.textInput.func_50020_b(i1 - this.textInput.getCursorPosition());
 		}
 
 		if(this.field_50068_i.size() > 1) {
@@ -190,11 +191,11 @@ public class GuiChat extends GuiScreen {
 			this.mc.ingameGUI.addChatMessage(stringBuilder4.toString());
 		}
 
-		this.field_50064_a.func_50031_b(((GuiPlayerInfo)this.field_50068_i.get(this.field_50067_h++)).name);
+		this.textInput.func_50031_b(((GuiPlayerInfo)this.field_50068_i.get(this.field_50067_h++)).name);
 	}
 
 	public void func_50058_a(int i1) {
-		int i2 = this.field_50063_c + i1;
+		int i2 = this.numMessages + i1;
 		int i3 = this.mc.ingameGUI.getMessageList().size();
 		if(i2 < 0) {
 			i2 = 0;
@@ -204,24 +205,44 @@ public class GuiChat extends GuiScreen {
 			i2 = i3;
 		}
 
-		if(i2 != this.field_50063_c) {
+		if(i2 != this.numMessages) {
 			if(i2 == i3) {
-				this.field_50063_c = i3;
-				this.field_50064_a.setText(this.field_50062_b);
+				this.numMessages = i3;
+				this.textInput.setText(this.field_50062_b);
 			} else {
-				if(this.field_50063_c == i3) {
-					this.field_50062_b = this.field_50064_a.getText();
+				if(this.numMessages == i3) {
+					this.field_50062_b = this.textInput.getText();
 				}
 
-				this.field_50064_a.setText((String)this.mc.ingameGUI.getMessageList().get(i2));
-				this.field_50063_c = i2;
+				this.textInput.setText((String)this.mc.ingameGUI.getMessageList().get(i2));
+				this.numMessages = i2;
 			}
 		}
 	}
 
 	public void drawScreen(int i1, int i2, float f3) {
 		drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
-		this.field_50064_a.drawTextBox();
+		this.textInput.drawTextBox();
 		super.drawScreen(i1, i2, f3);
+	}
+
+	@Override
+	public void printMessage(World world, String message) {
+		String[] subMessages = message.split("\n");
+		
+		for(String subMessage : subMessages) {
+			this.mc.ingameGUI.addChatMessage(subMessage); 
+		}
+	}
+
+	@Override
+	public BlockPos getMouseOverCoordinates() {
+		if(this.mc.objectMouseOver == null) return null;
+		
+		return new BlockPos().set(
+				this.mc.objectMouseOver.blockX, 
+				this.mc.objectMouseOver.blockY, 
+				this.mc.objectMouseOver.blockZ
+		);
 	}
 }

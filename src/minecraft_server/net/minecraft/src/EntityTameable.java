@@ -13,26 +13,26 @@ public abstract class EntityTameable extends EntityAnimal {
 		this.dataWatcher.addObject(17, "");
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
 		if(this.getOwnerName() == null) {
-			nBTTagCompound1.setString("Owner", "");
+			compoundTag.setString("Owner", "");
 		} else {
-			nBTTagCompound1.setString("Owner", this.getOwnerName());
+			compoundTag.setString("Owner", this.getOwnerName());
 		}
 
-		nBTTagCompound1.setBoolean("Sitting", this.isSitting());
+		compoundTag.setBoolean("Sitting", this.isSitting());
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		String string2 = nBTTagCompound1.getString("Owner");
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		String string2 = compoundTag.getString("Owner");
 		if(string2.length() > 0) {
 			this.setOwner(string2);
 			this.setTamed(true);
 		}
 
-		this.aiSit.func_48407_a(nBTTagCompound1.getBoolean("Sitting"));
+		this.aiSit.func_48407_a(compoundTag.getBoolean("Sitting"));
 	}
 
 	protected void spawnHeartOrSmoke(boolean z1) {

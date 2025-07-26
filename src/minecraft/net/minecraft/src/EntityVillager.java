@@ -1,10 +1,10 @@
 package net.minecraft.src;
 
 public class EntityVillager extends EntityAgeable {
-	private int randomTickDivider;
+	//private int randomTickDivider;
 	private boolean isMatingFlag;
 	private boolean isPlayingFlag;
-	Village villageObj;
+	//Village villageObj;
 
 	public EntityVillager(World world1) {
 		this(world1, 0);
@@ -12,10 +12,10 @@ public class EntityVillager extends EntityAgeable {
 
 	public EntityVillager(World world1, int i2) {
 		super(world1);
-		this.randomTickDivider = 0;
+		//this.randomTickDivider = 0;
 		this.isMatingFlag = false;
 		this.isPlayingFlag = false;
-		this.villageObj = null;
+		//this.villageObj = null;
 		this.setProfession(i2);
 		this.texture = "/mob/villager/villager.png";
 		this.moveSpeed = 0.5F;
@@ -23,11 +23,11 @@ public class EntityVillager extends EntityAgeable {
 		this.getNavigator().setAvoidsWater(true);
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityZombie.class, 8.0F, 0.3F, 0.35F));
-		this.tasks.addTask(2, new EntityAIMoveIndoors(this));
-		this.tasks.addTask(3, new EntityAIRestrictOpenDoor(this));
+		//this.tasks.addTask(2, new EntityAIMoveIndoors(this));
+		//this.tasks.addTask(3, new EntityAIRestrictOpenDoor(this));
 		this.tasks.addTask(4, new EntityAIOpenDoor(this, true));
 		this.tasks.addTask(5, new EntityAIMoveTwardsRestriction(this, 0.3F));
-		this.tasks.addTask(6, new EntityAIVillagerMate(this));
+		//this.tasks.addTask(6, new EntityAIVillagerMate(this));
 		this.tasks.addTask(7, new EntityAIFollowGolem(this));
 		this.tasks.addTask(8, new EntityAIPlay(this, 0.32F));
 		this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
@@ -41,6 +41,7 @@ public class EntityVillager extends EntityAgeable {
 	}
 
 	protected void updateAITick() {
+		/*
 		if(--this.randomTickDivider <= 0) {
 			this.worldObj.villageCollectionObj.addVillagerPosition(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
 			this.randomTickDivider = 70 + this.rand.nextInt(50);
@@ -52,6 +53,7 @@ public class EntityVillager extends EntityAgeable {
 				this.setHomeArea(chunkCoordinates1.posX, chunkCoordinates1.posY, chunkCoordinates1.posZ, this.villageObj.getVillageRadius());
 			}
 		}
+		*/
 
 		super.updateAITick();
 	}
@@ -69,14 +71,14 @@ public class EntityVillager extends EntityAgeable {
 		super.onLivingUpdate();
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setInteger("Profession", this.getProfession());
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setInteger("Profession", this.getProfession());
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.setProfession(nBTTagCompound1.getInteger("Profession"));
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.setProfession(compoundTag.getInteger("Profession"));
 	}
 
 	public String getTexture() {
@@ -138,9 +140,11 @@ public class EntityVillager extends EntityAgeable {
 
 	public void setRevengeTarget(EntityLiving entityLiving1) {
 		super.setRevengeTarget(entityLiving1);
+		/*
 		if(this.villageObj != null && entityLiving1 != null) {
 			this.villageObj.addOrRenewAgressor(entityLiving1);
 		}
+		*/
 
 	}
 }

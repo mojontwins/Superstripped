@@ -43,7 +43,7 @@ public class ItemInWorldManager {
 		return this.gameType == 1;
 	}
 
-	public void s_func_35695_b(int i1) {
+	public void setGameMode(int i1) {
 		if(this.gameType == -1) {
 			this.gameType = i1;
 		}

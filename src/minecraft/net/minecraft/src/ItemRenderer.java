@@ -29,14 +29,7 @@ public class ItemRenderer {
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture(itemStack2.getItem().getTextureFile()));
 
 			Tessellator tessellator4 = Tessellator.instance;
-			
-			/*
-			int i5 = entityLiving1.getItemIcon(itemStack2, i3);
-			float f6 = ((float)(i5 % 16 * 16) + 0.0F) / 256.0F;
-			float f7 = ((float)(i5 % 16 * 16) + 15.99F) / 256.0F;
-			float f8 = ((float)(i5 / 16 * 16) + 0.0F) / 256.0F;
-			float f9 = ((float)(i5 / 16 * 16) + 15.99F) / 256.0F;
-			*/
+
 			Idx2uvF.calc(entityLiving1.getItemIcon(itemStack2, i3));
 			double f6 = Idx2uvF.u1;
 			double f7 = Idx2uvF.u2;
@@ -202,7 +195,7 @@ public class ItemRenderer {
 		int i15 = this.mc.theWorld.getLightBrightnessForSkyBlocks(MathHelper.floor_double(entityPlayerSP3.posX), MathHelper.floor_double(entityPlayerSP3.posY), MathHelper.floor_double(entityPlayerSP3.posZ), 0);
 		int i8 = i15 % 65536;
 		int i9 = i15 / 65536;
-		//System.out.println ("LIGHT ITEM " + i8 + " " + i9);
+
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)i8 / 1.0F, (float)i9 / 1.0F);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		float f10;
@@ -452,15 +445,7 @@ public class ItemRenderer {
 		for(int i4 = 0; i4 < 2; ++i4) {
 			GL11.glPushMatrix();
 			int i5 = Block.fire.blockIndexInTexture + i4 * 16;
-			
-			/*
-			int i6 = (i5 & 15) << 4;
-			int i7 = i5 & 240;
-			float f8 = (float)i6 / 256.0F;
-			float f9 = ((float)i6 + 15.99F) / 256.0F;
-			float f10 = (float)i7 / 256.0F;
-			float f11 = ((float)i7 + 15.99F) / 256.0F;
-			*/
+
 			Idx2uvF.calc(i5);
 			double f8 = Idx2uvF.u1;
 			double f9 = Idx2uvF.u2;

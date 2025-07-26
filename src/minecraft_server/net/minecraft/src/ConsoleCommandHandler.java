@@ -219,22 +219,22 @@ public class ConsoleCommandHandler {
 							string19 = tokens[1];
 
 							try {
-								int i23 = Integer.parseInt(tokens[2]);
+								int armorValue = Integer.parseInt(tokens[2]);
 								WorldServer worldServer24;
 								if("add".equalsIgnoreCase(string19)) {
 									for(i20 = 0; i20 < this.minecraftServer.worldMngr.length; ++i20) {
 										worldServer24 = this.minecraftServer.worldMngr[i20];
-										worldServer24.advanceTime(worldServer24.getWorldTime() + (long)i23);
+										worldServer24.advanceTime(worldServer24.getWorldTime() + (long)armorValue);
 									}
 
-									this.sendNoticeToOps(username, "Added " + i23 + " to time");
+									this.sendNoticeToOps(username, "Added " + armorValue + " to time");
 								} else if("set".equalsIgnoreCase(string19)) {
 									for(i20 = 0; i20 < this.minecraftServer.worldMngr.length; ++i20) {
 										worldServer24 = this.minecraftServer.worldMngr[i20];
-										worldServer24.advanceTime((long)i23);
+										worldServer24.advanceTime((long)armorValue);
 									}
 
-									this.sendNoticeToOps(username, "Set time to " + i23);
+									this.sendNoticeToOps(username, "Set time to " + armorValue);
 								} else {
 									commandListener.log("Unknown method, use either \"add\" or \"set\"");
 								}

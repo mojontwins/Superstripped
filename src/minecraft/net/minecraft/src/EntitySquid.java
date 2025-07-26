@@ -1,38 +1,38 @@
 package net.minecraft.src;
 
 public class EntitySquid extends EntityWaterMob implements IWaterMob {
-	public float field_21089_a = 0.0F;
-	public float field_21088_b = 0.0F;
-	public float field_21087_c = 0.0F;
-	public float field_21086_f = 0.0F;
-	public float field_21085_g = 0.0F;
-	public float field_21084_h = 0.0F;
+	public float xBodyRot = 0.0F;
+	public float xBodyRotO = 0.0F;
+	public float zBodyRot = 0.0F;
+	public float zBodyRotO = 0.0F;
+	public float tentacleMovement = 0.0F;
+	public float oldTentacleMovement = 0.0F;
 	public float tentacleAngle = 0.0F;
-	public float lastTentacleAngle = 0.0F;
-	private float randomMotionSpeed = 0.0F;
-	private float field_21080_l = 0.0F;
-	private float field_21079_m = 0.0F;
-	private float randomMotionVecX = 0.0F;
-	private float randomMotionVecY = 0.0F;
-	private float randomMotionVecZ = 0.0F;
+	public float oldTentacleAngle = 0.0F;
+	private float speed = 0.0F;
+	private float tentacleSpeed = 0.0F;
+	private float rotateSpeed = 0.0F;
+	private float tx = 0.0F;
+	private float ty = 0.0F;
+	private float tz = 0.0F;
 
 	public EntitySquid(World world1) {
 		super(world1);
 		this.texture = "/mob/squid.png";
 		this.setSize(0.95F, 0.95F);
-		this.field_21080_l = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
+		this.tentacleSpeed = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
 	}
 
 	public int getMaxHealth() {
 		return 10;
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
 	}
 
 	protected String getLivingSound() {
@@ -74,48 +74,48 @@ public class EntitySquid extends EntityWaterMob implements IWaterMob {
 
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		this.field_21088_b = this.field_21089_a;
-		this.field_21086_f = this.field_21087_c;
-		this.field_21084_h = this.field_21085_g;
-		this.lastTentacleAngle = this.tentacleAngle;
-		this.field_21085_g += this.field_21080_l;
-		if(this.field_21085_g > 6.2831855F) {
-			this.field_21085_g -= 6.2831855F;
+		this.xBodyRotO = this.xBodyRot;
+		this.zBodyRotO = this.zBodyRot;
+		this.oldTentacleMovement = this.tentacleMovement;
+		this.oldTentacleAngle = this.tentacleAngle;
+		this.tentacleMovement += this.tentacleSpeed;
+		if(this.tentacleMovement > 6.2831855F) {
+			this.tentacleMovement -= 6.2831855F;
 			if(this.rand.nextInt(10) == 0) {
-				this.field_21080_l = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
+				this.tentacleSpeed = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
 			}
 		}
 
 		if(this.isInWater()) {
 			float f1;
-			if(this.field_21085_g < (float)Math.PI) {
-				f1 = this.field_21085_g / (float)Math.PI;
+			if(this.tentacleMovement < (float)Math.PI) {
+				f1 = this.tentacleMovement / (float)Math.PI;
 				this.tentacleAngle = MathHelper.sin(f1 * f1 * (float)Math.PI) * (float)Math.PI * 0.25F;
 				if((double)f1 > 0.75D) {
-					this.randomMotionSpeed = 1.0F;
-					this.field_21079_m = 1.0F;
+					this.speed = 1.0F;
+					this.rotateSpeed = 1.0F;
 				} else {
-					this.field_21079_m *= 0.8F;
+					this.rotateSpeed *= 0.8F;
 				}
 			} else {
 				this.tentacleAngle = 0.0F;
-				this.randomMotionSpeed *= 0.9F;
-				this.field_21079_m *= 0.99F;
+				this.speed *= 0.9F;
+				this.rotateSpeed *= 0.99F;
 			}
 
 			if(!this.worldObj.isRemote) {
-				this.motionX = (double)(this.randomMotionVecX * this.randomMotionSpeed);
-				this.motionY = (double)(this.randomMotionVecY * this.randomMotionSpeed);
-				this.motionZ = (double)(this.randomMotionVecZ * this.randomMotionSpeed);
+				this.motionX = (double)(this.tx * this.speed);
+				this.motionY = (double)(this.ty * this.speed);
+				this.motionZ = (double)(this.tz * this.speed);
 			}
 
 			f1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
 			this.renderYawOffset += (-((float)Math.atan2(this.motionX, this.motionZ)) * 180.0F / (float)Math.PI - this.renderYawOffset) * 0.1F;
 			this.rotationYaw = this.renderYawOffset;
-			this.field_21087_c += (float)Math.PI * this.field_21079_m * 1.5F;
-			this.field_21089_a += (-((float)Math.atan2((double)f1, this.motionY)) * 180.0F / (float)Math.PI - this.field_21089_a) * 0.1F;
+			this.zBodyRot += (float)Math.PI * this.rotateSpeed * 1.5F;
+			this.xBodyRot += (-((float)Math.atan2((double)f1, this.motionY)) * 180.0F / (float)Math.PI - this.xBodyRot) * 0.1F;
 		} else {
-			this.tentacleAngle = MathHelper.abs(MathHelper.sin(this.field_21085_g)) * (float)Math.PI * 0.25F;
+			this.tentacleAngle = MathHelper.abs(MathHelper.sin(this.tentacleMovement)) * (float)Math.PI * 0.25F;
 			if(!this.worldObj.isRemote) {
 				this.motionX = 0.0D;
 				this.motionY -= 0.08D;
@@ -123,7 +123,7 @@ public class EntitySquid extends EntityWaterMob implements IWaterMob {
 				this.motionZ = 0.0D;
 			}
 
-			this.field_21089_a = (float)((double)this.field_21089_a + (double)(-90.0F - this.field_21089_a) * 0.02D);
+			this.xBodyRot = (float)((double)this.xBodyRot + (double)(-90.0F - this.xBodyRot) * 0.02D);
 		}
 
 	}
@@ -135,18 +135,18 @@ public class EntitySquid extends EntityWaterMob implements IWaterMob {
 	protected void updateEntityActionState() {
 		++this.entityAge;
 		if(this.entityAge > 100) {
-			this.randomMotionVecX = this.randomMotionVecY = this.randomMotionVecZ = 0.0F;
-		} else if(this.rand.nextInt(50) == 0 || !this.inWater || this.randomMotionVecX == 0.0F && this.randomMotionVecY == 0.0F && this.randomMotionVecZ == 0.0F) {
+			this.tx = this.ty = this.tz = 0.0F;
+		} else if(this.rand.nextInt(50) == 0 || !this.inWater || this.tx == 0.0F && this.ty == 0.0F && this.tz == 0.0F) {
 			float f1 = this.rand.nextFloat() * (float)Math.PI * 2.0F;
-			this.randomMotionVecX = MathHelper.cos(f1) * 0.2F;
-			this.randomMotionVecY = -0.1F + this.rand.nextFloat() * 0.2F;
-			this.randomMotionVecZ = MathHelper.sin(f1) * 0.2F;
+			this.tx = MathHelper.cos(f1) * 0.2F;
+			this.ty = -0.1F + this.rand.nextFloat() * 0.2F;
+			this.tz = MathHelper.sin(f1) * 0.2F;
 		}
 
 		this.despawnEntity();
 	}
 
 	public boolean getCanSpawnHere() {
-		return this.posY > 45.0D && this.posY < 63.0D && super.getCanSpawnHere();
+		return GameRules.boolRule("enableSquids") && this.posY > 45.0D && this.posY < 63.0D && super.getCanSpawnHere();
 	}
 }

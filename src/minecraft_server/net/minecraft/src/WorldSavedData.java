@@ -8,9 +8,9 @@ public abstract class WorldSavedData {
 		this.mapName = string1;
 	}
 
-	public abstract void readFromNBT(NBTTagCompound nBTTagCompound1);
+	public abstract void readFromNBT(NBTTagCompound compoundTag);
 
-	public abstract void writeToNBT(NBTTagCompound nBTTagCompound1);
+	public abstract void writeToNBT(NBTTagCompound compoundTag);
 
 	public void markDirty() {
 		this.setDirty(true);

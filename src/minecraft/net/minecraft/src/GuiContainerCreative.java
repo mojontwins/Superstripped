@@ -143,7 +143,7 @@ public class GuiContainerCreative extends GuiContainer {
 			super.initGui();
 			this.controlList.clear();
 			Keyboard.enableRepeatEvents(true);
-			this.searchField = new GuiTextField(this.fontRenderer, this.guiLeft + 82, this.guiTop + 6, 89,
+			this.searchField = new GuiTextField(this, this.fontRenderer, this.guiLeft + 82, this.guiTop + 6, 89,
 					this.fontRenderer.FONT_HEIGHT);
 			this.searchField.setMaxStringLength(15);
 			this.searchField.setEnableBackgroundDrawing(false);

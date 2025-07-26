@@ -15,77 +15,79 @@ import java.util.Set;
 public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader {
 	private List<AnvilChunkLoaderPending> anvilChunkLoaderPending = new ArrayList<AnvilChunkLoaderPending>();
 	private Set<ChunkCoordIntPair> chunkCoordIntPairList = new HashSet<ChunkCoordIntPair>();
-	private Object field_48450_c = new Object();
+	private Object fileLock = new Object();
 	private final File chunkSaveLocation;
 
-	public AnvilChunkLoader(File file1) {
-		this.chunkSaveLocation = file1;
+	public AnvilChunkLoader(File saveFile) {
+		this.chunkSaveLocation = saveFile;
 	}
 
-	public Chunk loadChunk(World world1, int i2, int i3) throws IOException {
-		NBTTagCompound nBTTagCompound4 = null;
-		ChunkCoordIntPair chunkCoordIntPair5 = new ChunkCoordIntPair(i2, i3);
-		synchronized(this.field_48450_c) {
-			if(this.chunkCoordIntPairList.contains(chunkCoordIntPair5)) {
+	public Chunk loadChunk(World world, int chunkX, int chunkZ) throws IOException {
+		NBTTagCompound nbt = null;
+
+		ChunkCoordIntPair chunkCoords = new ChunkCoordIntPair(chunkX, chunkZ);
+		
+		synchronized(this.fileLock) {
+			if(this.chunkCoordIntPairList.contains(chunkCoords)) {
 				for(int i7 = 0; i7 < this.anvilChunkLoaderPending.size(); ++i7) {
-					if(((AnvilChunkLoaderPending)this.anvilChunkLoaderPending.get(i7)).field_48427_a.equals(chunkCoordIntPair5)) {
-						nBTTagCompound4 = ((AnvilChunkLoaderPending)this.anvilChunkLoaderPending.get(i7)).field_48426_b;
+					if(((AnvilChunkLoaderPending)this.anvilChunkLoaderPending.get(i7)).field_48427_a.equals(chunkCoords)) {
+						nbt = ((AnvilChunkLoaderPending)this.anvilChunkLoaderPending.get(i7)).field_48426_b;
 						break;
 					}
 				}
 			}
 		}
 
-		if(nBTTagCompound4 == null) {
-			DataInputStream dataInputStream10 = RegionFileCache.getChunkInputStream(this.chunkSaveLocation, i2, i3);
+		if(nbt == null) {
+			DataInputStream dataInputStream10 = RegionFileCache.getChunkInputStream(this.chunkSaveLocation, chunkX, chunkZ);
 			if(dataInputStream10 == null) {
 				return null;
 			}
 
-			nBTTagCompound4 = CompressedStreamTools.read((DataInput)dataInputStream10);
+			nbt = CompressedStreamTools.read((DataInput)dataInputStream10);
 		}
 
-		return this.func_48443_a(world1, i2, i3, nBTTagCompound4);
+		return this.loadChunkSections(world, chunkX, chunkZ, nbt);
 	}
 
-	protected Chunk func_48443_a(World world1, int i2, int i3, NBTTagCompound nBTTagCompound4) {
-		if(!nBTTagCompound4.hasKey("Level")) {
-			System.out.println("Chunk file at " + i2 + "," + i3 + " is missing level data, skipping");
+	protected Chunk loadChunkSections(World world, int chunkX, int chunkZ, NBTTagCompound nbt) {
+		if(!nbt.hasKey("Level")) {
+			System.out.println("Chunk file at " + chunkX + "," + chunkZ + " is missing level data, skipping");
 			return null;
-		} else if(!nBTTagCompound4.getCompoundTag("Level").hasKey("Sections")) {
-			System.out.println("Chunk file at " + i2 + "," + i3 + " is missing block data, skipping");
+		} else if(!nbt.getCompoundTag("Level").hasKey("Sections")) {
+			System.out.println("Chunk file at " + chunkX + "," + chunkZ + " is missing block data, skipping");
 			return null;
 		} else {
-			Chunk chunk5 = this.func_48444_a(world1, nBTTagCompound4.getCompoundTag("Level"));
-			if(!chunk5.isAtLocation(i2, i3)) {
-				System.out.println("Chunk file at " + i2 + "," + i3 + " is in the wrong location; relocating. (Expected " + i2 + ", " + i3 + ", got " + chunk5.xPosition + ", " + chunk5.zPosition + ")");
-				nBTTagCompound4.setInteger("xPos", i2);
-				nBTTagCompound4.setInteger("zPos", i3);
-				chunk5 = this.func_48444_a(world1, nBTTagCompound4.getCompoundTag("Level"));
+			Chunk chunk = this.doLoadChunk(world, nbt.getCompoundTag("Level"));
+			if(!chunk.isAtLocation(chunkX, chunkZ)) {
+				System.out.println("Chunk file at " + chunkX + "," + chunkZ + " is in the wrong location; relocating. (Expected " + chunkX + ", " + chunkZ + ", got " + chunk.xPosition + ", " + chunk.zPosition + ")");
+				nbt.setInteger("xPos", chunkX);
+				nbt.setInteger("zPos", chunkZ);
+				chunk = this.doLoadChunk(world, nbt.getCompoundTag("Level"));
 			}
 
-			chunk5.removeUnknownBlocks();
-			return chunk5;
+			chunk.removeUnknownBlocks();
+			return chunk;
 		}
 	}
 
-	public void saveChunk(World world1, Chunk chunk2) {
-		world1.checkSessionLock();
+	public void saveChunk(World world, Chunk chunk) {
+		world.checkSessionLock();
 
 		try {
-			NBTTagCompound nBTTagCompound3 = new NBTTagCompound();
-			NBTTagCompound nBTTagCompound4 = new NBTTagCompound();
-			nBTTagCompound3.setTag("Level", nBTTagCompound4);
-			this.func_48445_a(chunk2, world1, nBTTagCompound4);
-			this.func_48446_a(chunk2.getChunkCoordIntPair(), nBTTagCompound3);
+			NBTTagCompound nbt = new NBTTagCompound();
+			NBTTagCompound nbtLevel = new NBTTagCompound();
+			nbt.setTag("Level", nbtLevel);
+			this.doSaveChunk(chunk, world, nbtLevel);
+			this.enqueueChunkSave(chunk.getChunkCoordIntPair(), nbt);
 		} catch (Exception exception5) {
 			exception5.printStackTrace();
 		}
 
 	}
 
-	protected void func_48446_a(ChunkCoordIntPair chunkCoordIntPair1, NBTTagCompound nBTTagCompound2) {
-		synchronized(this.field_48450_c) {
+	protected void enqueueChunkSave(ChunkCoordIntPair chunkCoordIntPair1, NBTTagCompound nBTTagCompound2) {
+		synchronized(this.fileLock) {
 			if(this.chunkCoordIntPairList.contains(chunkCoordIntPair1)) {
 				for(int i4 = 0; i4 < this.anvilChunkLoaderPending.size(); ++i4) {
 					if(((AnvilChunkLoaderPending)this.anvilChunkLoaderPending.get(i4)).field_48427_a.equals(chunkCoordIntPair1)) {
@@ -103,7 +105,7 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader {
 
 	public boolean writeNextIO() {
 		AnvilChunkLoaderPending anvilChunkLoaderPending1 = null;
-		synchronized(this.field_48450_c) {
+		synchronized(this.fileLock) {
 			if(this.anvilChunkLoaderPending.size() <= 0) {
 				return false;
 			}
@@ -114,7 +116,7 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader {
 
 		if(anvilChunkLoaderPending1 != null) {
 			try {
-				this.func_48447_a(anvilChunkLoaderPending1);
+				this.doWriteToDisk(anvilChunkLoaderPending1);
 			} catch (Exception exception4) {
 				exception4.printStackTrace();
 			}
@@ -123,13 +125,13 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader {
 		return true;
 	}
 
-	private void func_48447_a(AnvilChunkLoaderPending anvilChunkLoaderPending1) throws IOException {
+	private void doWriteToDisk(AnvilChunkLoaderPending anvilChunkLoaderPending1) throws IOException {
 		DataOutputStream dataOutputStream2 = RegionFileCache.getChunkOutputStream(this.chunkSaveLocation, anvilChunkLoaderPending1.field_48427_a.chunkXPos, anvilChunkLoaderPending1.field_48427_a.chunkZPos);
 		CompressedStreamTools.write(anvilChunkLoaderPending1.field_48426_b, (DataOutput)dataOutputStream2);
 		dataOutputStream2.close();
 	}
 
-	public void saveExtraChunkData(World world1, Chunk chunk2) {
+	public void saveExtraChunkData(World world, Chunk chunk2) {
 	}
 
 	public void chunkTick() {
@@ -138,159 +140,185 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader {
 	public void saveExtraData() {
 	}
 
-	private void func_48445_a(Chunk chunk1, World world2, NBTTagCompound nBTTagCompound3) {
-		world2.checkSessionLock();
-		nBTTagCompound3.setInteger("xPos", chunk1.xPosition);
-		nBTTagCompound3.setInteger("zPos", chunk1.zPosition);
-		nBTTagCompound3.setLong("LastUpdate", world2.getWorldTime());
-		nBTTagCompound3.func_48183_a("HeightMap", chunk1.heightMap);
-		nBTTagCompound3.setBoolean("TerrainPopulated", chunk1.isTerrainPopulated);
-		ExtendedBlockStorage[] extendedBlockStorage4 = chunk1.getBlockStorageArray();
-		NBTTagList nBTTagList5 = new NBTTagList("Sections");
-		ExtendedBlockStorage[] extendedBlockStorage6 = extendedBlockStorage4;
-		int i7 = extendedBlockStorage4.length;
+	private void doSaveChunk(Chunk chunk, World world, NBTTagCompound nbt) {
+		world.checkSessionLock();
 
-		NBTTagCompound nBTTagCompound10;
-		for(int i8 = 0; i8 < i7; ++i8) {
-			ExtendedBlockStorage extendedBlockStorage9 = extendedBlockStorage6[i8];
-			if(extendedBlockStorage9 != null && extendedBlockStorage9.func_48700_f() != 0) {
-				nBTTagCompound10 = new NBTTagCompound();
-				nBTTagCompound10.setByte("Y", (byte)(extendedBlockStorage9.getYLocation() >> 4 & 255));
-				nBTTagCompound10.setByteArray("Blocks", extendedBlockStorage9.func_48692_g());
-				if(extendedBlockStorage9.getBlockMSBArray() != null) {
-					nBTTagCompound10.setByteArray("Add", extendedBlockStorage9.getBlockMSBArray().data);
-				}
+		// General data
+		nbt.setInteger("xPos", chunk.xPosition);
+		nbt.setInteger("zPos", chunk.zPosition);
+		nbt.setLong("LastUpdate", world.getWorldTime());
+		nbt.func_48183_a("HeightMap", chunk.heightMap);
+		nbt.setBoolean("TerrainPopulated", chunk.isTerrainPopulated);
+		
+		ExtendedBlockStorage[] ebsArray = chunk.getBlockStorageArray();
+		NBTTagList nbtSections = new NBTTagList("Sections");
 
-				nBTTagCompound10.setByteArray("Data", extendedBlockStorage9.func_48697_j().data);
-				nBTTagCompound10.setByteArray("SkyLight", extendedBlockStorage9.getSkylightArray().data);
-				nBTTagCompound10.setByteArray("BlockLight", extendedBlockStorage9.getBlocklightArray().data);
-				nBTTagList5.appendTag(nBTTagCompound10);
+		ExtendedBlockStorage[] ebsArrayS = ebsArray;
+		int numSections = ebsArray.length;
+
+		NBTTagCompound nbtSection;
+		for(int i = 0; i < numSections; ++i) {
+			ExtendedBlockStorage ebs = ebsArrayS[i];
+			if(ebs != null && ebs.blockCount() != 0) {
+				nbtSection = new NBTTagCompound();
+				nbtSection.setByte("Y", (byte)(ebs.getYLocation() >> 4 & 255));
+				
+				// Save blocks
+				nbtSection.setByteArray("Blocks", ebs.getBlockLSBArray());
+				if(ebs.getBlockMSBArray() != null) {
+					nbtSection.setByteArray("Add", ebs.getBlockMSBArray().data);
 			}
+
+				// Save metadata. TODO: expand to 8 bit
+				nbtSection.setByteArray("Data", ebs.getMetadataArray().data);
+
+				// Save light
+				nbtSection.setByteArray("SkyLight", ebs.getSkylightArray().data);
+				nbtSection.setByteArray("BlockLight", ebs.getBlocklightArray().data);
+
+				nbtSections.appendTag(nbtSection);
+		}
 		}
 
-		nBTTagCompound3.setTag("Sections", nBTTagList5);
-		nBTTagCompound3.setByteArray("Biomes", chunk1.getBiomeArray());
-		chunk1.hasEntities = false;
+		nbt.setTag("Sections", nbtSections);
+
+		// Save biome cache
+		nbt.setByteArray("Biomes", chunk.getBiomeArray());
+		chunk.hasEntities = false;
 
 		{
-			NBTTagList nBTTagList15 = new NBTTagList();
-			Iterator<Entity> iterator17;
-			for(i7 = 0; i7 < chunk1.entityLists.length; ++i7) {
-				iterator17 = chunk1.entityLists[i7].iterator();
+			NBTTagList nbtEntities = new NBTTagList();
+			Iterator<Entity> it;
+			for(int i = 0; i < chunk.entityLists.length; ++i) {
+				it = chunk.entityLists[i].iterator();
 	
-				while(iterator17.hasNext()) {
-					Entity entity19 = (Entity)iterator17.next();
-					chunk1.hasEntities = true;
-					nBTTagCompound10 = new NBTTagCompound();
-					if(entity19.addEntityID(nBTTagCompound10)) {
-						nBTTagList15.appendTag(nBTTagCompound10);
+				while(it.hasNext()) {
+					Entity entity = (Entity)it.next();
+					chunk.hasEntities = true;
+					nbtSection = new NBTTagCompound();
+					if(entity.addEntityID(nbtSection)) {
+						nbtEntities.appendTag(nbtSection);
 					}
 				}
 			}
 	
-			nBTTagCompound3.setTag("Entities", nBTTagList15);
+			nbt.setTag("Entities", nbtEntities);
 		}
 		
 		{
-			NBTTagList nBTTagList16 = new NBTTagList();
-			Iterator<TileEntity> iterator17 = chunk1.chunkTileEntityMap.values().iterator();
+			NBTTagList nbtTileEntities = new NBTTagList();
+			Iterator<TileEntity> it = chunk.chunkTileEntityMap.values().iterator();
 	
-			while(iterator17.hasNext()) {
-				TileEntity tileEntity20 = (TileEntity)iterator17.next();
-				nBTTagCompound10 = new NBTTagCompound();
-				tileEntity20.writeToNBT(nBTTagCompound10);
-				nBTTagList16.appendTag(nBTTagCompound10);
+			while(it.hasNext()) {
+				TileEntity tileEntity20 = (TileEntity)it.next();
+				nbtSection = new NBTTagCompound();
+				tileEntity20.writeToNBT(nbtSection);
+				nbtTileEntities.appendTag(nbtSection);
 			}
 	
-			nBTTagCompound3.setTag("TileEntities", nBTTagList16);
+			nbt.setTag("TileEntities", nbtTileEntities);
 		}
 		
-		List<NextTickListEntry> list18 = world2.getPendingBlockUpdates(chunk1, false);
-		if(list18 != null) {
-			long j21 = world2.getWorldTime();
-			NBTTagList nBTTagList11 = new NBTTagList();
-			Iterator<NextTickListEntry> iterator12 = list18.iterator();
+		List<NextTickListEntry> pendingUpdatesList = world.getPendingBlockUpdates(chunk, false);
+		if(pendingUpdatesList != null) {
+			long worldTime = world.getWorldTime();
+			NBTTagList nbtTileTicks = new NBTTagList();
+			Iterator<NextTickListEntry> it = pendingUpdatesList.iterator();
 
-			while(iterator12.hasNext()) {
-				NextTickListEntry nextTickListEntry13 = (NextTickListEntry)iterator12.next();
-				NBTTagCompound nBTTagCompound14 = new NBTTagCompound();
-				nBTTagCompound14.setInteger("i", nextTickListEntry13.blockID);
-				nBTTagCompound14.setInteger("x", nextTickListEntry13.xCoord);
-				nBTTagCompound14.setInteger("y", nextTickListEntry13.yCoord);
-				nBTTagCompound14.setInteger("z", nextTickListEntry13.zCoord);
-				nBTTagCompound14.setInteger("t", (int)(nextTickListEntry13.scheduledTime - j21));
-				nBTTagList11.appendTag(nBTTagCompound14);
+			while(it.hasNext()) {
+				NextTickListEntry ntle = (NextTickListEntry)it.next();
+				NBTTagCompound nbtTileTick = new NBTTagCompound();
+				nbtTileTick.setInteger("i", ntle.blockID);
+				nbtTileTick.setInteger("x", ntle.xCoord);
+				nbtTileTick.setInteger("y", ntle.yCoord);
+				nbtTileTick.setInteger("z", ntle.zCoord);
+				nbtTileTick.setInteger("t", (int)(ntle.scheduledTime - worldTime));
+				nbtTileTicks.appendTag(nbtTileTick);
 			}
 
-			nBTTagCompound3.setTag("TileTicks", nBTTagList11);
+			nbt.setTag("TileTicks", nbtTileTicks);
 		}
 
 	}
 
-	private Chunk func_48444_a(World world1, NBTTagCompound nBTTagCompound2) {
-		int i3 = nBTTagCompound2.getInteger("xPos");
-		int i4 = nBTTagCompound2.getInteger("zPos");
-		Chunk chunk5 = new Chunk(world1, i3, i4);
-		chunk5.heightMap = nBTTagCompound2.func_48182_l("HeightMap");
-		chunk5.isTerrainPopulated = nBTTagCompound2.getBoolean("TerrainPopulated");
-		NBTTagList nBTTagList6 = nBTTagCompound2.getTagList("Sections");
-		byte b7 = 16;
-		ExtendedBlockStorage[] extendedBlockStorage8 = new ExtendedBlockStorage[b7];
+	private Chunk doLoadChunk(World world, NBTTagCompound nbt) {
+		int chunkX = nbt.getInteger("xPos");
+		int chunkZ = nbt.getInteger("zPos");
 
-		for(int i9 = 0; i9 < nBTTagList6.tagCount(); ++i9) {
-			NBTTagCompound nBTTagCompound10 = (NBTTagCompound)nBTTagList6.tagAt(i9);
-			byte b11 = nBTTagCompound10.getByte("Y");
-			ExtendedBlockStorage extendedBlockStorage12 = new ExtendedBlockStorage(b11 << 4);
-			extendedBlockStorage12.setBlockLSBArray(nBTTagCompound10.getByteArray("Blocks"));
-			if(nBTTagCompound10.hasKey("Add")) {
-				extendedBlockStorage12.setBlockMSBArray(new NibbleArray(nBTTagCompound10.getByteArray("Add"), 4));
+		Chunk chunk = new Chunk(world, chunkX, chunkZ);
+		
+		chunk.heightMap = nbt.getIntArray("HeightMap");
+		chunk.isTerrainPopulated = nbt.getBoolean("TerrainPopulated");
+		
+		NBTTagList mbtSections = nbt.getTagList("Sections");
+		byte maxSections = 16;
+		ExtendedBlockStorage[] ebsArray = new ExtendedBlockStorage[maxSections];
+
+		for(int i = 0; i < mbtSections.tagCount(); ++i) {
+			NBTTagCompound nbtSection = (NBTTagCompound)mbtSections.tagAt(i);
+			byte sectionY = nbtSection.getByte("Y");
+			ExtendedBlockStorage ebs = new ExtendedBlockStorage(sectionY << 4);
+
+			// Read blocks
+			ebs.setBlockLSBArray(nbtSection.getByteArray("Blocks"));
+			if(nbtSection.hasKey("Add")) {
+				ebs.setBlockMSBArray(new NibbleArray(nbtSection.getByteArray("Add"), 4));
 			}
 
-			extendedBlockStorage12.setBlockMetadataArray(new NibbleArray(nBTTagCompound10.getByteArray("Data"), 4));
-			extendedBlockStorage12.setSkylightArray(new NibbleArray(nBTTagCompound10.getByteArray("SkyLight"), 4));
-			extendedBlockStorage12.setBlocklightArray(new NibbleArray(nBTTagCompound10.getByteArray("BlockLight"), 4));
-			extendedBlockStorage12.func_48708_d();
-			extendedBlockStorage8[b11] = extendedBlockStorage12;
+			// Read metadata. TODO: Modify this to read 8 bits!
+			ebs.setBlockMetadataArray(new NibbleArray(nbtSection.getByteArray("Data"), 4));
+
+			// Read skylight and block light
+			ebs.setSkylightArray(new NibbleArray(nbtSection.getByteArray("SkyLight"), 4));
+			ebs.setBlocklightArray(new NibbleArray(nbtSection.getByteArray("BlockLight"), 4));
+			
+			ebs.cleanupAndUpdateCounters();
+			ebsArray[sectionY] = ebs;
 		}
 
-		chunk5.setStorageArrays(extendedBlockStorage8);
-		if(nBTTagCompound2.hasKey("Biomes")) {
-			chunk5.setBiomeArray(nBTTagCompound2.getByteArray("Biomes"));
+		chunk.setStorageArrays(ebsArray);
+
+		// Read biome cache
+		if(nbt.hasKey("Biomes")) {
+			chunk.setBiomeArray(nbt.getByteArray("Biomes"));
 		}
 
-		NBTTagList nBTTagList14 = nBTTagCompound2.getTagList("Entities");
-		if(nBTTagList14 != null) {
-			for(int i15 = 0; i15 < nBTTagList14.tagCount(); ++i15) {
-				NBTTagCompound nBTTagCompound17 = (NBTTagCompound)nBTTagList14.tagAt(i15);
-				Entity entity19 = EntityList.createEntityFromNBT(nBTTagCompound17, world1);
-				chunk5.hasEntities = true;
-				if(entity19 != null) {
-					chunk5.addEntity(entity19);
+		// Read entities
+		NBTTagList nbtEntities = nbt.getTagList("Entities");
+		if(nbtEntities != null) {
+			for(int i = 0; i < nbtEntities.tagCount(); ++i) {
+				NBTTagCompound nbtEntity = (NBTTagCompound)nbtEntities.tagAt(i);
+				Entity entity = EntityList.createEntityFromNBT(nbtEntity, world);
+				chunk.hasEntities = true;
+				if(entity != null) {
+					chunk.addEntity(entity);
 				}
 			}
 		}
 
-		NBTTagList nBTTagList16 = nBTTagCompound2.getTagList("TileEntities");
-		if(nBTTagList16 != null) {
-			for(int i18 = 0; i18 < nBTTagList16.tagCount(); ++i18) {
-				NBTTagCompound nBTTagCompound21 = (NBTTagCompound)nBTTagList16.tagAt(i18);
-				TileEntity tileEntity13 = TileEntity.createAndLoadEntity(nBTTagCompound21);
+		// Read tile entities
+		NBTTagList nbtTileEntities = nbt.getTagList("TileEntities");
+		if(nbtTileEntities != null) {
+			for(int i = 0; i < nbtTileEntities.tagCount(); ++i) {
+				NBTTagCompound nbtTileEntity = (NBTTagCompound)nbtTileEntities.tagAt(i);
+				TileEntity tileEntity13 = TileEntity.createAndLoadEntity(nbtTileEntity);
 				if(tileEntity13 != null) {
-					chunk5.addTileEntity(tileEntity13);
+					chunk.addTileEntity(tileEntity13);
 				}
 			}
 		}
 
-		if(nBTTagCompound2.hasKey("TileTicks")) {
-			NBTTagList nBTTagList20 = nBTTagCompound2.getTagList("TileTicks");
-			if(nBTTagList20 != null) {
-				for(int i22 = 0; i22 < nBTTagList20.tagCount(); ++i22) {
-					NBTTagCompound nBTTagCompound23 = (NBTTagCompound)nBTTagList20.tagAt(i22);
-					world1.scheduleBlockUpdateFromLoad(nBTTagCompound23.getInteger("x"), nBTTagCompound23.getInteger("y"), nBTTagCompound23.getInteger("z"), nBTTagCompound23.getInteger("i"), nBTTagCompound23.getInteger("t"));
+		// Read tile ticks
+		if(nbt.hasKey("TileTicks")) {
+			NBTTagList nbtTileTicks = nbt.getTagList("TileTicks");
+			if(nbtTileTicks != null) {
+				for(int i = 0; i < nbtTileTicks.tagCount(); ++i) {
+					NBTTagCompound nbtTileTick = (NBTTagCompound)nbtTileTicks.tagAt(i);
+					world.scheduleBlockUpdateFromLoad(nbtTileTick.getInteger("x"), nbtTileTick.getInteger("y"), nbtTileTick.getInteger("z"), nbtTileTick.getInteger("i"), nbtTileTick.getInteger("t"));
 				}
 			}
 		}
 
-		return chunk5;
+		return chunk;
 	}
 }

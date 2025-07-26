@@ -6,7 +6,6 @@ import java.util.Random;
 public class BlockLeaves extends BlockLeavesBase {
 	private int baseIndexInPNG;
 	int[] surroundings;
-	private boolean needsColorizer = true;
 	
 	public static int decays = 0;
 	
@@ -15,34 +14,28 @@ public class BlockLeaves extends BlockLeavesBase {
 	public static final int BirchMetadata = 2;
 	public static final int JungleMetadata = 3;
 
-	protected BlockLeaves(int i1, int i2) {
-		super(i1, i2, Material.leaves, false);
+	protected BlockLeaves(int blockID, int blockIndexInTexture) {
+		super(blockID, blockIndexInTexture, Material.leaves, false);
 		
-		// TODO: i2 has the colorizable version. Use that in the future even if we want lime leaves.
-		// TODO: Leaves affected by metadata.
-		
-		this.baseIndexInPNG = 14*16 + 8;
-		this.needsColorizer = false;
-	
+		this.baseIndexInPNG = blockIndexInTexture;
 		this.setTickRandomly(true);
 	}
 
 	public int getBlockColor() {
-		if(!this.needsColorizer) return 0xFFFFFF;
 		double d1 = 0.5D;
 		double d3 = 1.0D;
 		return ColorizerFoliage.getFoliageColor(d1, d3);
 	}
 
 	public int getRenderColor(int i1) {
-		if(!this.needsColorizer) return 0xFFFFFF;
-		return (i1 & 3) == 1 ? ColorizerFoliage.getFoliageColorPine() : ((i1 & 3) == 2 ? ColorizerFoliage.getFoliageColorBirch() : ColorizerFoliage.getFoliageColorBasic());
+		if(Seasons.activated()) return Seasons.getLeavesColorForToday();
+		return (i1 & 3) == 1 ? ColorizerFoliage.getFoliageColorPine() : ((i1 & 3) == 2 ? ColorizerFoliage.getFoliageColorBirch() : 0x5BFB3B);
 	}
 
-	public int colorMultiplier(IBlockAccess iBlockAccess1, int i2, int i3, int i4) {
-		
-		int i5 = iBlockAccess1.getBlockMetadata(i2, i3, i4);
-		if(!this.needsColorizer && i5 == 0) return 0xFFFFFF; 
+	public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
+		/*
+		int i5 = blockAccess.getBlockMetadata(x, y, z);
+
 		if((i5 & 3) == 1) {
 			return ColorizerFoliage.getFoliageColorPine();
 		} else if((i5 & 3) == 2) {
@@ -54,7 +47,7 @@ public class BlockLeaves extends BlockLeavesBase {
 
 			for(int i9 = -1; i9 <= 1; ++i9) {
 				for(int i10 = -1; i10 <= 1; ++i10) {
-					int i11 = iBlockAccess1.getBiomeGenForCoords(i2 + i10, i4 + i9).getBiomeFoliageColor();
+					int i11 = blockAccess.getBiomeGenForCoords(x + i10, z + i9).getBiomeFoliageColor();
 					i6 += (i11 & 16711680) >> 16;
 					i7 += (i11 & 65280) >> 8;
 					i8 += i11 & 255;
@@ -63,6 +56,9 @@ public class BlockLeaves extends BlockLeavesBase {
 
 			return (i6 / 9 & 255) << 16 | (i7 / 9 & 255) << 8 | i8 / 9 & 255;
 		}
+		*/
+		
+		return this.getRenderColor(blockAccess.getBlockMetadata(x, y, z));
 	}
 
 	public void onBlockRemoval(World world, int x, int y, int z) {
@@ -95,8 +91,11 @@ public class BlockLeaves extends BlockLeavesBase {
 		}
 	}
 
+	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand) {
 		if(!world.isRemote) {
+			if(Seasons.activated() && Seasons.currentSeason == Seasons.AUTUMN && rand.nextInt(128 - Seasons.dayOfTheSeason * 4) == 0) this.autumnShit(world, x, y, z);
+			
 			int metadata = world.getBlockMetadata(x, y, z);
 
 			// Is leaf marked to be checked? Is this leaf not indestructible?
@@ -171,7 +170,13 @@ public class BlockLeaves extends BlockLeavesBase {
 					this.removeLeaves(world, x, y, z);
 				}
 			}
+			
 		}
+	}
+	
+	private void autumnShit(World world, int x, int y, int z) {
+		int i = 0; while (world.getBlockId(x, --y, z) != 0) {  i ++; if (i == 8) return; }
+		if(world.isBlockOpaqueCube(x, y - 1, z)) world.setBlock(x, y, z, Block.leafPile.blockID);
 	}
 
 	private void removeLeaves(World world1, int i2, int i3, int i4) {

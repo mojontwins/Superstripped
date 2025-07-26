@@ -64,7 +64,7 @@ public class WorldProviderSurfaceClassic extends WorldProvider {
 				float lightCoarseNorm = lightCoarse * (sb * 0.8F + 0.2F); 	// This is darker than Release Vanilla
 				float component = lightCoarseNorm + lightFine; 				// Grey only needs one component for rgb
 				
-				component = component * 0.96F + 0.03F;						// Don't let it get pitch black
+				component = component * 0.8F + 0.02F;						// Don't let it get pitch black
 				
 				if (component > 1.0F) component = 1.0F;
 				
@@ -96,4 +96,20 @@ public class WorldProviderSurfaceClassic extends WorldProvider {
 		if(this.worldObj.getWorldInfo().isSnowCovered()) return rand.nextInt(24000) + 12000;
 		return rand.nextInt(168000) + 12000;
 	}
+	
+	public void generateSpawnPoint(World world, Random rand) {
+		world.findingSpawnPoint = true;
+		int spawnX = 0;
+		int spawnY = this.getAverageGroundLevel();
+		int spawnZ = 0;
+
+		while (!this.findSpawn(world, spawnX, spawnZ)) {
+			spawnX += rand.nextInt(64) - rand.nextInt(64);
+			spawnZ += rand.nextInt(64) - rand.nextInt(64);
+		}
+	
+		world.worldInfo.setSpawnPosition(spawnX, spawnY, spawnZ);
+	}
+	
+	
 }

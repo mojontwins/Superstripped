@@ -116,11 +116,6 @@ public class GameSettings {
 			this.mc.renderGlobal.loadRenderers();
 		}
 
-		if(enumOptions1 == EnumOptions.ANAGLYPH) {
-			GameSettingsValues.anaglyph = !GameSettingsValues.anaglyph;
-			this.mc.renderEngine.refreshTextures();
-		}
-
 		if(enumOptions1 == EnumOptions.FRAMERATE_LIMIT) {
 			GameSettingsValues.limitFramerate = (GameSettingsValues.limitFramerate + i2 + 3) % 3;
 		}
@@ -172,8 +167,6 @@ public class GameSettings {
 			return GameSettingsValues.invertMouse;
 		case 2:
 			return GameSettingsValues.viewBobbing;
-		case 3:
-			return GameSettingsValues.anaglyph;
 		case 4:
 			return GameSettingsValues.advancedOpengl;
 		case 5:
@@ -293,10 +286,6 @@ public class GameSettings {
 						GameSettingsValues.viewBobbing = string3[1].equals("true");
 					}
 
-					if(string3[0].equals("anaglyph3d")) {
-						GameSettingsValues.anaglyph = string3[1].equals("true");
-					}
-
 					if(string3[0].equals("advancedOpengl")) {
 						GameSettingsValues.advancedOpengl = string3[1].equals("true");
 					}
@@ -392,7 +381,6 @@ public class GameSettings {
 			printWriter1.println("guiScale:" + GameSettingsValues.guiScale);
 			printWriter1.println("particles:" + GameSettingsValues.particleSetting);
 			printWriter1.println("bobView:" + GameSettingsValues.viewBobbing);
-			printWriter1.println("anaglyph3d:" + GameSettingsValues.anaglyph);
 			printWriter1.println("advancedOpengl:" + GameSettingsValues.advancedOpengl);
 			printWriter1.println("fpsLimit:" + GameSettingsValues.limitFramerate);
 			printWriter1.println("difficulty:" + GameSettingsValues.difficulty);

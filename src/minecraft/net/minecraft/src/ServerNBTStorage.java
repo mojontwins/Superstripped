@@ -14,10 +14,10 @@ public class ServerNBTStorage {
 	}
 
 	public NBTTagCompound getCompoundTag() {
-		NBTTagCompound nBTTagCompound1 = new NBTTagCompound();
-		nBTTagCompound1.setString("name", this.name);
-		nBTTagCompound1.setString("ip", this.host);
-		return nBTTagCompound1;
+		NBTTagCompound compoundTag = new NBTTagCompound();
+		compoundTag.setString("name", this.name);
+		compoundTag.setString("ip", this.host);
+		return compoundTag;
 	}
 
 	public static ServerNBTStorage createServerNBTStorage(NBTTagCompound nBTTagCompound0) {

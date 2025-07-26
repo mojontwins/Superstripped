@@ -18,12 +18,12 @@ public class GuiSleepMP extends GuiChat {
 		if(i2 == 1) {
 			this.wakeEntity();
 		} else if(i2 == 28) {
-			String string3 = this.field_50064_a.getText().trim();
+			String string3 = this.textInput.getText().trim();
 			if(string3.length() > 0) {
 				this.mc.thePlayer.sendChatMessage(string3);
 			}
 
-			this.field_50064_a.setText("");
+			this.textInput.setText("");
 			this.mc.ingameGUI.func_50014_d();
 		} else {
 			super.keyTyped(c1, i2);

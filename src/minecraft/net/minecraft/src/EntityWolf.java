@@ -20,7 +20,7 @@ public class EntityWolf extends EntityTameable {
 		this.tasks.addTask(3, new EntityAILeapAtTarget(this, 0.4F));
 		this.tasks.addTask(4, new EntityAIAttackOnCollide(this, this.moveSpeed, true));
 		this.tasks.addTask(5, new EntityAIFollowOwner(this, this.moveSpeed, 10.0F, 2.0F, 144.0F));
-		if (GameRules.canBreedAnimals) {
+		if (GameRules.boolRule("canBreedAnimals")) {
 			this.tasks.addTask(6, new EntityAIMate(this, this.moveSpeed));
 		}
 		this.tasks.addTask(7, new EntityAIWander(this, this.moveSpeed));
@@ -66,14 +66,14 @@ public class EntityWolf extends EntityTameable {
 		return this.isTamed() ? "/mob/wolf_tame.png" : (this.isAngry() ? "/mob/wolf_angry.png" : super.getTexture());
 	}
 
-	public void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
-		super.writeEntityToNBT(nBTTagCompound1);
-		nBTTagCompound1.setBoolean("Angry", this.isAngry());
+	public void writeEntityToNBT(NBTTagCompound compoundTag) {
+		super.writeEntityToNBT(compoundTag);
+		compoundTag.setBoolean("Angry", this.isAngry());
 	}
 
-	public void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
-		super.readEntityFromNBT(nBTTagCompound1);
-		this.setAngry(nBTTagCompound1.getBoolean("Angry"));
+	public void readEntityFromNBT(NBTTagCompound compoundTag) {
+		super.readEntityFromNBT(compoundTag);
+		this.setAngry(compoundTag.getBoolean("Angry"));
 	}
 
 	protected boolean canDespawn() {

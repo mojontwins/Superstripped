@@ -20,7 +20,7 @@ public class BlockGrass extends Block implements ISurface, IGround {
 	}
 
 	public int getBlockTextureFromSideAndMetadata(int i1, int i2) {
-		return i1 == 1 ? 0 : (i1 == 0 ? 2 : 3);
+		return i1 == 1 ? this.texTop : (i1 == 0 ? 2 : 3);
 	}
 
 	public int getBlockTexture(IBlockAccess iBlockAccess1, int i2, int i3, int i4, int i5) {

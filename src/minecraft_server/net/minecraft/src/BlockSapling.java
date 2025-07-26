@@ -14,15 +14,25 @@ public class BlockSapling extends BlockFlower {
 		this.displayOnCreativeTab = CreativeTabs.tabDeco;
 	}
 
-	public void updateTick(World world1, int i2, int i3, int i4, Random random5) {
-		if(!world1.isRemote) {
-			super.updateTick(world1, i2, i3, i4, random5);
-			if(world1.getBlockLightValue(i2, i3 + 1, i4) >= 9 && random5.nextInt(7) == 0) {
-				int i6 = world1.getBlockMetadata(i2, i3, i4);
-				if((i6 & 8) == 0) {
-					world1.setBlockMetadataWithNotify(i2, i3, i4, i6 | 8);
+	public void updateTick(World world, int x, int y, int z, Random rand) {
+		if(!world.isRemote) {
+			super.updateTick(world, x, y, z, rand);
+			
+			int chance = 7;
+			if(Seasons.activated()) {
+				if(Seasons.currentSeason == Seasons.WINTER) {
+					chance = 10;
+				} else if(Seasons.currentSeason == Seasons.SUMMER) {
+					chance = 4;
+				}
+			}
+			
+			if(world.getBlockLightValue(x, y + 1, z) >= 9 && rand.nextInt(chance) == 0) {
+				int meta = world.getBlockMetadata(x, y, z);
+				if((meta & 8) == 0) {
+					world.setBlockMetadataWithNotify(x, y, z, meta | 8);
 				} else {
-					this.growTree(world1, i2, i3, i4, random5);
+					this.growTree(world, x, y, z, rand);
 				}
 			}
 

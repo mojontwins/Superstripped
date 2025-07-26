@@ -193,7 +193,7 @@ public class ServerConfigurationManager {
 		WorldServer worldServer6 = this.mcServer.getWorldManager(entityPlayerMP5.dimension); // Was: entityPlayerMP1.dimension !!
 		
 		entityPlayerMP5.itemInWorldManager.toggleGameType(entityPlayerMP1.itemInWorldManager.getGameType());
-		entityPlayerMP5.itemInWorldManager.s_func_35695_b(worldServer6.getWorldInfo().getGameType());
+		entityPlayerMP5.itemInWorldManager.setGameMode(worldServer6.getWorldInfo().getGameType());
 		
 		if(chunkCoordinates4 != null) {
 			entityPlayerMP5.playerNetServerHandler.sendPacket(new Packet70Bed(0, 0));
@@ -645,12 +645,14 @@ System.out.println ("Attempt " + dimensionFrom + " to " + dimensionTo);
 		this.loadWhiteList();
 	}
 
-	public void updateTimeAndWeather(EntityPlayerMP entityPlayerMP1, WorldServer worldServer2) {
-		entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet4UpdateTime(worldServer2.getWorldTime()));
+	public void updateTimeAndWeather(EntityPlayerMP thePlayer, WorldServer world) {
+		thePlayer.playerNetServerHandler.sendPacket(new Packet4UpdateTime(world.getWorldTime()));
+		thePlayer.playerNetServerHandler.sendPacket(new Packet70Bed(world.isRaining(), world.isSnowing(), world.isThundering()));
+		/*
 		if(worldServer2.isRaining()) {
 			entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet70Bed(1, 0));
 		}
-
+		 */
 	}
 
 	public void s_func_30008_g(EntityPlayerMP entityPlayerMP1) {
@@ -658,6 +660,15 @@ System.out.println ("Attempt " + dimensionFrom + " to " + dimensionTo);
 		entityPlayerMP1.s_func_30001_B();
 	}
 
+	public void sendChatMessageToAllPlayers(String string1) {
+		Packet3Chat packet3Chat2 = new Packet3Chat(string1);
+
+		for(int i3 = 0; i3 < this.playerEntities.size(); ++i3) {
+			((EntityPlayerMP)this.playerEntities.get(i3)).playerNetServerHandler.sendPacket(packet3Chat2);
+		}
+
+	}	
+	
 	public int playersOnline() {
 		return this.playerEntities.size();
 	}

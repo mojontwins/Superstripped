@@ -3,9 +3,9 @@ package net.minecraft.src;
 import java.util.Random;
 
 public class ChunkProviderInfdev extends ChunkProviderGenerate {
-	private NoiseGeneratorOctavesInfdev infNoise1;
-	private NoiseGeneratorOctavesInfdev infNoise2;
-	private NoiseGeneratorOctavesInfdev infNoise3;
+	private NoiseGeneratorOctavesInfdev infminLimitArray;
+	private NoiseGeneratorOctavesInfdev infmaxLimitArray;
+	private NoiseGeneratorOctavesInfdev infmainArray;
 	
 	public ChunkProviderInfdev(World world, long seed) {
 		this(world, seed, true);
@@ -17,9 +17,9 @@ public class ChunkProviderInfdev extends ChunkProviderGenerate {
 		// Reset the randomizer so worlds are seed-accurate with vanilla
 		this.rand = new Random(seed);
 		
-		this.infNoise1 = new NoiseGeneratorOctavesInfdev(this.rand, 16);
-		this.infNoise2 = new NoiseGeneratorOctavesInfdev(this.rand, 16);
-		this.infNoise3 = new NoiseGeneratorOctavesInfdev(this.rand, 8);
+		this.infminLimitArray = new NoiseGeneratorOctavesInfdev(this.rand, 16);
+		this.infmaxLimitArray = new NoiseGeneratorOctavesInfdev(this.rand, 16);
+		this.infmainArray = new NoiseGeneratorOctavesInfdev(this.rand, 8);
 		
 		System.out.println ("Chunk Provider Infdev");
 	}
@@ -61,13 +61,13 @@ public class ChunkProviderInfdev extends ChunkProviderGenerate {
 
 						for(x = 0; x < 4; ++x) {
 							double xScalingFactor = (double)x / 4.0D;
-							double volNoise1 = curNoiseA + (curNoiseC - curNoiseA) * xScalingFactor;
-							double volNoise2 = curNoiseB + (curNoiseD - curNoiseB) * xScalingFactor;
+							double volminLimitArray = curNoiseA + (curNoiseC - curNoiseA) * xScalingFactor;
+							double volmaxLimitArray = curNoiseB + (curNoiseD - curNoiseB) * xScalingFactor;
 							int indexInBlockArray = x + (xSection << 2) << 11 | 0 + (zSection << 2) << 7 | (ySection << 2) + y;
 
 							for(z = 0; z < 4; ++z) {
 								double zScalingFactor = (double)z / 4.0D;
-								double volume = volNoise1 + (volNoise2 - volNoise1) * zScalingFactor;
+								double volume = volminLimitArray + (volmaxLimitArray - volminLimitArray) * zScalingFactor;
 								int blockID = 0;
 								
 								if((ySection << 2) + y < seaLevel) {
@@ -96,8 +96,8 @@ public class ChunkProviderInfdev extends ChunkProviderGenerate {
 
 		double d9;
 		double d13;
-		if((d9 = this.infNoise3.generateNoiseOctaves(d1 * 684.412D / 80.0D, d3 * 684.412D / 400.0D, d5 * 684.412D / 80.0D) / 2.0D) < -1.0D) {
-			if((d13 = this.infNoise1.generateNoiseOctaves(d1 * 684.412D, d3 * 984.412D, d5 * 684.412D) / 512.0D - d7) < -10.0D) {
+		if((d9 = this.infmainArray.generateNoiseOctaves(d1 * 684.412D / 80.0D, d3 * 684.412D / 400.0D, d5 * 684.412D / 80.0D) / 2.0D) < -1.0D) {
+			if((d13 = this.infminLimitArray.generateNoiseOctaves(d1 * 684.412D, d3 * 984.412D, d5 * 684.412D) / 512.0D - d7) < -10.0D) {
 				d13 = -10.0D;
 			}
 
@@ -105,7 +105,7 @@ public class ChunkProviderInfdev extends ChunkProviderGenerate {
 				d13 = 10.0D;
 			}
 		} else if(d9 > 1.0D) {
-			if((d13 = this.infNoise2.generateNoiseOctaves(d1 * 684.412D, d3 * 984.412D, d5 * 684.412D) / 512.0D - d7) < -10.0D) {
+			if((d13 = this.infmaxLimitArray.generateNoiseOctaves(d1 * 684.412D, d3 * 984.412D, d5 * 684.412D) / 512.0D - d7) < -10.0D) {
 				d13 = -10.0D;
 			}
 
@@ -113,8 +113,8 @@ public class ChunkProviderInfdev extends ChunkProviderGenerate {
 				d13 = 10.0D;
 			}
 		} else {
-			double d15 = this.infNoise1.generateNoiseOctaves(d1 * 684.412D, d3 * 984.412D, d5 * 684.412D) / 512.0D - d7;
-			double d17 = this.infNoise2.generateNoiseOctaves(d1 * 684.412D, d3 * 984.412D, d5 * 684.412D) / 512.0D - d7;
+			double d15 = this.infminLimitArray.generateNoiseOctaves(d1 * 684.412D, d3 * 984.412D, d5 * 684.412D) / 512.0D - d7;
+			double d17 = this.infmaxLimitArray.generateNoiseOctaves(d1 * 684.412D, d3 * 984.412D, d5 * 684.412D) / 512.0D - d7;
 			if(d15 < -10.0D) {
 				d15 = -10.0D;
 			}

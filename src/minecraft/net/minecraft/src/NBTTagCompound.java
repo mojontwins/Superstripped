@@ -136,8 +136,8 @@ public class NBTTagCompound extends NBTBase {
 		return !this.tagMap.containsKey(string1) ? new byte[0] : ((NBTTagByteArray)this.tagMap.get(string1)).byteArray;
 	}
 
-	public int[] func_48182_l(String string1) {
-		return !this.tagMap.containsKey(string1) ? new int[0] : ((NBTTagIntArray)this.tagMap.get(string1)).field_48181_a;
+	public int[] getIntArray(String string1) {
+		return !this.tagMap.containsKey(string1) ? new int[0] : ((NBTTagIntArray)this.tagMap.get(string1)).intArray;
 	}
 
 	public NBTTagCompound getCompoundTag(String string1) {
@@ -157,15 +157,15 @@ public class NBTTagCompound extends NBTBase {
 	}
 
 	public NBTBase copy() {
-		NBTTagCompound nBTTagCompound1 = new NBTTagCompound(this.getName());
+		NBTTagCompound compoundTag = new NBTTagCompound(this.getName());
 		Iterator<String> iterator2 = this.tagMap.keySet().iterator();
 
 		while(iterator2.hasNext()) {
 			String string3 = (String)iterator2.next();
-			nBTTagCompound1.setTag(string3, ((NBTBase)this.tagMap.get(string3)).copy());
+			compoundTag.setTag(string3, ((NBTBase)this.tagMap.get(string3)).copy());
 		}
 
-		return nBTTagCompound1;
+		return compoundTag;
 	}
 
 	public boolean equals(Object object1) {

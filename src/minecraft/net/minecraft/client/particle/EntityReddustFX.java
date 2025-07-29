@@ -1,7 +1,7 @@
 package net.minecraft.client.particle;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
 
 public class EntityReddustFX extends EntityFX {
 	float reddustParticleScale;

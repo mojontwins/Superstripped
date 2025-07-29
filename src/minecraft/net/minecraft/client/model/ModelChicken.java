@@ -2,8 +2,8 @@ package net.minecraft.client.model;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.src.Entity;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.Entity;
 
 public class ModelChicken extends ModelBase {
 	public ModelRenderer head;

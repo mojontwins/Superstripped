@@ -5,19 +5,19 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
-import net.minecraft.src.Chunk;
-import net.minecraft.src.ChunkCoordIntPair;
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.Entity;
-import net.minecraft.src.IChunkProvider;
-import net.minecraft.src.IWorldAccess;
-import net.minecraft.src.IntHashMap;
-import net.minecraft.src.Packet255KickDisconnect;
-import net.minecraft.src.Seasons;
-import net.minecraft.src.Weather;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldProvider;
-import net.minecraft.src.WorldSettings;
+import net.minecraft.network.packet.Packet255KickDisconnect;
+import net.minecraft.world.IntHashMap;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.IWorldAccess;
+import net.minecraft.world.level.Seasons;
+import net.minecraft.world.level.Weather;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.WorldSettings;
+import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.chunk.ChunkCoordIntPair;
+import net.minecraft.world.level.chunk.ChunkCoordinates;
+import net.minecraft.world.level.chunk.IChunkProvider;
+import net.minecraft.world.level.dimension.WorldProvider;
 
 public class WorldClient extends World {
 	private LinkedList<WorldBlockPositionType> blocksToReceive = new LinkedList<WorldBlockPositionType>();

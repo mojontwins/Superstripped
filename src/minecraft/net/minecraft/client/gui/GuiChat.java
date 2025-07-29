@@ -12,9 +12,9 @@ import com.mojontwins.minecraft.commands.CommandProcessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.EntityClientPlayerMP;
-import net.minecraft.src.BlockPos;
-import net.minecraft.src.ICommandSender;
-import net.minecraft.src.World;
+import net.minecraft.world.ICommandSender;
+import net.minecraft.world.level.BlockPos;
+import net.minecraft.world.level.World;
 
 public class GuiChat extends GuiScreen implements ICommandSender {
 	private String field_50062_b = "";

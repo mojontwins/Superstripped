@@ -4,7 +4,7 @@ import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import net.minecraft.src.Vec3i;
+import net.minecraft.world.phys.Vec3i;
 
 public class ExporterRaw extends ExporterBase {
 	

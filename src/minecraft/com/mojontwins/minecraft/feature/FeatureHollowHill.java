@@ -2,13 +2,13 @@ package com.mojontwins.minecraft.feature;
 
 import java.util.Random;
 
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.Block;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.IChunkProvider;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldGenSeaweed;
-import net.minecraft.src.WorldGenWaterlily;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.biome.BiomeGenBase;
+import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.chunk.IChunkProvider;
+import net.minecraft.world.level.levelgen.feature.WorldGenSeaweed;
+import net.minecraft.world.level.levelgen.feature.WorldGenWaterlily;
+import net.minecraft.world.level.tile.Block;
 
 public class FeatureHollowHill extends Feature {
 	public double diameter;

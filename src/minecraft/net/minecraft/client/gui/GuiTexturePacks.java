@@ -4,8 +4,8 @@ import java.io.File;
 import java.net.URI;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.renderer.FontRenderer;
+import net.minecraft.util.StringTranslate;
 
 import org.lwjgl.Sys;
 

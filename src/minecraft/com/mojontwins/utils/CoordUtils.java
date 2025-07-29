@@ -2,7 +2,7 @@ package com.mojontwins.utils;
 
 import java.util.Random;
 
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
 
 public class CoordUtils {
 	public static int getRandomFloor (World world, Random rand, int x, int z) {

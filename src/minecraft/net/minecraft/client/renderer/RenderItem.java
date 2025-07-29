@@ -9,12 +9,12 @@ import com.mojontwins.utils.Idx2uvF;
 import com.mojontwins.utils.Texels;
 
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityItem;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.EntityItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.tile.Block;
 
 public class RenderItem extends Render {
 	private RenderBlocks renderBlocks = new RenderBlocks();

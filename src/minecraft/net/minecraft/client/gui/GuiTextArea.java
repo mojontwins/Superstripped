@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.renderer.FontRenderer;
-import net.minecraft.src.ChatAllowedCharacters;
+import net.minecraft.util.ChatAllowedCharacters;
 
 public class GuiTextArea extends Gui {
 	private final FontRenderer fontRenderer;

@@ -3,9 +3,9 @@ package net.minecraft.client.renderer.entity;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityTNTPrimed;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.EntityTNTPrimed;
+import net.minecraft.world.level.tile.Block;
 
 public class RenderTNTPrimed extends Render {
 	private RenderBlocks blockRenderer = new RenderBlocks();

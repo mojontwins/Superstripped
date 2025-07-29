@@ -8,20 +8,20 @@ import com.mojontwins.utils.Texels;
 import com.mojontwins.utils.TextureAtlasSize;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Block;
-import net.minecraft.src.BlockFence;
-import net.minecraft.src.BlockFlower;
-import net.minecraft.src.BlockFluid;
-import net.minecraft.src.BlockPane;
-import net.minecraft.src.BlockRail;
-import net.minecraft.src.BlockRedstoneRepeater;
-import net.minecraft.src.BlockRedstoneWire;
-import net.minecraft.src.GameRules;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.Material;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.Vec3D;
-import net.minecraft.src.World;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.level.IBlockAccess;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.tile.Block;
+import net.minecraft.world.level.tile.BlockFence;
+import net.minecraft.world.level.tile.BlockFlower;
+import net.minecraft.world.level.tile.BlockFluid;
+import net.minecraft.world.level.tile.BlockPane;
+import net.minecraft.world.level.tile.BlockRail;
+import net.minecraft.world.level.tile.BlockRedstoneRepeater;
+import net.minecraft.world.level.tile.BlockRedstoneWire;
+import net.minecraft.world.phys.Vec3D;
 
 public class RenderBlocks {
 	public IBlockAccess blockAccess;

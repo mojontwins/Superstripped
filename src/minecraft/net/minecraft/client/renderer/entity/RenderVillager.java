@@ -3,9 +3,9 @@ package net.minecraft.client.renderer.entity;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelVillager;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityVillager;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.EntityVillager;
 
 public class RenderVillager extends RenderLiving {
 	protected ModelVillager mainModel = (ModelVillager)this.mainModel;

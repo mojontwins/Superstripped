@@ -1,6 +1,6 @@
 package net.minecraft.client.model;
 
-import net.minecraft.src.Entity;
+import net.minecraft.world.entity.Entity;
 
 public class ModelMinecart extends ModelBase {
 	public ModelRenderer[] sideModels = new ModelRenderer[7];

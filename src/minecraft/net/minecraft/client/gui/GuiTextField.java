@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.ChatAllowedCharacters;
+import net.minecraft.util.ChatAllowedCharacters;
 
 public class GuiTextField extends Gui {
 	private final FontRenderer fontRenderer;

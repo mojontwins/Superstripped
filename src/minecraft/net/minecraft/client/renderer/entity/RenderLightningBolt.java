@@ -5,8 +5,8 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLightningBolt;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLightningBolt;
 
 public class RenderLightningBolt extends Render {
 	public void doRenderLightningBolt(EntityLightningBolt entityLightningBolt1, double d2, double d4, double d6, float f8, float f9) {

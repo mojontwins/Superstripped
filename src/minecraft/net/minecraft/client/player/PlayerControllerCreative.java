@@ -4,10 +4,10 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.User;
-import net.minecraft.src.Block;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.tile.Block;
 
 public class PlayerControllerCreative extends PlayerController {
 	private int field_35647_c;

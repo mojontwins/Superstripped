@@ -4,10 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelQuadruped;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityMooshroom;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.animal.EntityMooshroom;
+import net.minecraft.world.level.tile.Block;
 
 public class RenderMooshroom extends RenderLiving {
 	public RenderMooshroom(ModelBase modelBase1, float f2) {

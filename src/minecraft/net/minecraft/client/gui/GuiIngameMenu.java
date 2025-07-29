@@ -2,8 +2,8 @@ package net.minecraft.client.gui;
 
 import net.minecraft.client.title.GuiMainMenu;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.Translator;
-import net.minecraft.src.World;
+import net.minecraft.util.Translator;
+import net.minecraft.world.level.World;
 
 public class GuiIngameMenu extends GuiScreen {
 	private int updateCounter2 = 0;

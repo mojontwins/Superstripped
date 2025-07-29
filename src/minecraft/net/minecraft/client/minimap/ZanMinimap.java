@@ -23,11 +23,11 @@ import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.client.renderer.FontRenderer;
 import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Block;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.EnumSkyBlock;
-import net.minecraft.src.Material;
-import net.minecraft.src.World;
+import net.minecraft.world.level.EnumSkyBlock;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.tile.Block;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;

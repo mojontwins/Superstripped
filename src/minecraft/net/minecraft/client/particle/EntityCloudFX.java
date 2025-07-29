@@ -1,8 +1,8 @@
 package net.minecraft.client.particle;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.level.World;
 
 public class EntityCloudFX extends EntityFX {
 	float field_35135_a;

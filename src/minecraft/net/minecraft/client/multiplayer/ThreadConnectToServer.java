@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiConnecting;
 import net.minecraft.client.gui.GuiDisconnected;
-import net.minecraft.src.Packet2Handshake;
+import net.minecraft.network.packet.Packet2Handshake;
 
 public class ThreadConnectToServer extends Thread {
 	final Minecraft mc;

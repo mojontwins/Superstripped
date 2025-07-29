@@ -2,10 +2,10 @@ package net.minecraft.client.gui.inventory;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.src.ContainerFurnace;
-import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.TileEntityFurnace;
-import net.minecraft.src.Translator;
+import net.minecraft.util.Translator;
+import net.minecraft.world.inventory.ContainerFurnace;
+import net.minecraft.world.inventory.InventoryPlayer;
+import net.minecraft.world.level.tile.entity.TileEntityFurnace;
 
 public class GuiFurnace extends GuiContainer {
 	private TileEntityFurnace furnaceInventory;

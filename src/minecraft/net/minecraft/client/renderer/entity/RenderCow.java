@@ -1,9 +1,9 @@
 package net.minecraft.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityCow;
-import net.minecraft.src.EntityLiving;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.animal.EntityCow;
 
 public class RenderCow extends RenderLiving {
 	public RenderCow(ModelBase modelBase1, float f2) {

@@ -5,10 +5,10 @@ import org.lwjgl.opengl.GL12;
 
 import net.minecraft.client.model.ModelIronGolem;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityIronGolem;
-import net.minecraft.src.EntityLiving;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.monster.EntityIronGolem;
+import net.minecraft.world.level.tile.Block;
 
 public class RenderIronGolem extends RenderLiving {
 	private ModelIronGolem field_48422_c = (ModelIronGolem)this.mainModel;

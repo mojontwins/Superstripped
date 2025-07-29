@@ -5,10 +5,10 @@ import org.lwjgl.opengl.GL12;
 
 import net.minecraft.client.GameSettingsValues;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityFishHook;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.Vec3D;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.EntityFishHook;
+import net.minecraft.world.phys.Vec3D;
 
 public class RenderFish extends Render {
 	public void doRenderFishHook(EntityFishHook entityFishHook1, double d2, double d4, double d6, float f8, float f9) {

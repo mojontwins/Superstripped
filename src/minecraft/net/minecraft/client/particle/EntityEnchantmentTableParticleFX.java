@@ -1,6 +1,6 @@
 package net.minecraft.client.particle;
 
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
 
 public class EntityEnchantmentTableParticleFX extends EntityFX {
 	private double field_40109_aw;

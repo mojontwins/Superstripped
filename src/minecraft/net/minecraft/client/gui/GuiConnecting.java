@@ -1,11 +1,11 @@
 package net.minecraft.client.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.client.multiplayer.ThreadConnectToServer;
 import net.minecraft.client.title.GuiMainMenu;
-import net.minecraft.src.World;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.world.level.World;
 
 public class GuiConnecting extends GuiScreen {
 	private NetClientHandler clientHandler;

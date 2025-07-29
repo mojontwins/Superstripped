@@ -20,11 +20,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.SaveHandler;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldSettings;
-import net.minecraft.src.WorldType;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.WorldSettings;
+import net.minecraft.world.level.WorldType;
+import net.minecraft.world.level.chunk.ChunkCoordinates;
+import net.minecraft.world.level.chunk.storage.SaveHandler;
 
 public class CanvasIsomPreview extends Canvas implements KeyListener, MouseListener, MouseMotionListener, Runnable {
 	/**

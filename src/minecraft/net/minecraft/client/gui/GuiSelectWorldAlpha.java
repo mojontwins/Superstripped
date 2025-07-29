@@ -3,13 +3,13 @@ package net.minecraft.client.gui;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.player.PlayerControllerCreative;
 import net.minecraft.client.player.PlayerControllerSP;
-import net.minecraft.src.ISaveFormat;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.SaveFormatComparator;
-import net.minecraft.src.WorldSettings;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.world.level.WorldSettings;
+import net.minecraft.world.level.chunk.storage.ISaveFormat;
+import net.minecraft.world.level.chunk.storage.SaveFormatComparator;
 
 public class GuiSelectWorldAlpha extends GuiScreen {
 	protected GuiScreen parentScreen;
@@ -102,8 +102,9 @@ public class GuiSelectWorldAlpha extends GuiScreen {
 			this.mc.displayGuiScreen((GuiScreen)null);
 			if(!this.selected) {
 				this.selected = true;
-				int i2 = ((SaveFormatComparator)this.saveList.get(i1-1)).getGameType();
-				if(i2 == 0) {
+				int gamemode = ((SaveFormatComparator)this.saveList.get(i1-1)).getGameType();
+				System.out.println ("Gamemode is " + gamemode);
+				if(gamemode == 0) {
 					this.mc.playerController = new PlayerControllerSP(this.mc);
 				} else {
 					this.mc.playerController = new PlayerControllerCreative(this.mc);

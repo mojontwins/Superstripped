@@ -1,6 +1,6 @@
 package net.minecraft.client.gui;
 
-import net.minecraft.client.locale.StringTranslate;
+import net.minecraft.util.StringTranslate;
 
 public abstract class GuiConfirmOpenLink extends GuiYesNo {
 	private String field_50054_a;

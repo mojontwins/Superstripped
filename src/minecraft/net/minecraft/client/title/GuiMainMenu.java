@@ -21,13 +21,13 @@ import net.minecraft.client.gui.GuiSelectWorld;
 import net.minecraft.client.gui.GuiSelectWorldAlpha;
 import net.minecraft.client.gui.GuiTexturePacks;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Block;
-import net.minecraft.src.GameRules;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.Version;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.Version;
+import net.minecraft.world.level.tile.Block;
 
 public class GuiMainMenu extends GuiScreen {
 	private static final Random rand = new Random();

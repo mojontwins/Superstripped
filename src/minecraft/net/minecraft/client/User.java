@@ -3,7 +3,7 @@ package net.minecraft.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.src.Block;
+import net.minecraft.world.level.tile.Block;
 
 public class User {
 	public static List<Block> registeredBlocksList = new ArrayList<Block>();

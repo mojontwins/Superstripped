@@ -3,7 +3,7 @@ package com.mojontwins.minecraft.worldedit;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import net.minecraft.src.Vec3i;
+import net.minecraft.world.phys.Vec3i;
 
 public abstract class ExporterBase {
 	public static HashMap<String,ExporterBase> exporterList = new HashMap<String,ExporterBase> ();

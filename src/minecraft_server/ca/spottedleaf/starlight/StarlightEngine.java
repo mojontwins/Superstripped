@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.ExtendedBlockStorage;
-import net.minecraft.src.NibbleArray;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.chunk.ExtendedBlockStorage;
+import net.minecraft.world.level.chunk.NibbleArray;
+import net.minecraft.world.level.tile.Block;
 
 public class StarlightEngine {
     protected static final int AIR_BLOCK_STATE = 0;

@@ -2,8 +2,8 @@ package com.mojontwins.minecraft.worldedit;
 
 import com.mojontwins.minecraft.commands.CommandBase;
 
-import net.minecraft.src.BlockPos;
-import net.minecraft.src.World;
+import net.minecraft.world.level.BlockPos;
+import net.minecraft.world.level.World;
 
 public abstract class CommandWorldEdit extends CommandBase {
 	public BlockPos pointingAt;

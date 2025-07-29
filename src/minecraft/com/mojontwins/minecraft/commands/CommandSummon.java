@@ -2,13 +2,13 @@ package com.mojontwins.minecraft.commands;
 
 import java.util.List;
 
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.EntityList;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IMobWithLevel;
-import net.minecraft.src.SpawnerAnimals;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.EntityList;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.monster.IMobWithLevel;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.level.SpawnerAnimals;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.ChunkCoordinates;
 
 public class CommandSummon extends CommandBase {
 

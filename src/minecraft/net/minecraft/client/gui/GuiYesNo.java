@@ -1,6 +1,6 @@
 package net.minecraft.client.gui;
 
-import net.minecraft.client.locale.StringTranslate;
+import net.minecraft.util.StringTranslate;
 
 public class GuiYesNo extends GuiScreen {
 	private GuiScreen parentScreen;

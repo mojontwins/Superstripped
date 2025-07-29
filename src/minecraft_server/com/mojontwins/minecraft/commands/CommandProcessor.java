@@ -9,12 +9,12 @@ import java.util.StringTokenizer;
 
 import com.mojang.nbt.NBTTagCompound;
 
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ICommandSender;
-import net.minecraft.src.IServerConfigManager;
-import net.minecraft.src.PlayerPositionComparator;
-import net.minecraft.src.World;
+import net.minecraft.server.IServerConfigManager;
+import net.minecraft.world.ICommandSender;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.level.PlayerPositionComparator;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.ChunkCoordinates;
 
 public class CommandProcessor {
 	public static Map<String,ICommand> commandsMap = new HashMap<String,ICommand>();	

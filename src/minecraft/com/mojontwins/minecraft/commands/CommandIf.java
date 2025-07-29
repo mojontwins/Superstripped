@@ -1,8 +1,8 @@
 package com.mojontwins.minecraft.commands;
 
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.ChunkCoordinates;
 
 public class CommandIf extends CommandBase {
 

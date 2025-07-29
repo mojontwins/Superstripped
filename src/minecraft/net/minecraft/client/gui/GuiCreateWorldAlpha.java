@@ -4,8 +4,8 @@ import java.util.Random;
 
 import net.minecraft.client.player.PlayerControllerCreative;
 import net.minecraft.client.player.PlayerControllerSP;
-import net.minecraft.src.GameRules;
-import net.minecraft.src.WorldSettings;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.level.WorldSettings;
 
 public class GuiCreateWorldAlpha extends GuiScreen {
     private GuiScreen parentGuiScreen;

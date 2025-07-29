@@ -1,7 +1,7 @@
 package net.minecraft.client.particle;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
 
 public class EntityCritFX extends EntityFX {
 	float field_35137_a;

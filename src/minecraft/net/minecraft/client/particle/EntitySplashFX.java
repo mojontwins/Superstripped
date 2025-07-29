@@ -1,6 +1,6 @@
 package net.minecraft.client.particle;
 
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
 
 public class EntitySplashFX extends EntityRainFX {
 	public EntitySplashFX(World world1, double d2, double d4, double d6, double d8, double d10, double d12) {

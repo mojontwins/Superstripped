@@ -1,6 +1,6 @@
 package net.minecraft.client.model;
 
-import net.minecraft.src.GameRules;
+import net.minecraft.world.GameRules;
 
 public class ModelSkeleton extends ModelZombie {
 	public ModelSkeleton() {

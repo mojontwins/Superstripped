@@ -3,9 +3,9 @@ package net.minecraft.client.renderer.entity;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntitySheep;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.animal.EntitySheep;
 
 public class RenderSheep extends RenderLiving {
 	public RenderSheep(ModelBase modelBase1, ModelBase modelBase2, float f3) {

@@ -101,7 +101,7 @@
 ```
 
 * [X] Remove all languages.
-* [ ] Reorganize class tree & packages like in old Indev.
+* [X] Reorganize class tree & packages like in old Indev.
 * [X] Add old ways to get seeds until no tall grass
 * [X] Restore water looks
 * [X] Enemy armor in the server should get to the client somehow.
@@ -176,6 +176,7 @@
 
 * [X] Check alpha chunk generator with NSSS's --> I get chunk borders on imported a1.1.2 worlds and that's a bug.
 * [X] Edit signs with feathers.
+* [ ] Study all rules. Some rules need special setters so they do extra stuff i.e. make food stackable which has to edit food classes.
 * [ ] Examine/study how you "deawt" minecraft.
 
 ## Diverge -> turn this into b1.6.6 *strict* (but with the goodies).

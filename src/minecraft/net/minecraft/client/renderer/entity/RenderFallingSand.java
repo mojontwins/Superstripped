@@ -3,11 +3,11 @@ package net.minecraft.client.renderer.entity;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityFallingSand;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.EntityFallingSand;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.tile.Block;
 
 public class RenderFallingSand extends Render {
 	private RenderBlocks renderBlocks = new RenderBlocks();

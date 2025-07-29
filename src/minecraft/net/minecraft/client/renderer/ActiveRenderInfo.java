@@ -6,14 +6,14 @@ import java.nio.IntBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.BlockFluid;
-import net.minecraft.src.ChunkPosition;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.Vec3D;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.level.ChunkPosition;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.tile.Block;
+import net.minecraft.world.level.tile.BlockFluid;
+import net.minecraft.world.phys.Vec3D;
 
 public class ActiveRenderInfo {
 	public static float objectX = 0.0F;

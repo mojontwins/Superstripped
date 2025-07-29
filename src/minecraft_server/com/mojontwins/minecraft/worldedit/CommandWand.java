@@ -1,11 +1,11 @@
 package com.mojontwins.minecraft.worldedit;
 
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.EntityItem;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.item.EntityItem;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.ChunkCoordinates;
 
 public class CommandWand extends CommandWorldEdit {
 

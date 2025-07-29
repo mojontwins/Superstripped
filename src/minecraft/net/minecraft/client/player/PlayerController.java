@@ -1,11 +1,11 @@
 package net.minecraft.client.player;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.tile.Block;
 
 public abstract class PlayerController {
 	protected final Minecraft mc;

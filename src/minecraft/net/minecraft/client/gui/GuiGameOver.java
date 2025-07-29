@@ -5,9 +5,9 @@ import java.util.Iterator;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.title.GuiMainMenu;
-import net.minecraft.src.ISaveFormat;
-import net.minecraft.src.Translator;
-import net.minecraft.src.World;
+import net.minecraft.util.Translator;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.storage.ISaveFormat;
 
 public class GuiGameOver extends GuiScreen {
 	private int cooldownTimer;

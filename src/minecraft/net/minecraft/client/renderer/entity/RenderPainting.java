@@ -7,10 +7,10 @@ import org.lwjgl.opengl.GL12;
 
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityPainting;
-import net.minecraft.src.EnumArt;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityPainting;
+import net.minecraft.world.entity.EnumArt;
 
 public class RenderPainting extends Render {
 	private Random rand = new Random();

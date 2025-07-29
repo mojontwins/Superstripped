@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.locale.StringTranslate;
-import net.minecraft.src.GameRule;
-import net.minecraft.src.GameRules;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.world.GameRule;
+import net.minecraft.world.GameRules;
 
 public class GuiGameRules extends GuiScreen {
 	private GuiScreen parentScreen;

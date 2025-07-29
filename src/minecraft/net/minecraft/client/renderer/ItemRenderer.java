@@ -11,13 +11,13 @@ import net.minecraft.client.player.EntityPlayerSP;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.src.Block;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EnumAction;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Material;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.EnumAction;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.tile.Block;
 
 public class ItemRenderer {
 	private Minecraft mc;

@@ -3,16 +3,16 @@ package net.minecraft.client.multiplayer;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.src.Chunk;
-import net.minecraft.src.ChunkCoordIntPair;
-import net.minecraft.src.ChunkPosition;
-import net.minecraft.src.EmptyChunk;
-import net.minecraft.src.EnumCreatureType;
-import net.minecraft.src.IChunkProvider;
-import net.minecraft.src.IProgressUpdate;
-import net.minecraft.src.LongHashMap;
-import net.minecraft.src.SpawnListEntry;
-import net.minecraft.src.World;
+import net.minecraft.world.LongHashMap;
+import net.minecraft.world.entity.EnumCreatureType;
+import net.minecraft.world.level.ChunkPosition;
+import net.minecraft.world.level.SpawnListEntry;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.chunk.ChunkCoordIntPair;
+import net.minecraft.world.level.chunk.EmptyChunk;
+import net.minecraft.world.level.chunk.IChunkProvider;
+import net.minecraft.world.level.chunk.storage.IProgressUpdate;
 
 public class ChunkProviderClient implements IChunkProvider {
 	private Chunk blankChunk;

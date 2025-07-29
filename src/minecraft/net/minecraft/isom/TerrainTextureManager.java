@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import javax.imageio.ImageIO;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.Material;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.tile.Block;
 
 public class TerrainTextureManager {
 	private float[] texCols = new float[768];

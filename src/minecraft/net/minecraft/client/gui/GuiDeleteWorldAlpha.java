@@ -1,6 +1,6 @@
 package net.minecraft.client.gui;
 
-import net.minecraft.src.ISaveFormat;
+import net.minecraft.world.level.chunk.storage.ISaveFormat;
 
 public class GuiDeleteWorldAlpha extends GuiSelectWorldAlpha {
 	public GuiDeleteWorldAlpha(GuiScreen guiScreen1) {

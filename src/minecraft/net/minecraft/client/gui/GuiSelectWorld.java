@@ -5,13 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.player.PlayerControllerCreative;
 import net.minecraft.client.player.PlayerControllerSP;
-import net.minecraft.src.ISaveFormat;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.SaveFormatComparator;
-import net.minecraft.src.WorldSettings;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.world.level.WorldSettings;
+import net.minecraft.world.level.chunk.storage.ISaveFormat;
+import net.minecraft.world.level.chunk.storage.SaveFormatComparator;
 
 public class GuiSelectWorld extends GuiScreen {
 	private final DateFormat dateFormatter = new SimpleDateFormat();

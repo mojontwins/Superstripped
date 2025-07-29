@@ -19,7 +19,7 @@ import net.minecraft.client.Config;
 import net.minecraft.client.GameSettingsValues;
 import net.minecraft.client.gui.GameSettings;
 import net.minecraft.client.skins.TexturePackBase;
-import net.minecraft.src.ChatAllowedCharacters;
+import net.minecraft.util.ChatAllowedCharacters;
 
 public class FontRenderer {
 	private static final Pattern colorCodePattern = Pattern.compile("(?i)\\u00A7[0-9A-FK-OR]");

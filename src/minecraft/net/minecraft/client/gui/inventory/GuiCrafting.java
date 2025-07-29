@@ -2,10 +2,10 @@ package net.minecraft.client.gui.inventory;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.src.ContainerWorkbench;
-import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.Translator;
-import net.minecraft.src.World;
+import net.minecraft.util.Translator;
+import net.minecraft.world.inventory.ContainerWorkbench;
+import net.minecraft.world.inventory.InventoryPlayer;
+import net.minecraft.world.level.World;
 
 public class GuiCrafting extends GuiContainer {
 	public GuiCrafting(InventoryPlayer inventoryPlayer1, World world2, int i3, int i4, int i5) {

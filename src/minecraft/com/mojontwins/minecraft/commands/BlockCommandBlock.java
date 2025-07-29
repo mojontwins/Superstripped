@@ -2,14 +2,14 @@ package com.mojontwins.minecraft.commands;
 
 import java.util.Random;
 
-import net.minecraft.src.BlockContainer;
-import net.minecraft.src.BlockPos;
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ICommandSender;
-import net.minecraft.src.Material;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
+import net.minecraft.world.ICommandSender;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.level.BlockPos;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.ChunkCoordinates;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.tile.BlockContainer;
+import net.minecraft.world.level.tile.entity.TileEntity;
 
 public class BlockCommandBlock extends BlockContainer implements ICommandSender {
 	private boolean debug = true;

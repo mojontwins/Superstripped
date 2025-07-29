@@ -1,6 +1,6 @@
 package net.minecraft.client.renderer;
 
-import net.minecraft.src.Vec3D;
+import net.minecraft.world.phys.Vec3D;
 
 public class TexturedQuad {
 	public PositionTextureVertex[] vertexPositions;

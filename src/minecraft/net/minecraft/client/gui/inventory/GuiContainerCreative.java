@@ -13,17 +13,17 @@ import net.minecraft.client.ContainerCreative;
 import net.minecraft.client.GameSettingsKeys;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.SlotCreativeInventory;
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.src.Container;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.InventoryBasic;
-import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemArmor;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Slot;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.inventory.Container;
+import net.minecraft.world.inventory.InventoryBasic;
+import net.minecraft.world.inventory.InventoryPlayer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemArmor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.creative.CreativeTabs;
 
 public class GuiContainerCreative extends GuiContainer {
 	private static InventoryBasic inventory = new InventoryBasic("tmp", 45);

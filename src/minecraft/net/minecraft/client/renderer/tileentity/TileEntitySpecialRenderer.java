@@ -2,8 +2,8 @@ package net.minecraft.client.renderer.tileentity;
 
 import net.minecraft.client.renderer.FontRenderer;
 import net.minecraft.client.renderer.RenderEngine;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.tile.entity.TileEntity;
 
 public abstract class TileEntitySpecialRenderer {
 	protected TileEntityRenderer tileEntityRenderer;

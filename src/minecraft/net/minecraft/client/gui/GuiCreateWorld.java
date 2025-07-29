@@ -4,15 +4,15 @@ import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.player.PlayerControllerCreative;
 import net.minecraft.client.player.PlayerControllerSP;
-import net.minecraft.src.ChatAllowedCharacters;
-import net.minecraft.src.ISaveFormat;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.Translator;
-import net.minecraft.src.WorldSettings;
-import net.minecraft.src.WorldType;
+import net.minecraft.util.ChatAllowedCharacters;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.util.Translator;
+import net.minecraft.world.level.WorldSettings;
+import net.minecraft.world.level.WorldType;
+import net.minecraft.world.level.chunk.storage.ISaveFormat;
 
 public class GuiCreateWorld extends GuiScreen {
 	private GuiScreen parentGuiScreen;

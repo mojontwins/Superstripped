@@ -2,10 +2,10 @@ package com.mojontwins.minecraft.feature;
 
 import java.util.Random;
 
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.IChunkProvider;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.biome.BiomeGenBase;
+import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.chunk.IChunkProvider;
 
 public class FeatureTest extends Feature {
 	public static final int radiusSquared = 24 * 24; 

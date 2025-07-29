@@ -1,8 +1,8 @@
 package net.minecraft.client.gui;
 
 import net.minecraft.client.GameSettingsValues;
-import net.minecraft.client.locale.StringTranslate;
-import net.minecraft.src.Translator;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.util.Translator;
 
 public class GuiVideoSettings extends GuiScreen {
 	private GuiScreen parentGuiScreen;

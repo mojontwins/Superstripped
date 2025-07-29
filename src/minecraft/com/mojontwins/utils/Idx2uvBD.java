@@ -1,6 +1,6 @@
 package com.mojontwins.utils;
 
-import net.minecraft.src.Block;
+import net.minecraft.world.level.tile.Block;
 
 public class Idx2uvBD {
 	public static int u, v;

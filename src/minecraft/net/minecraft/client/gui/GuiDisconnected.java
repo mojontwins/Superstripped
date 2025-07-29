@@ -1,7 +1,7 @@
 package net.minecraft.client.gui;
 
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.title.GuiMainMenu;
+import net.minecraft.util.StringTranslate;
 
 public class GuiDisconnected extends GuiScreen {
 	private String errorMessage;

@@ -4,9 +4,9 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBoat;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityBoat;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.EntityBoat;
 
 public class RenderBoat extends Render {
 	protected ModelBase modelBoat;

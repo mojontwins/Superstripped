@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.locale.StringTranslate;
+import net.minecraft.util.StringTranslate;
 
 public class GuiScreenAddServer extends GuiScreen {
 	private GuiScreen parentGui;

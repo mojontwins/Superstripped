@@ -1,6 +1,6 @@
 package net.minecraft.client.renderer.ptexture;
 
-import net.minecraft.src.Block;
+import net.minecraft.world.level.tile.Block;
 
 public class TextureFlamesFX extends TextureFX {
 	protected float[] field_1133_g = new float[320];

@@ -21,9 +21,9 @@ import java.util.function.Function;
 import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.GenLayer;
-import net.minecraft.src.WorldType;
+import net.minecraft.world.level.WorldType;
+import net.minecraft.world.level.biome.BiomeGenBase;
+import net.minecraft.world.level.levelgen.genlayer.GenLayer;
 
 public class GenLayerPreviewer {
     // GenLayerPreviewer created by BlueStaggo 2023

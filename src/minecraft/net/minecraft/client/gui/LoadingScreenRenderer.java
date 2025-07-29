@@ -3,7 +3,7 @@ package net.minecraft.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MinecraftError;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.IProgressUpdate;
+import net.minecraft.world.level.chunk.storage.IProgressUpdate;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;

@@ -17,9 +17,9 @@ import net.minecraft.client.GameSettingsKeys;
 import net.minecraft.client.GameSettingsValues;
 import net.minecraft.client.KeyBinding;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.renderer.GraphicsModeSorter;
-import net.minecraft.src.Translator;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.util.Translator;
 
 public class GameSettings {
 	public static final String DEFAULT_DISPLAY_STRING = "DEFAULT";

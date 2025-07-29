@@ -15,10 +15,10 @@ import com.mojang.nbt.CompressedStreamTools;
 import com.mojang.nbt.NBTTagCompound;
 import com.mojang.nbt.NBTTagList;
 
-import net.minecraft.client.locale.StringTranslate;
-import net.minecraft.src.ChatAllowedCharacters;
-import net.minecraft.src.Packet;
-import net.minecraft.src.Translator;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.util.ChatAllowedCharacters;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.util.Translator;
 
 public class GuiMultiplayer extends GuiScreen {
 	private static int threadsPending = 0;

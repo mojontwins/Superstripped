@@ -3,10 +3,10 @@ package net.minecraft.client.player;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Block;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.tile.Block;
 
 public class PlayerControllerSP extends PlayerController {
 	private int curBlockX = -1;

@@ -5,9 +5,9 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLiving;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;

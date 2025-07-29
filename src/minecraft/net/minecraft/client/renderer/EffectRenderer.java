@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.tile.Block;
 
 public class EffectRenderer {
 	protected World worldObj;

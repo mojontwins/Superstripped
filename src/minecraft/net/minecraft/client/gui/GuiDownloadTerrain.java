@@ -1,8 +1,8 @@
 package net.minecraft.client.gui;
 
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.src.Packet0KeepAlive;
+import net.minecraft.network.packet.Packet0KeepAlive;
+import net.minecraft.util.StringTranslate;
 
 public class GuiDownloadTerrain extends GuiScreen {
 	private NetClientHandler netHandler;

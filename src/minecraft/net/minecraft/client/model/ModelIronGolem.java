@@ -1,8 +1,8 @@
 package net.minecraft.client.model;
 
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityIronGolem;
-import net.minecraft.src.EntityLiving;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.monster.EntityIronGolem;
 
 public class ModelIronGolem extends ModelBase {
 	public ModelRenderer field_48234_a;

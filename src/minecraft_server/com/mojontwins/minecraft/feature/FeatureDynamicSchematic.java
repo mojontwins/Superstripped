@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.biome.BiomeGenBase;
+import net.minecraft.world.level.chunk.Chunk;
 
 public abstract class FeatureDynamicSchematic extends Feature {	
 	/*

@@ -1,8 +1,8 @@
 package com.mojontwins.utils;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.BlockFlower;
-import net.minecraft.src.Material;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.tile.Block;
+import net.minecraft.world.level.tile.BlockFlower;
 
 public class BlockUtils {
 	public static boolean isLeaves(int blockID) {

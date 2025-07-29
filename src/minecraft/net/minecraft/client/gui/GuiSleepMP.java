@@ -1,10 +1,10 @@
 package net.minecraft.client.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.multiplayer.EntityClientPlayerMP;
 import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.src.Packet19EntityAction;
+import net.minecraft.network.packet.Packet19EntityAction;
+import net.minecraft.util.StringTranslate;
 
 public class GuiSleepMP extends GuiChat {
 	public GuiSleepMP(Minecraft mc) {

@@ -3,9 +3,9 @@ package net.minecraft.client.renderer.entity;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntitySquid;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.animal.EntitySquid;
 
 public class RenderSquid extends RenderLiving {
 	public RenderSquid(ModelBase theModel, float f2) {

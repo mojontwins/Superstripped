@@ -7,7 +7,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import net.minecraft.src.NoiseGeneratorOctaves2;
+import net.minecraft.world.level.levelgen.synth.NoiseGeneratorOctaves2;
 
 public class NoiseResearch {
 

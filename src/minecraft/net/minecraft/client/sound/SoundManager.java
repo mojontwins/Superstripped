@@ -6,8 +6,8 @@ import java.util.Random;
 
 import net.minecraft.client.GameSettingsValues;
 import net.minecraft.client.gui.GameSettings;
-import net.minecraft.src.EntityLiving;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.EntityLiving;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.codecs.CodecJOrbis;

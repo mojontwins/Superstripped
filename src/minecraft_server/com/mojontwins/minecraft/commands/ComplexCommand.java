@@ -1,6 +1,6 @@
 package com.mojontwins.minecraft.commands;
 
-import net.minecraft.src.BlockPos;
+import net.minecraft.world.level.BlockPos;
 
 public class ComplexCommand {
 	public String command;

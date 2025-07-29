@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL12;
 import com.mojontwins.utils.Idx2uvF;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Entity;
+import net.minecraft.world.entity.Entity;
 
 public class RenderSnowball extends Render {
 	private int itemIconIndex;

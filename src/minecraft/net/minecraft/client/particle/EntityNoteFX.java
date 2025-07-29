@@ -2,7 +2,7 @@ package net.minecraft.client.particle;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
 
 public class EntityNoteFX extends EntityFX {
 	float noteParticleScale;

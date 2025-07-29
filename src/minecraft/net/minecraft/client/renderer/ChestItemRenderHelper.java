@@ -1,8 +1,8 @@
 package net.minecraft.client.renderer;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.src.Block;
-import net.minecraft.src.TileEntityChest;
+import net.minecraft.world.level.tile.Block;
+import net.minecraft.world.level.tile.entity.TileEntityChest;
 
 public class ChestItemRenderHelper {
 	public static ChestItemRenderHelper instance = new ChestItemRenderHelper();

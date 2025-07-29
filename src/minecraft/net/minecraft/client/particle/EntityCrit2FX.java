@@ -1,8 +1,8 @@
 package net.minecraft.client.particle;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Entity;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.World;
 
 public class EntityCrit2FX extends EntityFX {
 	private Entity field_35134_a;

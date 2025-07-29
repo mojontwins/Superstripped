@@ -16,12 +16,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.src.Container;
-import net.minecraft.src.EnumChatFormatting;
-import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.Slot;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.inventory.Container;
+import net.minecraft.world.inventory.InventoryPlayer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class GuiContainer extends GuiScreen {
 	protected static RenderItem itemRenderer = new RenderItem();

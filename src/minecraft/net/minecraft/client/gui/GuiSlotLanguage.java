@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.TreeMap;
 
 import net.minecraft.client.GameSettingsValues;
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.StringTranslate;
 
 class GuiSlotLanguage extends GuiSlot {
 	private ArrayList<String> languageIds;

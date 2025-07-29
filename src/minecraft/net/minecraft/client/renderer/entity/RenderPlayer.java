@@ -6,16 +6,16 @@ import net.minecraft.client.player.EntityPlayerSP;
 import net.minecraft.client.renderer.FontRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EnumAction;
-import net.minecraft.src.IArmorTextureProvider;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemArmor;
-import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.EnumAction;
+import net.minecraft.world.entity.IArmorTextureProvider;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemArmor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.tile.Block;
 
 import org.lwjgl.opengl.GL11;
 

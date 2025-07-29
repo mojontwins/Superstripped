@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import com.mojang.nbt.NBTBase;
 import com.mojang.nbt.NBTTagCompound;
 
-import net.minecraft.src.Vec3i;
+import net.minecraft.world.phys.Vec3i;
 
 public class ExporterSchematic extends ExporterBase {
 

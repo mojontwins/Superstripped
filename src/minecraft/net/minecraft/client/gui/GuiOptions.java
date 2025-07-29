@@ -1,7 +1,7 @@
 package net.minecraft.client.gui;
 
-import net.minecraft.client.locale.StringTranslate;
-import net.minecraft.src.Translator;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.util.Translator;
 
 public class GuiOptions extends GuiScreen {
 	private GuiScreen parentScreen;

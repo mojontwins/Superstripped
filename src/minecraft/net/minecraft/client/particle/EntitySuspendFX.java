@@ -1,8 +1,8 @@
 package net.minecraft.client.particle;
 
-import net.minecraft.src.Material;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.material.Material;
 
 public class EntitySuspendFX extends EntityFX {
 	public EntitySuspendFX(World world1, double d2, double d4, double d6, double d8, double d10, double d12) {

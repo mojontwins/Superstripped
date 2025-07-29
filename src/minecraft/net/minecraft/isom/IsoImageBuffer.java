@@ -2,7 +2,7 @@ package net.minecraft.isom;
 
 import java.awt.image.BufferedImage;
 
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
 
 public class IsoImageBuffer {
 	public BufferedImage image;

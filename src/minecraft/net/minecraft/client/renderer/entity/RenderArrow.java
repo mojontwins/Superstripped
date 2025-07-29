@@ -4,9 +4,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityArrow;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.EntityArrow;
 
 public class RenderArrow extends Render {
 	public void renderArrow(EntityArrow entityArrow1, double d2, double d4, double d6, float f8, float f9) {

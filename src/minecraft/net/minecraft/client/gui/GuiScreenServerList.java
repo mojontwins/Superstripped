@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.locale.StringTranslate;
+import net.minecraft.util.StringTranslate;
 
 public class GuiScreenServerList extends GuiScreen {
 	private static String field_52009_d = "";

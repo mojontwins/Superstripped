@@ -26,7 +26,7 @@ import net.minecraft.client.GameSettingsValues;
 import net.minecraft.client.renderer.ptexture.TextureFX;
 import net.minecraft.client.skins.TexturePackBase;
 import net.minecraft.client.skins.TexturePackList;
-import net.minecraft.src.IntHashMap;
+import net.minecraft.world.IntHashMap;
 
 public class RenderEngine {
 	public static boolean useMipmaps = false;

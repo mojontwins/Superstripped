@@ -6,8 +6,8 @@ import org.lwjgl.opengl.GL12;
 import com.mojontwins.utils.Idx2uvF;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityFireball;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.EntityFireball;
 
 public class RenderFireball extends Render {
 	private float field_40269_a;

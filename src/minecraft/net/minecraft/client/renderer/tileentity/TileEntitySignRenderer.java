@@ -4,9 +4,9 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelSign;
 import net.minecraft.client.renderer.FontRenderer;
-import net.minecraft.src.Block;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.TileEntitySign;
+import net.minecraft.world.level.tile.Block;
+import net.minecraft.world.level.tile.entity.TileEntity;
+import net.minecraft.world.level.tile.entity.TileEntitySign;
 
 public class TileEntitySignRenderer extends TileEntitySpecialRenderer {
 	private ModelSign modelSign = new ModelSign();

@@ -3,7 +3,7 @@ package com.mojontwins.minecraft.worldedit;
 import java.io.File;
 import java.io.FileWriter;
 
-import net.minecraft.src.Vec3i;
+import net.minecraft.world.phys.Vec3i;
 
 public class ExporterColumnsArray extends ExporterBase {
 	public static final boolean is4096IDs = false;

@@ -1,7 +1,7 @@
 package net.minecraft.client.renderer.ptexture;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.GameRules;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.level.tile.Block;
 
 public class TextureWaterFlowFX extends TextureFX {
 	protected float[] field_1138_g = new float[256];

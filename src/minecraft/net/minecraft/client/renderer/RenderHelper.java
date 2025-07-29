@@ -4,7 +4,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.src.Vec3D;
+import net.minecraft.world.phys.Vec3D;
 
 public class RenderHelper {
 	private static FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);

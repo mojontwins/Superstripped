@@ -1,7 +1,7 @@
 package net.minecraft.client.model;
 
-import net.minecraft.src.Entity;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.Entity;
 
 public class ModelBook extends ModelBase {
 	public ModelRenderer coverRight = (new ModelRenderer(this)).setTextureOffset(0, 0).addBox(-6.0F, -5.0F, 0.0F, 6, 10, 0);

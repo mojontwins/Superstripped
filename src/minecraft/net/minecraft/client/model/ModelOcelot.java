@@ -2,10 +2,10 @@ package net.minecraft.client.model;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityOcelot;
 import net.minecraft.src.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.animal.EntityOcelot;
 
 public class ModelOcelot extends ModelBase {
 	ModelRenderer field_48225_a;

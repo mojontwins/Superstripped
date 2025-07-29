@@ -7,13 +7,13 @@ import java.util.List;
 
 import com.mojang.nbt.NBTTagCompound;
 
-import net.minecraft.src.CraftingManager;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.IRecipe;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.ShapedRecipes;
-import net.minecraft.src.ShapelessRecipes;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.inventory.IInventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingManager;
+import net.minecraft.world.item.crafting.IRecipe;
+import net.minecraft.world.item.crafting.ShapedRecipes;
+import net.minecraft.world.item.crafting.ShapelessRecipes;
 
 public class InventoryRecipeBook implements IInventory {
 	private static List<IRecipe> recipes = null;

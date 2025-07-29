@@ -42,7 +42,6 @@ import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.gui.LoadingScreenRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.client.minimap.ZanMinimap;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.multiplayer.EntityClientPlayerMP;
@@ -76,34 +75,34 @@ import net.minecraft.client.renderer.ptexture.TextureWaterFlowFX;
 import net.minecraft.client.skins.TexturePackList;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.title.GuiMainMenu;
-import net.minecraft.src.AnvilSaveConverter;
-import net.minecraft.src.AxisAlignedBB;
-import net.minecraft.src.Block;
-import net.minecraft.src.BlockLeaves;
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.ColorizerFog;
-import net.minecraft.src.ColorizerFoliage;
-import net.minecraft.src.ColorizerGrass;
-import net.minecraft.src.ColorizerWater;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EnumMovingObjectType;
-import net.minecraft.src.GameRules;
-import net.minecraft.src.ISaveFormat;
-import net.minecraft.src.ISaveHandler;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemBlock;
-import net.minecraft.src.ItemStack;
+import net.minecraft.network.packet.Packet3Chat;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.MinecraftException;
-import net.minecraft.src.MovingObjectPosition;
-import net.minecraft.src.Packet3Chat;
-import net.minecraft.src.PlayerUsageSnooper;
-import net.minecraft.src.Translator;
-import net.minecraft.src.Vec3D;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldSettings;
-import net.minecraft.src.WorldType;
+import net.minecraft.util.MinecraftException;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.util.Translator;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemBlock;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.WorldSettings;
+import net.minecraft.world.level.WorldType;
+import net.minecraft.world.level.chunk.ChunkCoordinates;
+import net.minecraft.world.level.chunk.storage.AnvilSaveConverter;
+import net.minecraft.world.level.chunk.storage.ISaveFormat;
+import net.minecraft.world.level.chunk.storage.ISaveHandler;
+import net.minecraft.world.level.colorizer.ColorizerFog;
+import net.minecraft.world.level.colorizer.ColorizerFoliage;
+import net.minecraft.world.level.colorizer.ColorizerGrass;
+import net.minecraft.world.level.colorizer.ColorizerWater;
+import net.minecraft.world.level.tile.Block;
+import net.minecraft.world.level.tile.BlockLeaves;
+import net.minecraft.world.phys.AxisAlignedBB;
+import net.minecraft.world.phys.EnumMovingObjectType;
+import net.minecraft.world.phys.MovingObjectPosition;
+import net.minecraft.world.phys.Vec3D;
 
 public abstract class Minecraft implements Runnable {
 	public static byte[] field_28006_b = new byte[10485760];
@@ -280,7 +279,6 @@ public abstract class Minecraft implements Runnable {
 			exception4.printStackTrace();
 		}
 
-		func_52004_D();
 		this.checkGLError("Pre startup");
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -1572,20 +1570,6 @@ public abstract class Minecraft implements Runnable {
 
 	public static String func_52003_C() {
 		return "1.2.5";
-	}
-
-	public static void func_52004_D() {
-		PlayerUsageSnooper playerUsageSnooper0 = new PlayerUsageSnooper("client");
-		playerUsageSnooper0.func_52022_a("version", func_52003_C());
-		playerUsageSnooper0.func_52022_a("os_name", System.getProperty("os.name"));
-		playerUsageSnooper0.func_52022_a("os_version", System.getProperty("os.version"));
-		playerUsageSnooper0.func_52022_a("os_architecture", System.getProperty("os.arch"));
-		playerUsageSnooper0.func_52022_a("memory_total", Runtime.getRuntime().totalMemory());
-		playerUsageSnooper0.func_52022_a("memory_max", Runtime.getRuntime().maxMemory());
-		playerUsageSnooper0.func_52022_a("java_version", System.getProperty("java.version"));
-		playerUsageSnooper0.func_52022_a("opengl_version", GL11.glGetString(GL11.GL_VERSION));
-		playerUsageSnooper0.func_52022_a("opengl_vendor", GL11.glGetString(GL11.GL_VENDOR));
-		playerUsageSnooper0.func_52021_a();
 	}
 
 	public static long getSystemTime() {

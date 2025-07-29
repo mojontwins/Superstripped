@@ -3,11 +3,11 @@ package net.minecraft.client.multiplayer;
 import java.io.File;
 import java.util.List;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IChunkLoader;
-import net.minecraft.src.ISaveHandler;
-import net.minecraft.src.WorldInfo;
-import net.minecraft.src.WorldProvider;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.level.WorldInfo;
+import net.minecraft.world.level.chunk.IChunkLoader;
+import net.minecraft.world.level.chunk.storage.ISaveHandler;
+import net.minecraft.world.level.dimension.WorldProvider;
 
 public class SaveHandlerMP implements ISaveHandler {
 	public WorldInfo loadWorldInfo() {

@@ -6,11 +6,11 @@ import java.util.Map;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityList;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.TileEntityMobSpawner;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityList;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.tile.entity.TileEntity;
+import net.minecraft.world.level.tile.entity.TileEntityMobSpawner;
 
 public class TileEntityMobSpawnerRenderer extends TileEntitySpecialRenderer {
 	private Map<String, Entity> entityHashMap = new HashMap<String, Entity>();

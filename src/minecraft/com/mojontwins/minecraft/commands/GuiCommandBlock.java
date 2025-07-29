@@ -6,8 +6,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextArea;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.locale.StringTranslate;
-import net.minecraft.src.Packet91UpdateCommandBlock;
+import net.minecraft.network.packet.Packet91UpdateCommandBlock;
+import net.minecraft.util.StringTranslate;
 
 public class GuiCommandBlock extends GuiScreen {
 	public GuiTextArea commandTextArea;

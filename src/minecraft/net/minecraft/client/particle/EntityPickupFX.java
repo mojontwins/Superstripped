@@ -5,8 +5,8 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.src.Entity;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.World;
 
 public class EntityPickupFX extends EntityFX {
 	private Entity entityToPickUp;

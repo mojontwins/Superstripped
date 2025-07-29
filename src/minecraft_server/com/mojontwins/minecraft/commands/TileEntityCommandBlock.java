@@ -2,9 +2,9 @@ package com.mojontwins.minecraft.commands;
 
 import com.mojang.nbt.NBTTagCompound;
 
-import net.minecraft.src.Packet;
-import net.minecraft.src.Packet91UpdateCommandBlock;
-import net.minecraft.src.TileEntity;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet91UpdateCommandBlock;
+import net.minecraft.world.level.tile.entity.TileEntity;
 
 public class TileEntityCommandBlock extends TileEntity {
 	// This tile entity only serves as a means to contain a command

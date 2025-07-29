@@ -3,8 +3,8 @@ package net.minecraft.client.renderer.entity;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelGhast;
-import net.minecraft.src.EntityGhast;
-import net.minecraft.src.EntityLiving;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.monster.EntityGhast;
 
 public class RenderGhast extends RenderLiving {
 	public RenderGhast() {

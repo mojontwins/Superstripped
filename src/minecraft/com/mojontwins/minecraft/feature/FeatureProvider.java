@@ -7,11 +7,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.ChunkCoordIntPair;
-import net.minecraft.src.IChunkProvider;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.biome.BiomeGenBase;
+import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.chunk.ChunkCoordIntPair;
+import net.minecraft.world.level.chunk.IChunkProvider;
 
 public class FeatureProvider {
 	public World world;

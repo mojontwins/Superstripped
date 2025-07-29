@@ -1,7 +1,7 @@
 package com.mojontwins.utils;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.tile.Block;
 
 public class MetaBlock {
 	private final int blockId;

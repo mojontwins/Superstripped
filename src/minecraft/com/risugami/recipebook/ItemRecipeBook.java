@@ -1,9 +1,9 @@
 package com.risugami.recipebook;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
+import net.minecraft.world.entity.player.EntityPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.World;
 
 public class ItemRecipeBook extends Item {
 	public ItemRecipeBook(int id) {

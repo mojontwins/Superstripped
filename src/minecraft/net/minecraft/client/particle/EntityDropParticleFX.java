@@ -1,9 +1,9 @@
 package net.minecraft.client.particle;
 
-import net.minecraft.src.BlockFluid;
-import net.minecraft.src.Material;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.tile.BlockFluid;
 
 public class EntityDropParticleFX extends EntityFX {
 	private Material materialType;

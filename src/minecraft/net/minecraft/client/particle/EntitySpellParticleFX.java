@@ -1,7 +1,7 @@
 package net.minecraft.client.particle;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.World;
+import net.minecraft.world.level.World;
 
 public class EntitySpellParticleFX extends EntityFX {
 	private int field_40111_a = 128;

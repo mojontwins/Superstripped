@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityBoat extends Entity {
 	private int boatPosRotationIncrements;
 	private double boatX;

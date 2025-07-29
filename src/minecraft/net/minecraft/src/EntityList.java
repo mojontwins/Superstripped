@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityList {
 	private static Map<String, Class<?>> stringToClassMapping = new HashMap<String, Class<?>>();
 	private static Map<Class<?>, String> classToStringMapping = new HashMap<Class<?>, String>();

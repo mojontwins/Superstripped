@@ -5,10 +5,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
+
+import com.mojang.nbt.NBTBase;
+import com.mojang.nbt.NBTTagByte;
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagInt;
 
 public class GameRules {
 	// You should be able to change all this from a special menu in options.
@@ -20,32 +27,42 @@ public class GameRules {
 	public static boolean oldSelectWorldScreen = true;
 	public static boolean genlayerWorldChunkManager = false;
 
-	public static final boolean debug = true;
+	public static final boolean debug = false;
 	
 	public static HashMap<String, GameRule> gameRules = new HashMap<String, GameRule> ();
+	
+	public static final String catAesthetics = "Aesthetics";
+	public static final String catMobs = "Mobs";
+	public static final String catGameplay = "Gameplay";
 
+	public static final String[] categories = {
+			catAesthetics,
+			catGameplay,
+			catMobs
+	};
+	
 	static {
 		// Create all rules and give the default value		
-		gameRules.put("connectFences", new GameRule().withCaption("connectFences").withDescription("Fences connect to all cube blocks.").withValue(false));
-		gameRules.put("generateLapislazuli", new GameRule().withCaption("generateLapislazuli").withDescription("Generate lapislazuli ore.").withValue(true));
-		gameRules.put("noiseTreeDensity", new GameRule().withCaption("noiseTreeDensity").withDescription("Tree density based on noise.").withValue(true));
-		gameRules.put("smarterMobs", new GameRule().withCaption("smarterMobs").withDescription("Use new AI based zombies & skeletons.").withValue(true));
-		gameRules.put("enableSquids", new GameRule().withCaption("enableSquids").withDescription("Spawn squids.").withValue(true));
-		gameRules.put("oldFences", new GameRule().withCaption("oldFences").withDescription("Fences have full block collision.").withValue(false));
-		gameRules.put("colouredWater", new GameRule().withCaption("colouredWater").withDescription("Use T/H from the biome gen to get color from ramp.").withValue(false));
-		gameRules.put("edibleChicken", new GameRule().withCaption("edibleChicken").withDescription("Chicken sometimes drop chicken meat.").withValue(true));
-		gameRules.put("edibleCows", new GameRule().withCaption("edibleCows").withDescription("Cows sometimes drop cow meat.").withValue(true));
-		gameRules.put("canBreedAnimals", new GameRule().withCaption("canBreedAnimals").withDescription("You can make animals mate & reproduce").withValue(true));
-		gameRules.put("skeletonsWithBows", new GameRule().withCaption("skeletonsWithBows").withDescription("Skeletons have visible bows.").withValue(true));
-		gameRules.put("classicHurtSound", new GameRule().withCaption("classicHurtSound").withDescription("Use the classic HUH when hurt.").withValue(true));
-		gameRules.put("enableHunger", new GameRule().withCaption("enableHunger").withDescription("Enable sprinting mechanic.").withValue(false));
-		gameRules.put("enableSprinting", new GameRule().withCaption("enableSprinting").withDescription("Enable hunger mechanic.").withValue(false));
-		gameRules.put("hasSunriseSunset", new GameRule().withCaption("hasSunriseSunset").withDescription("Enable sunrise / sunset colors.").withValue(false));
-		gameRules.put("classicBow", new GameRule().withCaption("classicBow").withDescription("Classic shotgun bow").withValue(true));
-		gameRules.put("stackableFood", new GameRule().withCaption("stackableFood").withDescription("Food is stackable").withValue(false));
-		gameRules.put("colouredFog", new GameRule().withCaption("colouredFog").withDescription("Coloured fog").withValue(true));
-		gameRules.put("renderAllBlocksStraight", new GameRule().withCaption("renderAllBlocksStraight").withDescription("Render al 3axis (i.e. logs) vertical").withValue(false));
-		gameRules.put("snowPilesUp", new GameRule().withCaption("snowPilesUp").withDescription("Snow will build up as it keeps snowing").withValue(true));
+		gameRules.put("connectFences", new GameRule().withCaption("connectFences").withDescription("Fences connect to all cube blocks.").category(catAesthetics).withValue(false));
+		gameRules.put("generateLapislazuli", new GameRule().withCaption("generateLapislazuli").withDescription("Generate lapislazuli ore.").category(catGameplay).withValue(true));
+		gameRules.put("noiseTreeDensity", new GameRule().withCaption("noiseTreeDensity").withDescription("Tree density based on noise.").category(catAesthetics).withValue(true));
+		gameRules.put("smarterMobs", new GameRule().withCaption("smarterMobs").withDescription("Use new AI based zombies & skeletons.").category(catMobs).withValue(true));
+		gameRules.put("enableSquids", new GameRule().withCaption("enableSquids").withDescription("Spawn squids.").category(catMobs).withValue(true));
+		gameRules.put("oldFences", new GameRule().withCaption("oldFences").withDescription("Fences have full block collision.").category(catGameplay).withValue(false));
+		gameRules.put("colouredWater", new GameRule().withCaption("colouredWater").withDescription("Use T/H from the biome gen to get color from ramp.").category(catAesthetics).withValue(false));
+		gameRules.put("edibleChicken", new GameRule().withCaption("edibleChicken").withDescription("Chicken sometimes drop chicken meat.").category(catMobs).withValue(true));
+		gameRules.put("edibleCows", new GameRule().withCaption("edibleCows").withDescription("Cows sometimes drop cow meat.").category(catMobs).withValue(true));
+		gameRules.put("canBreedAnimals", new GameRule().withCaption("canBreedAnimals").withDescription("You can make animals mate & reproduce").category(catMobs).withValue(true));
+		gameRules.put("skeletonsWithBows", new GameRule().withCaption("skeletonsWithBows").withDescription("Skeletons have visible bows.").category(catAesthetics).withValue(true));
+		gameRules.put("classicHurtSound", new GameRule().withCaption("classicHurtSound").withDescription("Use the classic HUH when hurt.").category(catAesthetics).withValue(true));
+		gameRules.put("enableHunger", new GameRule().withCaption("enableHunger").withDescription("Enable sprinting mechanic.").category(catGameplay).withValue(false));
+		gameRules.put("enableSprinting", new GameRule().withCaption("enableSprinting").withDescription("Enable hunger mechanic.").category(catGameplay).withValue(false));
+		gameRules.put("hasSunriseSunset", new GameRule().withCaption("hasSunriseSunset").withDescription("Enable sunrise / sunset colors.").category(catAesthetics).withValue(false));
+		gameRules.put("classicBow", new GameRule().withCaption("classicBow").withDescription("Classic shotgun bow").category(catGameplay).withValue(true));
+		gameRules.put("stackableFood", new GameRule().withCaption("stackableFood").withDescription("Food is stackable").category(catGameplay).withValue(false));
+		gameRules.put("colouredFog", new GameRule().withCaption("colouredFog").withDescription("Coloured fog").category(catAesthetics).withValue(true));
+		gameRules.put("renderAllBlocksStraight", new GameRule().withCaption("renderAllBlocksStraight").withDescription("Render al 3axis (i.e. logs) vertical").category(catAesthetics).withValue(false));
+		gameRules.put("snowPilesUp", new GameRule().withCaption("snowPilesUp").withDescription("Snow will build up as it keeps snowing").category(catAesthetics).withValue(true));
 	}
 	
 	public static boolean boolRule(String rule) {
@@ -198,4 +215,14 @@ public class GameRules {
 		}
 	}
 
+	public static List<GameRule> getRulesOfCategory(String category) {
+		List<GameRule> rules = new ArrayList<>();
+		
+		gameRules.forEach((k, v) -> {
+			GameRule rule = (GameRule)v;
+			if (rule.getCategory().equals(category)) rules.add(rule);
+		});
+		
+		return rules;
+	}
 }

@@ -1,5 +1,8 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagList;
+
 public class TileEntityChest extends TileEntity implements IInventory {
 	private ItemStack[] chestContents = new ItemStack[36];
 	public boolean adjacentChestChecked = false;

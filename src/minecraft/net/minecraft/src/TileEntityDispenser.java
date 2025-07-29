@@ -2,6 +2,9 @@ package net.minecraft.src;
 
 import java.util.Random;
 
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagList;
+
 public class TileEntityDispenser extends TileEntity implements IInventory {
 	private ItemStack[] dispenserContents = new ItemStack[9];
 	private Random dispenserRandom = new Random();

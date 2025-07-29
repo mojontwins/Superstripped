@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.Random;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntitySheep extends EntityAnimal implements IDyeableEntity {
 	// Note how fleece color are in reverse order, when compared to dyes in ItemDye,
 	// but correspond to wool metadata. I guess this was made this way because sheep

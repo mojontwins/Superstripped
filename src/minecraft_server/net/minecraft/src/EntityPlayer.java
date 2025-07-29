@@ -3,6 +3,9 @@ package net.minecraft.src;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagList;
+
 public abstract class EntityPlayer extends EntityLiving {
 	public InventoryPlayer inventory = new InventoryPlayer(this);
 	public Container inventorySlots;

@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class TileEntityMobSpawner extends TileEntity {
 	public int delay = -1;
 	protected String mobID = "Pig";

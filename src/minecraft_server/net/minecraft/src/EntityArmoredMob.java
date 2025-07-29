@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityArmoredMob extends EntityMob implements IArmoredMob {
 	// Added a proper inventory to manage actual armor and stuff
 	public InventoryMob inventory;

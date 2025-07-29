@@ -15,6 +15,8 @@ import net.minecraft.src.World;
 
 public abstract class CommandBase implements ICommand {
 	public static final int BREAK_AND_FAIL = -99999999;
+	public static final int NOT_FOUND      = -99999998;
+	
 	protected ICommandSender theCommandSender;
 		
 	public CommandBase() {

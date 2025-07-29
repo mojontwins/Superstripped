@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mojang.nbt.CompressedStreamTools;
+import com.mojang.nbt.NBTTagCompound;
+
 public class AnvilSaveConverter extends SaveFormatOld {
 	public AnvilSaveConverter(File file1) {
 		super(file1);
@@ -20,34 +23,36 @@ public class AnvilSaveConverter extends SaveFormatOld {
 	}
 
 	public List<SaveFormatComparator> getSaveList() {
-		ArrayList<SaveFormatComparator> arrayList1 = new ArrayList<SaveFormatComparator>();
-		File[] file2 = this.savesDirectory.listFiles();
-		File[] file3 = file2;
-		int i4 = file2.length;
+		ArrayList<SaveFormatComparator> savesList = new ArrayList<SaveFormatComparator>();
 
-		for(int i5 = 0; i5 < i4; ++i5) {
-			File file6 = file3[i5];
-			if(file6.isDirectory()) {
-				String string7 = file6.getName();
-				WorldInfo worldInfo8 = this.getWorldInfo(string7);
-				if(worldInfo8 != null && (worldInfo8.getSaveVersion() == 19132 || worldInfo8.getSaveVersion() == 19133)) {
-					boolean z9 = worldInfo8.getSaveVersion() != this.func_48431_c();
-					String string10 = worldInfo8.getWorldName();
-					if(string10 == null || MathHelper.stringNullOrLengthZero(string10)) {
-						string10 = string7;
+		File[] filesListA = this.savesDirectory.listFiles();
+		File[] filesListC = filesListA;
+		int numFiles = filesListA.length;
+
+		for(int i = 0; i < numFiles; ++i) {
+			File saveFile = filesListC[i];
+			if(saveFile.isDirectory()) {
+				String saveFileName = saveFile.getName();
+				WorldInfo worldInfo = this.getWorldInfo(saveFileName);
+				if(worldInfo != null && (worldInfo.getSaveVersion() == SaveHandler.mcRegion || worldInfo.getSaveVersion() == SaveHandler.anvil || worldInfo.getSaveVersion() == SaveHandler.old)) {
+					boolean needsConversion = worldInfo.getSaveVersion() != this.getSaveVersion();
+					
+					String worldName = worldInfo.getWorldName();
+					if(worldName == null || MathHelper.stringNullOrLengthZero(worldName)) {
+						worldName = saveFileName;
 					}
 
-					long j11 = 0L;
-					arrayList1.add(new SaveFormatComparator(string7, string10, worldInfo8.getLastTimePlayed(), j11, worldInfo8.getGameType(), z9, worldInfo8.isHardcoreModeEnabled()));
+					long seed = 0L;
+					savesList.add(new SaveFormatComparator(saveFileName, worldName, worldInfo.getLastTimePlayed(), seed, worldInfo.getGameType(), needsConversion, worldInfo.isHardcoreModeEnabled()));
 				}
 			}
 		}
 
-		return arrayList1;
+		return savesList;
 	}
 
-	protected int func_48431_c() {
-		return 19133;
+	protected int getSaveVersion() {
+		return SaveHandler.anvil;
 	}
 
 	public void flushCache() {
@@ -60,52 +65,60 @@ public class AnvilSaveConverter extends SaveFormatOld {
 
 	public boolean isOldMapFormat(String string1) {
 		WorldInfo worldInfo2 = this.getWorldInfo(string1);
-		return worldInfo2 != null && worldInfo2.getSaveVersion() != this.func_48431_c();
+		return worldInfo2 != null && worldInfo2.getSaveVersion() != this.getSaveVersion();
 	}
 
-	public boolean convertMapFormat(String string1, IProgressUpdate iProgressUpdate2) {
-		iProgressUpdate2.setLoadingProgress(0);
-		ArrayList<File> arrayList3 = new ArrayList<File>();
-		ArrayList<File> arrayList4 = new ArrayList<File>();
-		ArrayList<File> arrayList5 = new ArrayList<File>();
-		File file6 = new File(this.savesDirectory, string1);
-		File file7 = new File(file6, "DIM-1");
-		File file8 = new File(file6, "DIM1");
+	public boolean convertMapFormat(String levelName, IProgressUpdate progress) {
+		progress.setLoadingProgress(0);
+
+		ArrayList<File> regionsSurface = new ArrayList<File>();
+		ArrayList<File> regionsNether = new ArrayList<File>();
+		ArrayList<File> regionsTheEnd = new ArrayList<File>();
+		
+		File baseDir = new File(this.savesDirectory, levelName);
+		File netherDir = new File(baseDir, "DIM-1");
+		File theEndDir = new File(baseDir, "DIM1");
+		
 		System.out.println("Scanning folders...");
-		this.func_48432_a(file6, arrayList3);
-		if(file7.exists()) {
-			this.func_48432_a(file7, arrayList4);
+		
+		// Get list of region files.
+
+		this.getRegionFileList(baseDir, regionsSurface);
+		if(netherDir.exists()) {
+			this.getRegionFileList(netherDir, regionsNether);
 		}
 
-		if(file8.exists()) {
-			this.func_48432_a(file8, arrayList5);
+		if(theEndDir.exists()) {
+			this.getRegionFileList(theEndDir, regionsTheEnd);
 		}
 
-		int i9 = arrayList3.size() + arrayList4.size() + arrayList5.size();
-		System.out.println("Total conversion count is " + i9);
-		WorldInfo worldInfo10 = this.getWorldInfo(string1);
-		Object object11 = null;
-		if(worldInfo10.getTerrainType() == WorldType.FLAT) {
-			object11 = new WorldChunkManagerHell(BiomeGenBase.alpha, 0.5F, 0.5F);
+		int totalRegions = regionsSurface.size() + regionsNether.size() + regionsTheEnd.size();
+		System.out.println("Total conversion count is " + totalRegions);
+
+		WorldInfo worldInfo = this.getWorldInfo(levelName);
+
+		Object chunkManager = null;
+		if(worldInfo.getTerrainType() == WorldType.FLAT) {
+			chunkManager = new WorldChunkManagerHell(BiomeGenBase.alpha, 0.5F, 0.5F);
 		} else {
-			object11 = new WorldChunkManager(worldInfo10.getSeed(), worldInfo10.getTerrainType());
+			chunkManager = new WorldChunkManager(worldInfo.getSeed(), worldInfo.getTerrainType());
 		}
 
-		this.func_48428_a(new File(file6, "region"), arrayList3, (WorldChunkManager)object11, 0, i9, iProgressUpdate2);
-		this.func_48428_a(new File(file7, "region"), arrayList4, new WorldChunkManagerHell(BiomeGenBase.alpha, 1.0F, 0.0F), arrayList3.size(), i9, iProgressUpdate2);
-		this.func_48428_a(new File(file8, "region"), arrayList5, new WorldChunkManagerHell(BiomeGenBase.alpha, 0.5F, 0.0F), arrayList3.size() + arrayList4.size(), i9, iProgressUpdate2);
-		worldInfo10.setSaveVersion(19133);
-		if(worldInfo10.getTerrainType() == WorldType.DEFAULT_1_1) {
-			worldInfo10.setTerrainType(WorldType.DEFAULT);
-		}
+		this.convertRegionsDir(new File(baseDir, "region"), regionsSurface, (WorldChunkManager)chunkManager, 0, totalRegions, progress);
+		this.convertRegionsDir(new File(netherDir, "region"), regionsNether, new WorldChunkManagerHell(BiomeGenBase.alpha, 1.0F, 0.0F), regionsSurface.size(), totalRegions, progress);
+		this.convertRegionsDir(new File(theEndDir, "region"), regionsTheEnd, new WorldChunkManagerHell(BiomeGenBase.alpha, 0.5F, 0.0F), regionsSurface.size() + regionsNether.size(), totalRegions, progress);
+		
+		// Change save version to ANVIL
+		worldInfo.setSaveVersion(SaveHandler.anvil);
 
-		this.func_48429_d(string1);
-		ISaveHandler iSaveHandler12 = this.getSaveLoader(string1, false);
-		iSaveHandler12.saveWorldInfo(worldInfo10);
+		this.makeMcrBackup(levelName);
+		ISaveHandler saveHandler = this.getSaveLoader(levelName, false);
+		saveHandler.saveWorldInfo(worldInfo);
+		
 		return true;
 	}
 
-	private void func_48429_d(String string1) {
+	private void makeMcrBackup(String string1) {
 		File file2 = new File(this.savesDirectory, string1);
 		if(!file2.exists()) {
 			System.out.println("Warning: Unable to create level.dat_mcr backup");
@@ -123,73 +136,83 @@ public class AnvilSaveConverter extends SaveFormatOld {
 		}
 	}
 
-	private void func_48428_a(File file1, ArrayList<File> arrayList2, WorldChunkManager worldChunkManager3, int i4, int i5, IProgressUpdate iProgressUpdate6) {
-		Iterator<File> iterator7 = arrayList2.iterator();
+	private void convertRegionsDir(File regionsDir, ArrayList<File> regionFileList, WorldChunkManager chunkManager, int curRegionNumber, int totalRegions, IProgressUpdate progress) {
+		Iterator<File> it = regionFileList.iterator();
 
-		while(iterator7.hasNext()) {
-			File file8 = (File)iterator7.next();
-			this.func_48430_a(file1, file8, worldChunkManager3, i4, i5, iProgressUpdate6);
-			++i4;
-			int i9 = (int)Math.round(100.0D * (double)i4 / (double)i5);
-			iProgressUpdate6.setLoadingProgress(i9);
+		while(it.hasNext()) {
+			File regionFile = (File)it.next();
+			this.convertRegionFile(regionsDir, regionFile, chunkManager, curRegionNumber, totalRegions, progress);
+			++curRegionNumber;
+			int percent = (int)Math.round(100.0D * (double)curRegionNumber / (double)totalRegions);
+			progress.setLoadingProgress(percent);
 		}
 
 	}
 
-	private void func_48430_a(File file1, File file2, WorldChunkManager worldChunkManager3, int i4, int i5, IProgressUpdate iProgressUpdate6) {
+	// You could add metadata 4->8 bit conversion here too, so mcr regions are converted to Anvil8bmd regions.
+	
+	private void convertRegionFile(File regionsDir, File regionsFile, WorldChunkManager chunkManager, int curRegionNumber, int totalRegions, IProgressUpdate progress) {
 		try {
-			String string7 = file2.getName();
-			RegionFile regionFile8 = new RegionFile(file2);
-			RegionFile regionFile9 = new RegionFile(new File(file1, string7.substring(0, string7.length() - ".mcr".length()) + ".mca"));
+			String fileName = regionsFile.getName();
 
-			for(int i10 = 0; i10 < 32; ++i10) {
-				int i11;
-				for(i11 = 0; i11 < 32; ++i11) {
-					if(regionFile8.isChunkSaved(i10, i11) && !regionFile9.isChunkSaved(i10, i11)) {
-						DataInputStream dataInputStream12 = regionFile8.getChunkDataInputStream(i10, i11);
-						if(dataInputStream12 == null) {
+			RegionFile mcrFile = new RegionFile(regionsFile);
+			RegionFile mcaFile = new RegionFile(new File(regionsDir, fileName.substring(0, fileName.length() - ".mcr".length()) + ".mca"));
+
+			// Convert chunks
+
+			for(int chunkX = 0; chunkX < 32; ++chunkX) {
+				for(int chunkZ = 0; chunkZ < 32; ++chunkZ) {
+					if(mcrFile.isChunkSaved(chunkX, chunkZ) && !mcaFile.isChunkSaved(chunkX, chunkZ)) {
+						DataInputStream dis = mcrFile.getChunkDataInputStream(chunkX, chunkZ);
+						if(dis == null) {
 							System.out.println("Failed to fetch input stream");
 						} else {
-							NBTTagCompound compoundTag3 = CompressedStreamTools.read((DataInput)dataInputStream12);
-							dataInputStream12.close();
-							NBTTagCompound compoundTag4 = compoundTag3.getCompoundTag("Level");
-							AnvilConverterData anvilConverterData15 = ChunkLoader.load(compoundTag4);
-							NBTTagCompound compoundTag6 = new NBTTagCompound();
-							NBTTagCompound compoundTag7 = new NBTTagCompound();
-							compoundTag6.setTag("Level", compoundTag7);
-							ChunkLoader.convertToAnvilFormat(anvilConverterData15, compoundTag7, worldChunkManager3);
-							DataOutputStream dataOutputStream18 = regionFile9.getChunkDataOutputStream(i10, i11);
-							CompressedStreamTools.write(compoundTag6, (DataOutput)dataOutputStream18);
-							dataOutputStream18.close();
+							NBTTagCompound nbt = CompressedStreamTools.read((DataInput)dis);
+							dis.close();
+							NBTTagCompound levelNbt = nbt.getCompoundTag("Level");
+							AnvilConverterData dataOldFormat = ChunkLoader.load(levelNbt);
+
+							NBTTagCompound nbtOut = new NBTTagCompound();
+							NBTTagCompound levelOut = new NBTTagCompound();
+							nbtOut.setTag("Level", levelOut);
+
+							ChunkLoader.convertToAnvilFormat(dataOldFormat, levelOut, chunkManager);
+							
+							DataOutputStream dos = mcaFile.getChunkDataOutputStream(chunkX, chunkZ);
+							CompressedStreamTools.write(nbtOut, (DataOutput)dos);
+							dos.close();
 						}
 					}
 				}
 
-				i11 = (int)Math.round(100.0D * (double)(i4 * 1024) / (double)(i5 * 1024));
-				int i20 = (int)Math.round(100.0D * (double)((i10 + 1) * 32 + i4 * 1024) / (double)(i5 * 1024));
-				if(i20 > i11) {
-					iProgressUpdate6.setLoadingProgress(i20);
+				int a = (int)Math.round(100.0D * (double)(curRegionNumber * 1024) / (double)(totalRegions * 1024));
+				int b = (int)Math.round(100.0D * (double)((chunkX + 1) * 32 + curRegionNumber * 1024) / (double)(totalRegions * 1024));
+				if(b > a) {
+					progress.setLoadingProgress(b);
 				}
 			}
 
-			regionFile8.close();
-			regionFile9.close();
-		} catch (IOException iOException19) {
-			iOException19.printStackTrace();
+			mcrFile.close();
+			mcaFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 	}
 
-	private void func_48432_a(File file1, ArrayList<File> arrayList2) {
-		File file3 = new File(file1, "region");
-		File[] file4 = file3.listFiles(new AnvilSaveConverterFileFilter(this));
-		if(file4 != null) {
-			File[] file5 = file4;
-			int i6 = file4.length;
+	private void getRegionFileList(File dir, ArrayList<File> regionFiles) {
+		File regionDir = new File(dir, "region");
+		
+		// Will get all .mcr files.
+		File[] fileArray = regionDir.listFiles(new AnvilSaveConverterFileFilter(this));
+		
+		if(fileArray != null) {
+			File[] fileArray2 = fileArray;
+			int numFiles = fileArray.length;
 
-			for(int i7 = 0; i7 < i6; ++i7) {
-				File file8 = file5[i7];
-				arrayList2.add(file8);
+			for(int i7 = 0; i7 < numFiles; ++i7) {
+				File regionFile = fileArray2[i7];
+				regionFiles.add(regionFile);
 			}
 		}
 

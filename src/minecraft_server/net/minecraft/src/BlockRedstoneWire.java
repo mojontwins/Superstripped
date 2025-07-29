@@ -326,7 +326,7 @@ public class BlockRedstoneWire extends Block {
 		}
 	}
 
-	boolean isBlockGood(IBlockAccess world, int x, int y, int z) {
+	public boolean isBlockGood(IBlockAccess world, int x, int y, int z) {
 		Block block = world.getBlock(x, y, z);
 		return block != null && block.supportsRedstone(world.getBlockMetadata(x, y, z));
 	}

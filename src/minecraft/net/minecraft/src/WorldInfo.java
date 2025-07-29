@@ -2,9 +2,11 @@ package net.minecraft.src;
 
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class WorldInfo {
 	private long randomSeed;
-	private WorldType terrainType = WorldType.DEFAULT;
+	private WorldType terrainType = WorldType.ALPHA;
 	private int spawnX;
 	private int spawnY;
 	private int spawnZ;
@@ -35,13 +37,15 @@ public class WorldInfo {
 
 	public WorldInfo(NBTTagCompound nBTWorldInfo) {
 		this.randomSeed = nBTWorldInfo.getLong("RandomSeed");
+		this.snowCovered = nBTWorldInfo.getBoolean("SnowCovered");
+		
 		if(nBTWorldInfo.hasKey("generatorName")) {
 			String string2 = nBTWorldInfo.getString("generatorName");
 
 			this.terrainType = WorldType.parseWorldType(string2);
 			
 			if(this.terrainType == null) {
-				this.terrainType = WorldType.DEFAULT;
+				this.terrainType = WorldType.ALPHA;
 			} else if(this.terrainType.func_48626_e()) {
 				int i3 = 0;
 				if(nBTWorldInfo.hasKey("generatorVersion")) {
@@ -50,9 +54,16 @@ public class WorldInfo {
 
 				this.terrainType = this.terrainType.func_48629_a(i3);
 			}
+		} else if(this.snowCovered) {
+			this.terrainType = WorldType.ALPHA_SNOW;
 		}
 
-		this.gameType = nBTWorldInfo.getInteger("GameType");
+		if(nBTWorldInfo.hasKey("gameType")) {
+			this.gameType = nBTWorldInfo.getInteger("GameType");
+		} else {
+			this.gameType = 0;
+		}
+		
 		if(nBTWorldInfo.hasKey("MapFeatures")) {
 			this.mapFeaturesEnabled = nBTWorldInfo.getBoolean("MapFeatures");
 		} else {
@@ -73,11 +84,23 @@ public class WorldInfo {
 		this.raining = nBTWorldInfo.getBoolean("raining");
 		this.thunderTime = nBTWorldInfo.getInteger("thunderTime");
 		this.thundering = nBTWorldInfo.getBoolean("thundering");
+		this.snowingTime = nBTWorldInfo.getInteger("snowingTime");
+		this.snowing = nBTWorldInfo.getBoolean("snowing");
+		this.thunderTime = nBTWorldInfo.getInteger("thunderTime");
+		this.thundering = nBTWorldInfo.getBoolean("thundering");
 		this.sandstorming = nBTWorldInfo.getBoolean("sandstorming");
 		this.sandstormingTime = nBTWorldInfo.getInteger("sandstormingTime");
-		Seasons.dayOfTheYear = nBTWorldInfo.getInteger("DayOfTheYear");
+		
+		if(nBTWorldInfo.hasKey("DayOfTheYear")) {
+			Seasons.dayOfTheYear = nBTWorldInfo.getInteger("DayOfTheYear");
+		} else if(this.snowCovered) {
+			Seasons.dayOfTheYear = 0;
+		} else {
+			Seasons.dayOfTheYear = Seasons.SEASON_DURATION * 2;
+		}
+		
 		this.hardcore = nBTWorldInfo.getBoolean("hardcore");
-		this.snowCovered = nBTWorldInfo.getBoolean("SnowCovered");
+		
 		this.enableSeasons = nBTWorldInfo.getBoolean("EnableSeasons");
 		
 		GameRules.loadRules(nBTWorldInfo);
@@ -126,6 +149,8 @@ public class WorldInfo {
 		this.raining = worldInfo.raining;
 		this.thunderTime = worldInfo.thunderTime;
 		this.thundering = worldInfo.thundering;
+		this.snowingTime = worldInfo.snowingTime;;
+		this.snowing = worldInfo.snowing;
 		this.sandstormingTime = worldInfo.sandstormingTime;
 		this.sandstorming = worldInfo.sandstorming;
 		this.hardcore = worldInfo.hardcore;
@@ -175,6 +200,8 @@ public class WorldInfo {
 		nBTWorldInfo.setBoolean("raining", this.raining);
 		nBTWorldInfo.setInteger("thunderTime", this.thunderTime);
 		nBTWorldInfo.setBoolean("thundering", this.thundering);
+		nBTWorldInfo.setInteger("snowingTime", this.snowingTime);
+		nBTWorldInfo.setBoolean("snowing", this.snowing);
 		nBTWorldInfo.setInteger("sandstromingTime", this.sandstormingTime);
 		nBTWorldInfo.setBoolean("sandstorming", this.sandstorming);
 		nBTWorldInfo.setInteger("DayOfTheYear", Seasons.dayOfTheYear);

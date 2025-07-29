@@ -20,7 +20,7 @@ public abstract class BlockFluid extends Block implements ILiquid {
 	}
 
 	public int colorMultiplier(IBlockAccess iBlockAccess1, int i2, int i3, int i4) {
-		if(this.blockMaterial != Material.water) {
+		if(this.blockMaterial != Material.water || !GameRules.boolRule("colouredWater")) {
 			return 0xFFFFFF;
 		} else {
 			int i5 = 0;
@@ -32,14 +32,12 @@ public abstract class BlockFluid extends Block implements ILiquid {
 				for(int i9 = -1; i9 <= 1; ++i9) {
 					biomeGen = iBlockAccess1.getBiomeGenForCoords(i2 + i9, i4 + i8);
 					int i10 = biomeGen.waterColorMultiplier;
-					
-					if(GameRules.boolRule("colouredWater")) {
-						// Use a ramp if the color multiplier is white
-						if(i10 == 0xFFFFFF) {
-							i10 = biomeGen.getBiomeWaterColor();
-						}
+
+					// Use a ramp if the color multiplier is white
+					if(i10 == 0xFFFFFF) {
+						i10 = biomeGen.getBiomeWaterColor();
 					}
-				
+
 					i5 += (i10 & 16711680) >> 16;
 					i6 += (i10 & 65280) >> 8;
 					i7 += i10 & 255;
@@ -51,7 +49,7 @@ public abstract class BlockFluid extends Block implements ILiquid {
 	}
 	
 	public Vec3D colorMultiplierAsVec3D(IBlockAccess iBlockAccess1, int i2, int i3, int i4) {
-		if(this.blockMaterial != Material.water) {
+		if(this.blockMaterial != Material.water || !GameRules.boolRule("colouredWater")) {
 			return Vec3D.createVector(1, 1, 1);
 		} else {
 			int i5 = 0;
@@ -63,12 +61,10 @@ public abstract class BlockFluid extends Block implements ILiquid {
 				for(int i9 = -1; i9 <= 1; ++i9) {
 					biomeGen = iBlockAccess1.getBiomeGenForCoords(i2 + i9, i4 + i8);
 					int i10 = biomeGen.waterColorMultiplier;
-					
-					if(GameRules.boolRule("colouredWater")) {
-						// Use a ramp if the color multiplier is white
-						if(i10 == 0xFFFFFF) {
-							i10 = biomeGen.getBiomeWaterColor();
-						}
+				
+					// Use a ramp if the color multiplier is white
+					if(i10 == 0xFFFFFF) {
+						i10 = biomeGen.getBiomeWaterColor();
 					}
 					
 					i5 += (i10 & 16711680) >> 16;

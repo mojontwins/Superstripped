@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityFishHook extends Entity {
 	private int xTile;
 	private int yTile;

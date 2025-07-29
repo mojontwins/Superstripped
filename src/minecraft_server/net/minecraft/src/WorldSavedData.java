@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public abstract class WorldSavedData {
 	public final String mapName;
 	private boolean dirty;

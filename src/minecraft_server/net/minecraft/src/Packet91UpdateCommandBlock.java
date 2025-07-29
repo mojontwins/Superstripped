@@ -5,7 +5,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class Packet91UpdateCommandBlock extends Packet {
-	int x, y, z;
+	public int x;
+	public int y;
+	public int z;
 	public String command;
 
 	public Packet91UpdateCommandBlock() {

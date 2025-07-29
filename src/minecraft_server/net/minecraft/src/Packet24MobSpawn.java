@@ -13,7 +13,7 @@ public class Packet24MobSpawn extends Packet {
 	public int zPosition;
 	public byte yaw;
 	public byte pitch;
-	public byte field_48169_h;
+	public byte yawHead;
 	private DataWatcher metaData;
 	private List<WatchableObject> receivedMetadata;
 
@@ -28,7 +28,7 @@ public class Packet24MobSpawn extends Packet {
 		this.zPosition = MathHelper.floor_double(entityLiving1.posZ * 32.0D);
 		this.yaw = (byte)((int)(entityLiving1.rotationYaw * 256.0F / 360.0F));
 		this.pitch = (byte)((int)(entityLiving1.rotationPitch * 256.0F / 360.0F));
-		this.field_48169_h = (byte)((int)(entityLiving1.rotationYawHead * 256.0F / 360.0F));
+		this.yawHead = (byte)((int)(entityLiving1.rotationYawHead * 256.0F / 360.0F));
 		this.metaData = entityLiving1.getDataWatcher();
 	}
 
@@ -40,7 +40,7 @@ public class Packet24MobSpawn extends Packet {
 		this.zPosition = dataInputStream1.readInt();
 		this.yaw = dataInputStream1.readByte();
 		this.pitch = dataInputStream1.readByte();
-		this.field_48169_h = dataInputStream1.readByte();
+		this.yawHead = dataInputStream1.readByte();
 		this.receivedMetadata = DataWatcher.readWatchableObjects(dataInputStream1);
 	}
 
@@ -52,7 +52,7 @@ public class Packet24MobSpawn extends Packet {
 		dataOutputStream1.writeInt(this.zPosition);
 		dataOutputStream1.writeByte(this.yaw);
 		dataOutputStream1.writeByte(this.pitch);
-		dataOutputStream1.writeByte(this.field_48169_h);
+		dataOutputStream1.writeByte(this.yawHead);
 		this.metaData.writeWatchableObjects(dataOutputStream1);
 	}
 

@@ -1,6 +1,7 @@
 package com.mojontwins.minecraft.commands;
 
-import net.minecraft.src.NBTTagCompound;
+import com.mojang.nbt.NBTTagCompound;
+
 import net.minecraft.src.Packet;
 import net.minecraft.src.Packet91UpdateCommandBlock;
 import net.minecraft.src.TileEntity;

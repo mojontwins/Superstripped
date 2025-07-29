@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityOcelot extends EntityTameable {
 	private EntityAITempt aiTempt;
 	private boolean neverDespawn;

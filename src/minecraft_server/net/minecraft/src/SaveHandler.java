@@ -9,13 +9,21 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.mojang.nbt.CompressedStreamTools;
+import com.mojang.nbt.NBTTagCompound;
+
 public class SaveHandler implements ISaveHandler {
 	private static final Logger logger = Logger.getLogger("Minecraft");
+	
 	private final File saveDirectory;
 	private final File playersDirectory;
 	private final File mapDataDir;
 	private final long initializationTime = System.currentTimeMillis();
 	private final String saveDirectoryName;
+	
+	public static final int anvil = 19133;
+	public static final int mcRegion = 19132;
+	public static final int old = 0;
 
 	public SaveHandler(File file1, String string2, boolean z3) {
 		this.saveDirectory = new File(file1, string2);

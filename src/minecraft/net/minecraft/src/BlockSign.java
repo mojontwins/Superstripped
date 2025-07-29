@@ -114,4 +114,16 @@ public class BlockSign extends BlockContainer {
 
 		super.onNeighborBlockChange(world1, i2, i3, i4, i5);
 	}
+	
+	@Override
+	public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer) {
+		if (entityPlayer.getCurrentEquippedItem() != null && entityPlayer.getCurrentEquippedItem().itemID == Item.feather.shiftedIndex) {
+			TileEntitySign sign = (TileEntitySign)world.getBlockTileEntity(x, y, z);
+			if(sign != null) {
+				entityPlayer.displayGUIEditSign(sign);
+			}
+		} 
+		
+		return true;
+	}
 }

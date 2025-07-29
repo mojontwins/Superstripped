@@ -30,8 +30,12 @@ public class BlockSnow extends Block {
 	}
 
 	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-		int id = world.getBlockId(x, y - 1, z);
-		return id != 0 && (id == Block.leaves.blockID || Block.blocksList[id].isOpaqueCube()) ? world.getBlockMaterial(x, y - 1, z).blocksMovement() : false;
+		Block block = world.getBlock(x, y, z);
+		Block below = world.getBlock(x, y - 1, z);
+		
+		return 
+				(block == null || block.blockMaterial.isGroundCover()) &&
+				below != null && (below == Block.leaves || below.isOpaqueCube()) ? below.blockMaterial.blocksMovement() : false;
 	}
 
 	public void onNeighborBlockChange(World world, int x, int y, int z, int i5) {

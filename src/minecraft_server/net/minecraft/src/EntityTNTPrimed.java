@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityTNTPrimed extends Entity {
 	public int fuse;
 

@@ -3,8 +3,8 @@ package net.minecraft.src;
 import java.util.Random;
 
 public class BlockIce extends BlockBreakable {
-	public BlockIce(int i1, int i2) {
-		super(i1, i2, Material.ice, false);
+	public BlockIce(int blockID, int blockIndexInTexture) {
+		super(blockID, blockIndexInTexture, Material.ice, false);
 		this.slipperiness = 0.98F;
 		this.setTickRandomly(true);
 		this.displayOnCreativeTab = CreativeTabs.tabBlock;
@@ -14,15 +14,15 @@ public class BlockIce extends BlockBreakable {
 		return 1;
 	}
 
-	public boolean shouldSideBeRendered(IBlockAccess iBlockAccess1, int i2, int i3, int i4, int i5) {
-		return super.shouldSideBeRendered(iBlockAccess1, i2, i3, i4, 1 - i5);
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+		return super.shouldSideBeRendered(world, x, y, z, 1 - side);
 	}
 
-	public void harvestBlock(World world1, EntityPlayer entityPlayer2, int i3, int i4, int i5, int i6) {
-		super.harvestBlock(world1, entityPlayer2, i3, i4, i5, i6);
-		Material material7 = world1.getBlockMaterial(i3, i4 - 1, i5);
-		if(material7.blocksMovement() || material7.isLiquid()) {
-			world1.setBlockWithNotify(i3, i4, i5, Block.waterMoving.blockID);
+	public void harvestBlock(World world, EntityPlayer thePlayer, int x, int y, int z, int meta) {
+		super.harvestBlock(world, thePlayer, x, y, z, meta);
+		Material material = world.getBlockMaterial(x, y - 1, z);
+		if(material.blocksMovement() || material.isLiquid()) {
+			world.setBlockWithNotify(x, y, z, Block.waterMoving.blockID);
 		}
 
 	}
@@ -31,23 +31,35 @@ public class BlockIce extends BlockBreakable {
 		return 0;
 	}
 
-	public void updateTick(World world1, int i2, int i3, int i4, Random random5) {
-		if(world1.getSavedLightValue(EnumSkyBlock.Block, i2, i3, i4) > 11 - Block.lightOpacity[this.blockID]) {
-			this.dropBlockAsItem(world1, i2, i3, i4, world1.getBlockMetadata(i2, i3, i4), 0);
-			world1.setBlockWithNotify(i2, i3, i4, Block.waterStill.blockID);
+	public void updateTick(World world, int x, int y, int z, Random rand) {
+		if(world.getSavedLightValue(EnumSkyBlock.Block, x, y, z) > 11 - Block.lightOpacity[this.blockID]) {
+			this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+			world.setBlockWithNotify(x, y, z, Block.waterStill.blockID);
 		}
 
+		// Seasonal
+		if(Seasons.activated()) {
+			BiomeGenBase biomeGen = world.getBiomeGenForCoords(x, z);
+			if(biomeGen.weather != Weather.cold && (Seasons.currentSeason != Seasons.WINTER || biomeGen.weather == Weather.desert)) {
+				world.setBlockWithNotify(x, y, z, Block.waterStill.blockID);
+				
+				if(world.getBlockId(x - 1, y, z) == this.blockID) world.setBlockWithNotify(x, y, z, Block.waterStill.blockID);
+				if(world.getBlockId(x + 1, y, z) == this.blockID) world.setBlockWithNotify(x, y, z, Block.waterStill.blockID);
+				if(world.getBlockId(x, y, z) == this.blockID) world.setBlockWithNotify(x, y, z, Block.waterStill.blockID);
+				if(world.getBlockId(x, y, z - 1) == this.blockID) world.setBlockWithNotify(x, y, z, Block.waterStill.blockID);
+			}
+		}
 	}
 
 	public int getMobilityFlag() {
 		return 0;
 	}
 
-	protected ItemStack createStackedBlock(int i1) {
+	protected ItemStack createStackedBlock(int damage) {
 		return null;
 	}
 	
-	public int colorMultiplier(IBlockAccess iBlockAccess1, int i2, int i3, int i4) {
-		return Block.waterStill.colorMultiplier(iBlockAccess1, i2, i3, i4);
+	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
+		return Block.waterStill.colorMultiplier(world, x, y, z);
 	}
 }

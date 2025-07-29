@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import com.mojang.nbt.NBTTagCompound;
+
 import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ICommandSender;
-import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.PlayerPositionComparator;
 import net.minecraft.src.World;
 
@@ -187,7 +188,7 @@ public class CommandProcessor {
 						iCommand.withCommandSender(commandSender);
 						res = iCommand.execute(tokens, idx, coords, theWorld, thePlayer);
 					}
-				}
+				} else res = CommandBase.NOT_FOUND;
 	
 			} else {
 				
@@ -209,7 +210,7 @@ public class CommandProcessor {
 							iCommand.withCommandSender(commandSender);
 							res = iCommand.execute(tokens, idx, coords, theWorld, curPlayer);
 						}
-					}
+ 					} else res = CommandBase.NOT_FOUND;
 					
 				}
 				
@@ -220,7 +221,7 @@ public class CommandProcessor {
 	}
 
 	public static void registerCommands() {		
-		registerCommand(CommandGamemode.class);
+		registerCommand(CommandGamemodeClient.class);
 		registerCommand(CommandSetArmor.class);
 		registerCommand(CommandSetHeldItem.class);
 		registerCommand(CommandSummon.class);

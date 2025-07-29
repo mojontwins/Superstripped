@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public abstract class EntityAgeable extends EntityCreature {
 	public EntityAgeable(World world1) {
 		super(world1);

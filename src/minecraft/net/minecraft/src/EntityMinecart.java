@@ -2,6 +2,9 @@ package net.minecraft.src;
 
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagList;
+
 public class EntityMinecart extends Entity implements IInventory {
 	private ItemStack[] cargoItems;
 	private int fuel;

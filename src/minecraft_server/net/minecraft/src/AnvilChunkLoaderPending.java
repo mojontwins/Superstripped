@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 class AnvilChunkLoaderPending {
 	public final ChunkCoordIntPair field_48427_a;
 	public final NBTTagCompound field_48426_b;

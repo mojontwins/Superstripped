@@ -6,6 +6,8 @@ import java.util.Random;
 import com.mojontwins.minecraft.worldedit.ItemMagicWand;
 import com.risugami.recipebook.ItemRecipeBook;
 
+import net.minecraft.client.locale.StringTranslate;
+
 public class Item implements ITextureProvider {
 	protected static Random itemRand = new Random();
 	public static Item[] itemsList = new Item[32000];

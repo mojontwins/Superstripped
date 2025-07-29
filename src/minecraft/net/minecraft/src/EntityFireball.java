@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityFireball extends Entity {
 	private int xTile = -1;
 	private int yTile = -1;

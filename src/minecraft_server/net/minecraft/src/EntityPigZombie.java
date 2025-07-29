@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityPigZombie extends EntityZombie {
 	private int angerLevel = 0;
 	private int randomSoundDelay = 0;
@@ -128,7 +130,7 @@ public class EntityPigZombie extends EntityZombie {
 					if(itemId == 0) {
 						switch(this.rand.nextInt(8)) {
 							case 0:
-								itemId = Item.ingotCopper.shiftedIndex;
+								itemId = Item.ingotIron.shiftedIndex;
 								break;
 							case 1:
 								itemId = Item.silk.shiftedIndex;

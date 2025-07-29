@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public abstract class EntityAnimal extends EntityAgeable implements IAnimals {
 	private int inLove;
 	private int breeding = 0;

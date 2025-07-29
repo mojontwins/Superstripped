@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class FoodStats {
 	private int foodLevel = 20;
 	private float foodSaturationLevel = 5.0F;

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 import net.minecraft.server.MinecraftServer;
 
-public class ServerConfigurationManager {
+public class ServerConfigurationManager implements IServerConfigManager {
 	public static Logger logger = Logger.getLogger("Minecraft");
 	public List<EntityPlayerMP> playerEntities = new ArrayList<EntityPlayerMP>();
 	private MinecraftServer mcServer;
@@ -56,6 +56,10 @@ public class ServerConfigurationManager {
 		this.saveWhiteList();
 	}
 
+	public MinecraftServer getServer() {
+		return this.mcServer;
+	}
+	
 	public void setPlayerManager(WorldServer[] worldServer1) {
 		this.playerNBTManagerObj = worldServer1[0].getSaveHandler().getPlayerNBTManager();
 	}

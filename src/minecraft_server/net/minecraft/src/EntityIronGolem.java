@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityIronGolem extends EntityGolem {
 	//private int field_48119_b = 0;
 	//Village villageObj = null;

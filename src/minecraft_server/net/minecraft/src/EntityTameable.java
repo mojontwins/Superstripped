@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public abstract class EntityTameable extends EntityAnimal {
 	protected EntityAISit aiSit = new EntityAISit(this);
 

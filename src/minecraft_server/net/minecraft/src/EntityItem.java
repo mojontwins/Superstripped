@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityItem extends Entity {
 	public ItemStack item;
 	public int age = 0;

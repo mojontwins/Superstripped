@@ -3,6 +3,11 @@ package net.minecraft.src;
 import java.util.List;
 import java.util.Random;
 
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagDouble;
+import com.mojang.nbt.NBTTagFloat;
+import com.mojang.nbt.NBTTagList;
+
 public abstract class Entity {
 	private static int nextEntityID = 0;
 	public int entityId = nextEntityID++;

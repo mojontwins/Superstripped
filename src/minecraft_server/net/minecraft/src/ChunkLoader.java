@@ -1,5 +1,8 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagList;
+
 public class ChunkLoader {
 	public static AnvilConverterData load(NBTTagCompound nBTTagCompound0) {
 		int i1 = nBTTagCompound0.getInteger("xPos");

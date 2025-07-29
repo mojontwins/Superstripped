@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.locale.StringTranslate;
+
 public class CreativeTabs {
 	public static List<CreativeTabs> creativeTabList = new ArrayList<CreativeTabs> ();
 	

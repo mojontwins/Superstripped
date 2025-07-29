@@ -2,12 +2,12 @@ package com.mojontwins.minecraft.commands;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiTextArea;
-import net.minecraft.src.GuiTextField;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextArea;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.locale.StringTranslate;
 import net.minecraft.src.Packet91UpdateCommandBlock;
-import net.minecraft.src.StringTranslate;
 
 public class GuiCommandBlock extends GuiScreen {
 	public GuiTextArea commandTextArea;

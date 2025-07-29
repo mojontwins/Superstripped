@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntitySquid extends EntityWaterMob implements IWaterMob {
 	public float xBodyRot = 0.0F;
 	public float xBodyRotO = 0.0F;
@@ -147,6 +149,6 @@ public class EntitySquid extends EntityWaterMob implements IWaterMob {
 	}
 
 	public boolean getCanSpawnHere() {
-		return this.posY > 45.0D && this.posY < 63.0D && super.getCanSpawnHere();
+		return GameRules.boolRule("enableSquids") && this.posY > 45.0D && this.posY < 63.0D && super.getCanSpawnHere();
 	}
 }

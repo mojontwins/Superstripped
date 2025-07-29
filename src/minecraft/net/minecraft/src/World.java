@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.mojang.nbt.NBTTagCompound;
+
 import ca.spottedleaf.starlight.StarlightEngine;
 
 public class World implements IBlockAccess {
@@ -51,7 +53,7 @@ public class World implements IBlockAccess {
 	public List<IWorldAccess> worldAccesses = new ArrayList<IWorldAccess>();
 	protected IChunkProvider chunkProvider;
 	protected final ISaveHandler saveHandler;
-	protected WorldInfo worldInfo;
+	public WorldInfo worldInfo;
 	public boolean findingSpawnPoint;
 	private ArrayList<AxisAlignedBB> collidingBoundingBoxes = new ArrayList<AxisAlignedBB>();
 	private boolean scanningTileEntities;

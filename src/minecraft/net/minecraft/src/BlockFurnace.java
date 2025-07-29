@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.Random;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class BlockFurnace extends BlockContainer {
 	private Random furnaceRand = new Random();
 	private final boolean isActive;

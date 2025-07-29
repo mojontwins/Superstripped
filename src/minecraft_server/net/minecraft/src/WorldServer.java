@@ -101,7 +101,7 @@ public class WorldServer extends World {
 
 	}
 
-	public Entity s_func_6158_a(int i1) {
+	public Entity getEntityById(int i1) {
 		return (Entity)this.entityInstanceIdMap.lookup(i1);
 	}
 

@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntitySlime extends EntityLiving implements IMob {
 	public float field_40139_a;
 	public float field_768_a;

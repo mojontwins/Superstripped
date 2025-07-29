@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import com.mojontwins.minecraft.commands.ComplexCommand;
 import com.mojontwins.minecraft.commands.TileEntityCommandBlock;
 
 import net.minecraft.server.MinecraftServer;
@@ -430,26 +431,27 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 		}
 	}
 
-	public void handleChat(Packet3Chat packet3Chat1) {
-		String string2 = packet3Chat1.message;
-		if(string2.length() > 100) {
+	public void handleChat(Packet3Chat packet) {
+		String message = packet.message;
+		
+		if(message.length() > 256) {
 			this.kickPlayer("Chat message too long");
 		} else {
-			string2 = string2.trim();
+			message = message.trim();
 
-			for(int i3 = 0; i3 < string2.length(); ++i3) {
-				if(!ChatAllowedCharacters.isAllowedCharacter(string2.charAt(i3))) {
-					this.kickPlayer("Illegal characters in chat");
+			for(int i = 0; i < message.length(); ++i) {
+				if(!ChatAllowedCharacters.isAllowedCharacter(message.charAt(i))) {					
+					this.kickPlayer("Illegal characters in chat -> " + i + " [" + message.charAt(i)+ "]");
 					return;
 				}
 			}
 
-			if(string2.startsWith("/")) {
-				this.handleSlashCommand(string2);
+			if(message.startsWith("/")) {
+				this.handleSlashCommand(message, packet.mouseValid, packet.mouseX, packet.mouseY, packet.mouseZ);
 			} else {
-				string2 = "<" + this.playerEntity.username + "> " + string2;
-				logger.info(string2);
-				this.mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat(string2));
+				message = "<" + this.playerEntity.username + "> " + message;
+				logger.info(message);
+				this.mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat(message));
 			}
 
 			this.tickCounter1 += 20;
@@ -460,34 +462,40 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 		}
 	}
 
-	private void handleSlashCommand(String string1) {
-		if(string1.toLowerCase().startsWith("/me ")) {
-			string1 = "* " + this.playerEntity.username + " " + string1.substring(string1.indexOf(" ")).trim();
-			logger.info(string1);
-			this.mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat(string1));
-		} else if(string1.toLowerCase().startsWith("/kill")) {
+	private void handleSlashCommand(String message, boolean mouseValid, int mouseX, int mouseY, int mouseZ) {
+		if(message.toLowerCase().startsWith("/me ")) {
+			message = "* " + this.playerEntity.username + " " + message.substring(message.indexOf(" ")).trim();
+			logger.info(message);
+			this.mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat(message));
+
+		} else if(message.toLowerCase().startsWith("/kill")) {
 			this.playerEntity.attackEntityFrom(DamageSource.generic, 1000);
-		} else if(string1.toLowerCase().startsWith("/tell ")) {
-			String[] string2 = string1.split(" ");
-			if(string2.length >= 3) {
-				string1 = string1.substring(string1.indexOf(" ")).trim();
-				string1 = string1.substring(string1.indexOf(" ")).trim();
-				string1 = "\u00a77" + this.playerEntity.username + " whispers " + string1;
-				logger.info(string1 + " to " + string2[1]);
-				if(!this.mcServer.configManager.sendPacketToPlayer(string2[1], new Packet3Chat(string1))) {
+
+		} else if(message.toLowerCase().startsWith("/tell ")) {
+			String[] destA = message.split(" ");
+			if(destA.length >= 3) {
+				message = message.substring(message.indexOf(" ")).trim();
+				message = message.substring(message.indexOf(" ")).trim();
+				message = "\u00a77" + this.playerEntity.username + " whispers " + message;
+				logger.info(message + " to " + destA[1]);
+				if(!this.mcServer.configManager.sendPacketToPlayer(destA[1], new Packet3Chat(message))) {
 					this.sendPacket(new Packet3Chat("\u00a7cThere\'s no player by that name online."));
 				}
 			}
+
 		} else {
-			String string3;
+			String command = message.substring(1);
 			if(this.mcServer.configManager.isOp(this.playerEntity.username)) {
-				string3 = string1.substring(1);
-				logger.info(this.playerEntity.username + " issued server command: " + string3);
-				this.mcServer.addCommand(string3, this);
+				BlockPos mousePos = mouseValid ? new BlockPos().set(mouseX, mouseY, mouseZ) : null;
+				
+				logger.info(this.playerEntity.username + " issued server command: " + command);
+				this.mcServer.addCommand(new ComplexCommand(command, mousePos), this);
+				
 			} else {
-				string3 = string1.substring(1);
-				logger.info(this.playerEntity.username + " tried command: " + string3);
+				logger.info(this.playerEntity.username + " tried command: " + command);
+				
 			}
+			
 		}
 
 	}
@@ -530,7 +538,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
 	public void handleUseEntity(Packet7UseEntity packet7UseEntity1) {
 		WorldServer worldServer2 = this.mcServer.getWorldManager(this.playerEntity.dimension);
-		Entity entity3 = worldServer2.s_func_6158_a(packet7UseEntity1.targetEntity);
+		Entity entity3 = worldServer2.getEntityById(packet7UseEntity1.targetEntity);
 		if(entity3 != null) {
 			boolean z4 = this.playerEntity.canEntityBeSeen(entity3);
 			double d5 = 36.0D;

@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagList;
+
 public class AnvilConverterData {
 	public long lastUpdated;
 	public boolean terrainPopulated;

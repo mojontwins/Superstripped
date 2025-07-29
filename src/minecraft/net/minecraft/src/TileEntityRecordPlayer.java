@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class TileEntityRecordPlayer extends TileEntity {
 	public int record;
 

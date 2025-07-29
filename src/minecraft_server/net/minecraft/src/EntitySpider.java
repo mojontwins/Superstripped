@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntitySpider extends EntityMob implements IMob {
 	public EntitySpider(World world1) {
 		super(world1);

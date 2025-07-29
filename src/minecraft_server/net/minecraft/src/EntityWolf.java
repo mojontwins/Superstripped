@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityWolf extends EntityTameable {
 	private boolean looksWithInterest = false;
 	private float field_25048_b;

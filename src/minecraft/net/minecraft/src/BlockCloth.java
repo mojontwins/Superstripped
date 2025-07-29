@@ -38,7 +38,7 @@ public class BlockCloth extends Block implements IDyeableBlock {
 	}
 	
 	public int getRenderColor(int meta) {
-		return this.getTints() [(15 - meta) & 15];
+		return this.getTints() [15 - meta];
 	}
 	
 	public int[] getTints() {

@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntitySquid extends EntityWaterMob implements IWaterMob {
 	public float xBodyRot = 0.0F;
 	public float xBodyRotO = 0.0F;

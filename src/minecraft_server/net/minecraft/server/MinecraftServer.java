@@ -14,6 +14,10 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.mojontwins.minecraft.commands.CommandProcessor;
+import com.mojontwins.minecraft.commands.ComplexCommand;
+import com.mojontwins.minecraft.worldedit.WorldEdit;
+
 import net.minecraft.src.AnvilSaveConverter;
 import net.minecraft.src.AnvilSaveHandler;
 import net.minecraft.src.AxisAlignedBB;
@@ -102,9 +106,14 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 		ConsoleLogManager.init();
 		logger.info("Starting minecraft server version " + Version.getVersion());
 		
+		// Init game rules
 		GameRules.withMcDataDir(new File("."));
 		GameRules.loadRulesFromOptions();
 		GameRules.saveRulesAsOptions();
+		
+		// Init commands
+		CommandProcessor.registerCommands();
+		WorldEdit.registerCommands();
 		
 		if(Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L) {
 			logger.warning("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
@@ -468,8 +477,8 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 		this.s_field_48077_H = Packet.field_48156_n;
 	}
 
-	public void addCommand(String string1, ICommandListener iCommandListener2) {
-		this.commands.add(new ServerCommand(string1, iCommandListener2));
+	public void addCommand(ComplexCommand complexCommand, ICommandListener iCommandListener2) {
+		this.commands.add(new ServerCommand(complexCommand, iCommandListener2));
 	}
 
 	public void commandLineParser() {
@@ -601,7 +610,7 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 
 	public String handleRConCommand(String string1) {
 		RConConsoleSource.instance.resetLog();
-		this.commandHandler.handleCommand(new ServerCommand(string1, RConConsoleSource.instance));
+		this.commandHandler.handleCommand(new ServerCommand(new ComplexCommand(string1, null), RConConsoleSource.instance));
 		return RConConsoleSource.instance.getLogContents();
 	}
 

@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class PlayerCapabilities {
 	public boolean disableDamage = false;
 	public boolean isFlying = false;

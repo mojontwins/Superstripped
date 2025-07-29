@@ -1,5 +1,8 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagList;
+
 public class TileEntityFurnace extends TileEntity implements IInventory {
 	private ItemStack[] furnaceItemStacks = new ItemStack[3];
 	public int furnaceBurnTime = 0;

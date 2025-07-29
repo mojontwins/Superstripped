@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class BlockChest extends BlockContainer {
 	private Random random = new Random();
 

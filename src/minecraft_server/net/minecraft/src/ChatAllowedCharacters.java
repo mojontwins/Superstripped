@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 
 public class ChatAllowedCharacters {
 	public static final String allowedCharacters = getAllowedCharacters();
-	public static final char[] allowedCharactersArray = new char[]{'/', '\n', '\r', '\t', '\u0000', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'};
+	public static final char[] allowedCharactersArray = new char[]{'/', '\n', '\r', '\t', '\u0000', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':', ' '};
 
 	private static String getAllowedCharacters() {
 		String string0 = "";
@@ -28,7 +28,7 @@ public class ChatAllowedCharacters {
 	}
 
 	public static final boolean isAllowedCharacter(char c0) {
-		return c0 != 167 && (allowedCharacters.indexOf(c0) >= 0 || c0 > 32);
+		return c0 != 167 && (allowedCharacters.indexOf(c0) >= 0 || c0 >= 32);
 	}
 
 	public static String func_52019_a(String string0) {

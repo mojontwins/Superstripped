@@ -25,6 +25,57 @@ import com.misc.moreresources.MoreResourcesInstaller;
 import com.mojontwins.minecraft.commands.CommandProcessor;
 import com.mojontwins.minecraft.worldedit.WorldEdit;
 
+import net.minecraft.client.gui.EnumOptions;
+import net.minecraft.client.gui.GameHints;
+import net.minecraft.client.gui.GameSettings;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiConflictWarning;
+import net.minecraft.client.gui.GuiConnecting;
+import net.minecraft.client.gui.GuiErrorScreen;
+import net.minecraft.client.gui.GuiGameOver;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.GuiMemoryErrorScreen;
+import net.minecraft.client.gui.GuiMinimap;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSleepMP;
+import net.minecraft.client.gui.LoadingScreenRenderer;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.locale.StringTranslate;
+import net.minecraft.client.minimap.ZanMinimap;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.multiplayer.EntityClientPlayerMP;
+import net.minecraft.client.multiplayer.NetClientHandler;
+import net.minecraft.client.player.EntityPlayerSP;
+import net.minecraft.client.player.MovementInputFromOptions;
+import net.minecraft.client.player.PlayerController;
+import net.minecraft.client.renderer.EffectRenderer;
+import net.minecraft.client.renderer.FontRenderer;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.GraphicsMode;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MouseHelper;
+import net.minecraft.client.renderer.OpenGlCapsChecker;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderEngine;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.ptexture.TextureAnimatedFX;
+import net.minecraft.client.renderer.ptexture.TextureCompassFX;
+import net.minecraft.client.renderer.ptexture.TextureFlamesFX;
+import net.minecraft.client.renderer.ptexture.TextureLavaFX;
+import net.minecraft.client.renderer.ptexture.TextureLavaFlowFX;
+import net.minecraft.client.renderer.ptexture.TextureWatchFX;
+import net.minecraft.client.renderer.ptexture.TextureWaterFX;
+import net.minecraft.client.renderer.ptexture.TextureWaterFlowFX;
+import net.minecraft.client.skins.TexturePackList;
+import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.title.GuiMainMenu;
 import net.minecraft.src.AnvilSaveConverter;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.Block;
@@ -34,89 +85,25 @@ import net.minecraft.src.ColorizerFog;
 import net.minecraft.src.ColorizerFoliage;
 import net.minecraft.src.ColorizerGrass;
 import net.minecraft.src.ColorizerWater;
-import net.minecraft.src.EffectRenderer;
-import net.minecraft.src.EntityClientPlayerMP;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EntityPlayerSP;
-import net.minecraft.src.EntityRenderer;
 import net.minecraft.src.EnumMovingObjectType;
-import net.minecraft.src.EnumOS2;
-import net.minecraft.src.EnumOSMappingHelper;
-import net.minecraft.src.EnumOptions;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GLAllocation;
 import net.minecraft.src.GameRules;
-import net.minecraft.src.GameSettings;
-import net.minecraft.src.GameSettingsKeys;
-import net.minecraft.src.GameSettingsValues;
-import net.minecraft.src.GameWindowListener;
-import net.minecraft.src.GraphicsMode;
-import net.minecraft.src.GuiChat;
-import net.minecraft.src.GuiConflictWarning;
-import net.minecraft.src.GuiConnecting;
-import net.minecraft.src.GuiErrorScreen;
-import net.minecraft.src.GuiGameOver;
-import net.minecraft.src.GuiIngame;
-import net.minecraft.src.GuiIngameMenu;
-import net.minecraft.src.GuiInventory;
-import net.minecraft.src.GuiMainMenu;
-import net.minecraft.src.GuiMemoryErrorScreen;
-import net.minecraft.src.GuiMinimap;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiSleepMP;
 import net.minecraft.src.ISaveFormat;
 import net.minecraft.src.ISaveHandler;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemBlock;
-import net.minecraft.src.ItemRenderer;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.KeyBinding;
-import net.minecraft.src.LoadingScreenRenderer;
 import net.minecraft.src.MathHelper;
-import net.minecraft.src.MinecraftError;
 import net.minecraft.src.MinecraftException;
-import net.minecraft.src.MinecraftImpl;
-import net.minecraft.src.ModelBiped;
-import net.minecraft.src.MouseHelper;
-import net.minecraft.src.MovementInputFromOptions;
 import net.minecraft.src.MovingObjectPosition;
-import net.minecraft.src.NetClientHandler;
-import net.minecraft.src.OpenGlCapsChecker;
-import net.minecraft.src.OpenGlHelper;
 import net.minecraft.src.Packet3Chat;
-import net.minecraft.src.PlayerController;
 import net.minecraft.src.PlayerUsageSnooper;
-import net.minecraft.src.RenderBlocks;
-import net.minecraft.src.RenderEngine;
-import net.minecraft.src.RenderGlobal;
-import net.minecraft.src.RenderManager;
-import net.minecraft.src.ScaledResolution;
-import net.minecraft.src.ScreenShotHelper;
-import net.minecraft.src.Session;
-import net.minecraft.src.SoundManager;
-import net.minecraft.src.StringTranslate;
-import net.minecraft.src.Tessellator;
-import net.minecraft.src.TextureAnimatedFX;
-import net.minecraft.src.TextureCompassFX;
-import net.minecraft.src.TextureFlamesFX;
-import net.minecraft.src.TextureLavaFX;
-import net.minecraft.src.TextureLavaFlowFX;
-import net.minecraft.src.TexturePackList;
-import net.minecraft.src.TextureWatchFX;
-import net.minecraft.src.TextureWaterFX;
-import net.minecraft.src.TextureWaterFlowFX;
-import net.minecraft.src.ThreadClientSleep;
-import net.minecraft.src.ThreadDownloadResources;
-import net.minecraft.src.Timer;
 import net.minecraft.src.Translator;
-import net.minecraft.src.UnexpectedThrowable;
 import net.minecraft.src.Vec3D;
 import net.minecraft.src.World;
-import net.minecraft.src.WorldRenderer;
 import net.minecraft.src.WorldSettings;
 import net.minecraft.src.WorldType;
-import net.minecraft.src.ZanMinimap;
 
 public abstract class Minecraft implements Runnable {
 	public static byte[] field_28006_b = new byte[10485760];
@@ -128,11 +115,11 @@ public abstract class Minecraft implements Runnable {
 	public int displayHeight;
 	private Timer timer = new Timer(20.0F);
 	public World theWorld;
-	public RenderGlobal renderGlobal;
+	public LevelRenderer renderGlobal;
 	public EntityPlayerSP thePlayer;
 	public EntityLiving renderViewEntity;
 	public EffectRenderer effectRenderer;
-	public Session session = null;
+	public User session = null;
 	public String minecraftUri;
 	public Canvas mcCanvas;
 	public boolean hideQuitButton = false;
@@ -142,7 +129,7 @@ public abstract class Minecraft implements Runnable {
 	public FontRenderer standardGalacticFontRenderer;
 	public GuiScreen currentScreen = null;
 	public LoadingScreenRenderer loadingScreen;
-	public EntityRenderer entityRenderer;
+	public GameRenderer entityRenderer;
 	private ThreadDownloadResources downloadResourcesThread;
 	public int ticksRan = 0;
 	private int leftClickCounter = 0;
@@ -186,7 +173,7 @@ public abstract class Minecraft implements Runnable {
 		this.tempDisplayHeight = i5;
 		this.fullscreen = z6;
 		this.mcApplet = minecraftApplet3;
-		Packet3Chat.field_52010_b = 32767;
+		Packet3Chat.maxStringLength = 32767;
 		new ThreadClientSleep(this, "Timer hack thread");
 		this.mcCanvas = canvas2;
 		this.displayWidth = i4;
@@ -280,7 +267,7 @@ public abstract class Minecraft implements Runnable {
 		CommandProcessor.registerCommands();
 		WorldEdit.registerCommands();
 		
-		this.entityRenderer = new EntityRenderer(this);
+		this.entityRenderer = new GameRenderer(this);
 		RenderManager.instance.itemRenderer = new ItemRenderer(this);
 		
 		this.loadScreen();
@@ -321,7 +308,7 @@ public abstract class Minecraft implements Runnable {
 		// Custom texture atlas based animated textures
 		this.renderEngine.registerTextureFX(new TextureAnimatedFX(12*16+11, 0, "/animated/block_seaweed.png", 1));
 		
-		this.renderGlobal = new RenderGlobal(this, this.renderEngine);
+		this.renderGlobal = new LevelRenderer(this, this.renderEngine);
 		GL11.glViewport(0, 0, this.displayWidth, this.displayHeight);
 		this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
 
@@ -1180,6 +1167,7 @@ public abstract class Minecraft implements Runnable {
 			this.convertMapFormat(saveName, displayName);
 		} else {
 			if(this.loadingScreen != null) {
+				this.loadingScreen.setHint(GameHints.getRandomHint());
 				this.loadingScreen.printText(Translator.translateToLocal("menu.switchingLevel"));
 				this.loadingScreen.displayLoadingString("");
 			}
@@ -1191,6 +1179,7 @@ public abstract class Minecraft implements Runnable {
 			// When loading a world from disk, worldSettings == null!
 			world = new World(saveHandler, displayName, worldSettings);
 		
+			
 			if(world.isNewWorld) {
 				this.changeWorld2(world, Translator.translateToLocal("menu.generatingLevel"));
 			} else {
@@ -1284,11 +1273,17 @@ public abstract class Minecraft implements Runnable {
 		this.systemTime = 0L;
 	}
 
-	private void convertMapFormat(String string1, String string2) {
+	private void convertMapFormat(String saveName, String displayName) {
+		if(this.saveLoader.getSaveVersion(saveName) == 0) {
+			this.loadingScreen.printText("Converting World to MCRegion");
+			this.loadingScreen.displayLoadingString("This may take a while :)");
+			this.saveLoader.converMapToMCRegion(saveName, this.loadingScreen);
+		}
+		
 		this.loadingScreen.printText("Converting World to " + this.saveLoader.getFormatName());
 		this.loadingScreen.displayLoadingString("This may take a while :)");
-		this.saveLoader.convertMapFormat(string1, this.loadingScreen);
-		this.startWorld(string1, string2, new WorldSettings(0L, 0, true, false, false, WorldType.DEFAULT));
+		this.saveLoader.convertMapFormat(saveName, this.loadingScreen);
+		this.startWorld(saveName, displayName, new WorldSettings(0L, 0, true, false, false, WorldType.DEFAULT));
 	}
 
 	private void preloadWorld(String message) {
@@ -1473,9 +1468,9 @@ public abstract class Minecraft implements Runnable {
 		thread8.setPriority(10);
 		minecraftImpl7.minecraftUri = "www.minecraft.net";
 		if(string0 != null && string1 != null) {
-			minecraftImpl7.session = new Session(string0, string1);
+			minecraftImpl7.session = new User(string0, string1);
 		} else {
-			minecraftImpl7.session = new Session("Player" + System.currentTimeMillis() % 1000L, "");
+			minecraftImpl7.session = new User("Player" + System.currentTimeMillis() % 1000L, "");
 		}
 
 		if(string2 != null) {

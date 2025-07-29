@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntitySnowman extends EntityGolem {
 	public EntitySnowman(World world1) {
 		super(world1);

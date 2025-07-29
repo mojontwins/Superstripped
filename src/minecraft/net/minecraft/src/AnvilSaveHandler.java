@@ -35,7 +35,7 @@ public class AnvilSaveHandler extends SaveHandler {
 	}
 
 	public void saveWorldInfoAndPlayer(WorldInfo worldInfo1, List<EntityPlayer> list2) {
-		worldInfo1.setSaveVersion(19133);
+		worldInfo1.setSaveVersion(SaveHandler.anvil);
 		super.saveWorldInfoAndPlayer(worldInfo1, list2);
 	}
 

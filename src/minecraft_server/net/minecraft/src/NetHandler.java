@@ -96,6 +96,10 @@ public abstract class NetHandler {
 		this.registerPacket(packet24MobSpawn1);
 	}
 
+	public void handleArmoredMobSpawn(Packet90ArmoredMobSpawn packet90ArmoredMobSpawn) {
+		this.registerPacket(packet90ArmoredMobSpawn);
+	}
+
 	public void handleUpdateTime(Packet4UpdateTime packet4UpdateTime1) {
 		this.registerPacket(packet4UpdateTime1);
 	}
@@ -245,4 +249,9 @@ public abstract class NetHandler {
 	public void handleUpdateCommandBlock(Packet91UpdateCommandBlock packet91UpdateCommandBlock) {
 		this.registerPacket(packet91UpdateCommandBlock);
 	}
+
+	public void handleSetArmor(Packet89SetArmor packet) {
+		this.registerPacket(packet);
+	}
+
 }

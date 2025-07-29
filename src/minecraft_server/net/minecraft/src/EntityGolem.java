@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public abstract class EntityGolem extends EntityCreature implements IAnimals {
 	public EntityGolem(World world1) {
 		super(world1);

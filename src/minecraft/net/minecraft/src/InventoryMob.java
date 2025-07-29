@@ -1,5 +1,8 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagList;
+
 public class InventoryMob implements IInventory {
 	private static final int sizeSecondaryInventory = 9;
 	private ItemStack[] mainInventory = new ItemStack[1];

@@ -1,11 +1,13 @@
 package net.minecraft.src;
 
+import com.mojontwins.minecraft.commands.ComplexCommand;
+
 public class ServerCommand {
-	public final String command;
+	public final ComplexCommand command;
 	public final ICommandListener commandListener;
 
-	public ServerCommand(String string1, ICommandListener iCommandListener2) {
-		this.command = string1;
+	public ServerCommand(ComplexCommand complexCommand, ICommandListener iCommandListener2) {
+		this.command = complexCommand;
 		this.commandListener = iCommandListener2;
 	}
 }

@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class TileEntity {
 	private static Map<String, Class<?>> nameToClassMap = new HashMap<String, Class<?>>();
 	private static Map<Class<?>, String> classToNameMap = new HashMap<Class<?>, String>();

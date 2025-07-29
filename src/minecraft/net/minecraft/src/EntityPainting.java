@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityPainting extends Entity {
 	private int tickCounter1;
 	public int direction;

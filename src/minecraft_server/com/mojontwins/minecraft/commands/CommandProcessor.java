@@ -7,17 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import com.mojang.nbt.NBTTagCompound;
+
 import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ICommandSender;
-import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.IServerConfigManager;
 import net.minecraft.src.PlayerPositionComparator;
 import net.minecraft.src.World;
 
 public class CommandProcessor {
 	public static Map<String,ICommand> commandsMap = new HashMap<String,ICommand>();	
-	public static ICommandSender commandSender;
+	public static ICommandSender commandSender = null;
 	public static int[] flags = new int[256]; 
+	public static IServerConfigManager serverConfigManager = null;
 	
 	public static List<String> tokenizeWithBraces(String s) {
 		// Cheap
@@ -123,7 +126,7 @@ public class CommandProcessor {
 		} else if(cmd.startsWith("/")) {
 			cmd = cmd.substring(1);
 		}
-		
+
 		// Override everything if cmd is a number
 		if(cmd.matches("\\d+")) {
 			int i = 0;
@@ -187,7 +190,7 @@ public class CommandProcessor {
 						iCommand.withCommandSender(commandSender);
 						res = iCommand.execute(tokens, idx, coords, theWorld, thePlayer);
 					}
-				}
+				} else res = CommandBase.NOT_FOUND;
 	
 			} else {
 				
@@ -209,7 +212,7 @@ public class CommandProcessor {
 							iCommand.withCommandSender(commandSender);
 							res = iCommand.execute(tokens, idx, coords, theWorld, curPlayer);
 						}
-					}
+ 					} else res = CommandBase.NOT_FOUND;
 					
 				}
 				
@@ -220,12 +223,12 @@ public class CommandProcessor {
 	}
 
 	public static void registerCommands() {		
-		registerCommand(CommandGamemode.class);
-		registerCommand(CommandSetArmor.class);
-		registerCommand(CommandSetHeldItem.class);
+		registerCommand(CommandGamemodeServer.class);
+		registerCommand(CommandSetArmorServer.class);
+		registerCommand(CommandSetHeldItemServer.class);
 		registerCommand(CommandSummon.class);
-		registerCommand(CommandTime.class);
-		registerCommand(CommandTp.class);
+		registerCommand(CommandTimeServer.class);
+		registerCommand(CommandTpServer.class);
 		registerCommand(CommandSnow.class);
 		registerCommand(CommandRain.class);
 		registerCommand(CommandThunder.class);
@@ -251,6 +254,10 @@ public class CommandProcessor {
 
 	public static void withCommandSender(ICommandSender iCommandSender) {
 		commandSender = iCommandSender;
+	}
+	
+	public static void withServerConfigManager(IServerConfigManager iServerConfigManager) {
+		serverConfigManager = iServerConfigManager;
 	}
 	
 	public static void readFromNBT(NBTTagCompound nBTTagCompound) {

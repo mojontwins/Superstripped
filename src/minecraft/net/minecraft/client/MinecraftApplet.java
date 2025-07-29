@@ -4,10 +4,6 @@ import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 
-import net.minecraft.src.CanvasMinecraftApplet;
-import net.minecraft.src.MinecraftAppletImpl;
-import net.minecraft.src.Session;
-
 public class MinecraftApplet extends Applet {
 	/**
 	 * 
@@ -31,13 +27,13 @@ public class MinecraftApplet extends Applet {
 		}
 
 		if(this.getParameter("username") != null && this.getParameter("sessionid") != null) {
-			this.mc.session = new Session(this.getParameter("username"), this.getParameter("sessionid"));
+			this.mc.session = new User(this.getParameter("username"), this.getParameter("sessionid"));
 			System.out.println("Setting user: " + this.mc.session.username + ", " + this.mc.session.sessionId);
 			if(this.getParameter("mppass") != null) {
 				this.mc.session.mpPassParameter = this.getParameter("mppass");
 			}
 		} else {
-			this.mc.session = new Session("Player", "");
+			this.mc.session = new User("Player", "");
 		}
 
 		if(this.getParameter("server") != null && this.getParameter("port") != null) {

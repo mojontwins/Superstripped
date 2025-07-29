@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityFallingSand extends Entity {
 	public int blockID;
 	public int fallTime = 0;
@@ -90,7 +92,11 @@ public class EntityFallingSand extends Entity {
 	}
 
 	protected void readEntityFromNBT(NBTTagCompound compoundTag) {
-		this.blockID = compoundTag.getShort("Tile") & 4095;
+		try {
+			this.blockID = compoundTag.getShort("Tile") & 4095;
+		} catch (ClassCastException e) {
+			this.blockID = compoundTag.getByte("Tile") & 255;
+		}
 	}
 
 	public float getShadowSize() {

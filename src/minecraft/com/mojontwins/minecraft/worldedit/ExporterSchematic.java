@@ -3,8 +3,9 @@ package com.mojontwins.minecraft.worldedit;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 
-import net.minecraft.src.NBTBase;
-import net.minecraft.src.NBTTagCompound;
+import com.mojang.nbt.NBTBase;
+import com.mojang.nbt.NBTTagCompound;
+
 import net.minecraft.src.Vec3i;
 
 public class ExporterSchematic extends ExporterBase {

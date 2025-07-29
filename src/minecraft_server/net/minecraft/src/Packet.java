@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.mojang.nbt.CompressedStreamTools;
+import com.mojang.nbt.NBTTagCompound;
+
 public abstract class Packet {
 	public static IntHashMap packetIdToClassMap = new IntHashMap();
 	private static Map<Class<?>, Integer> packetClassToIdMap = new HashMap<Class<?>, Integer>();
@@ -228,6 +231,8 @@ public abstract class Packet {
 		addIdClassMapping(61, true, false, Packet61DoorChange.class);
 		addIdClassMapping(70, true, false, Packet70Bed.class);
 		addIdClassMapping(71, true, false, Packet71Weather.class);
+		addIdClassMapping(89, true, false, Packet89SetArmor.class);
+		addIdClassMapping(90, true, false, Packet90ArmoredMobSpawn.class);
 		addIdClassMapping(91, true, true, Packet91UpdateCommandBlock.class);
 		addIdClassMapping(95, true, false, Packet95UpdateDayOfTheYear.class);
 		addIdClassMapping(100, true, false, Packet100OpenWindow.class);

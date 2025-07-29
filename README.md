@@ -6,7 +6,7 @@
 
 * [X] Original cactus block.
 
-* [ ] Block capabilities rather than blocID == checks.
+* [X] Block capabilities rather than blocID == checks.
 	Base case in Block.java must return the most general check done originally.
 
 	* [X] .canGrowPlants ()
@@ -50,6 +50,9 @@
 * [X] The "good" command parser.
 * [X] Sponges.
 * [ ] 8 bit metadata? Snowlogged shit needs this.
+
+	* [X] Before: Make this able to read old alpha worlds!
+
 	* All meta writing is @ ExtendedBlockStorage.
 	* Modify Chunk's getChunkData & setChunkData.
 	* Packet51MapChunk -> size of chunk data arrays?
@@ -77,14 +80,103 @@
 		* [X] Weather is as follows: use only rain, if temperature < X || Seasons.WINTER -> snow <- Implement a new particleDecide. - Nah, it is simmilar to Infhell but better.
 		* [X] Particles? & leaf piles in autumn. 
 		* [X] "Super fog" event.
-		* [ ] make sure leaf piles disappear.
+		* [X] make sure leaf piles disappear.
 		* [X] Make weather affect crops and saplings.
 * [X] Show time in GUI only if sundial in inventory.
-* [ ] Gui for Game Rules.
+* [X] Gui for Game Rules.
+	* [X] Must support being called from the pause menu or when creating a new world.
+	* [X] Creating a new world should load the default configuration from disk *i.e. reset it*, and save if modified.
+	* [X] When saving a world, current config is saved to the worldInfo.
+	* [X] When loading a world, corrent config is loaded from the worldInfo.
+	* [X] Menu can be opened from the pause menu and show current config *and not reset it*
+
+```
+	 [CAT1] [CAT2] [CAT3]
+	 --------------------
+	     [Option 1: ON]
+	     [Option 2: OFF]
+	     ...
+
+	        [  OK  ]
+```
+
 * [X] Remove all languages.
 * [ ] Reorganize class tree & packages like in old Indev.
 * [X] Add old ways to get seeds until no tall grass
-* [ ] Restore water looks
+* [X] Restore water looks
+* [X] Enemy armor in the server should get to the client somehow.
+	The process of getting aware that a new mob has been spawned and send it to the clients...
+
+	World.spanwEntityInWorld->WorldServer.obtainEntitySkin->World.obtainEntitySkin-> 
+
+	To all worldAccesses.obtainEntitySkin --> to al WorldManagers -> 
+
+	EntityTracker.trackEntity!! <- this is it. There's a case for IAnimals, let's check if the entity
+	is also a instance of EntityArmoredMob and send the inventory?
+	[ ] Are tiered spawners sending the correct data when spawning mobs?
+
+* [X] Integrate new command parser in the server via chat commands.
+
+	This need some thought. Commands should be sent to the server alongside mouse coordinates, and the results must be sent back as chat messages to the client that issued the command. 1st of all - I must change the packet to include the mouse position. I need "validMouseCoords" as a boolean and separate x, y, z to build a `BlockPos` object that may equal null on the server.
+
+	In NetServerHandler, `handleChat` sends the commands starting with "/" to handleSlashCommand that ends up handing the TEXT to MinecraftServer, which enqueues and then processes it. This should be made a bit more complex, an object including command and the BlockPos object should be passed to, encoded and processed by MinecraftServer rather than a single String.
+
+	This will be done to effectively replace `ConsoleCommandHandler` with our system, so I'll have to check if I need to add any commands (I will surely need to do this).
+
+	Pure server commands: 
+	* list -> serverConfigurationManager.
+	* stop -> minecraftServer.
+	* save-all -> worldServerm etc.
+	* save-off -> ...
+	* save-on
+	* op
+	* deop
+	* ban-ip
+	* pardon-ip
+	* ban
+	* pardon
+	* kick
+	* say
+	* tell
+	* whitelist
+	* banlist
+
+	* tp <- remove from here
+	* give <- ""
+	* gamemode
+	* time
+	* summon
+	* toggledownfall
+
+	Hmmm - Maybe the idea is removing the second list and hooking my system when no server command was recognized.
+
+	In this case, ConsoleCommandHandler will become the ICommandSender. 
+
+	BTW, setting the game mode:
+
+```java
+
+	i20 = Integer.parseInt(gameMode);
+	i20 = WorldSettings.validGameType(i20);
+	if(entityPlayerMP18.itemInWorldManager.getGameType() != i20) {
+		this.sendNoticeToOps(username, "Setting " + entityPlayerMP18.username + " to game mode " + i20);
+		entityPlayerMP18.itemInWorldManager.toggleGameType(i20);
+		entityPlayerMP18.playerNetServerHandler.sendPacket(new Packet70Bed(3, i20));
+	} else {
+		this.sendNoticeToOps(username, entityPlayerMP18.username + " already has game mode " + i20);
+	}
+
+```
+
+	Problem /tp user1 user2, how to.
+
+	Let me first hook it "basic mode", and then some. Done!
+
+* [ ] Cleanup the command parser a bit so different stuff is on different files that only exist in the client or in the server.
+
+* [X] Check alpha chunk generator with NSSS's --> I get chunk borders on imported a1.1.2 worlds and that's a bug.
+* [X] Edit signs with feathers.
+* [ ] Examine/study how you "deawt" minecraft.
 
 ## Diverge -> turn this into b1.6.6 *strict* (but with the goodies).
 
@@ -112,10 +204,10 @@
 * [ ] Skeleton spawners spawn armored skeletons?
 * [X] Won't snow in "alpha cold, no biomes"? Make sure if seasons are off, leaves are lime green!
 * [X] Fix extra weapons icons.
-* [ ] Recipe book recipe not working. -- It works but the icon is missing, also the tooltip.
+* [X] Recipe book recipe not working. -- It works but the icon is missing, also the tooltip.
 * [X] Air hud wrong place (too low, overwriting hearts).
 * [X] Armor hud reversed icons.
-* [ ] Recipe book breaks on one of the recipes involving cloth? with an out of bounds meta/damage when trying to find tint color?
+* [X] Recipe book breaks on one of the recipes involving cloth? with an out of bounds meta/damage when trying to find tint color?
 	[ ] Crarfting recipe for painting shows whool as "black whool"  and needs meta = -1, this is the cause! I think I introduced this meaning "any meta" for crafting? Check and fix at recipe book.
 
 ### Morning fog design

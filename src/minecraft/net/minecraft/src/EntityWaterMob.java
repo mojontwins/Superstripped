@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public abstract class EntityWaterMob extends EntityCreature implements IAnimals {
 	public EntityWaterMob(World world1) {
 		super(world1);

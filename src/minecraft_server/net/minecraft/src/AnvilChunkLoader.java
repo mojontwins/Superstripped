@@ -12,6 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.mojang.nbt.CompressedStreamTools;
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagList;
+
 public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader {
 	private List<AnvilChunkLoaderPending> anvilChunkLoaderPending = new ArrayList<AnvilChunkLoaderPending>();
 	private Set<ChunkCoordIntPair> chunkCoordIntPairList = new HashSet<ChunkCoordIntPair>();

@@ -56,7 +56,6 @@ public class ItemSign extends Item {
 			if(!entityPlayer.canPlayerEdit(x, y, z)) {
 				return false;
 			} else if(!Block.signPost.canPlaceBlockAt(world, x, y, z)) {
-				System.out.println ("CANT PLACE");
 				return false;
 			} else {
 				if(side == 1) {

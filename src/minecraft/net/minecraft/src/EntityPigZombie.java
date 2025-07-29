@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityPigZombie extends EntityZombie {
 	private int angerLevel = 0;
 	private int randomSoundDelay = 0;

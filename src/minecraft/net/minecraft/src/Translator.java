@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import net.minecraft.client.locale.StringTranslate;
+
 public class Translator {
 	private static StringTranslate localizedName = StringTranslate.getInstance();
 

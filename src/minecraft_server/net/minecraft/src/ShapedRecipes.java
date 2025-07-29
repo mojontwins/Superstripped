@@ -9,12 +9,12 @@ public class ShapedRecipes implements IRecipe {
 	private ItemStack recipeOutput;
 	public final int recipeOutputItemID;
 
-	public ShapedRecipes(int i1, int i2, ItemStack[] itemStack3, ItemStack itemStack4) {
-		this.recipeOutputItemID = itemStack4.itemID;
-		this.recipeWidth = i1;
-		this.recipeHeight = i2;
-		this.recipeItems = itemStack3;
-		this.recipeOutput = itemStack4;
+	public ShapedRecipes(int w, int h, ItemStack[] inputStacks, ItemStack outputStack) {
+		this.recipeOutputItemID = outputStack.itemID;
+		this.recipeWidth = w;
+		this.recipeHeight = h;
+		this.recipeItems = inputStacks;
+		this.recipeOutput = outputStack;
 	}
 
 	public ItemStack getRecipeOutput() {
@@ -30,17 +30,14 @@ public class ShapedRecipes implements IRecipe {
 		return res;
 	}
 	
-	public boolean matches(InventoryCrafting inventoryCrafting1) {
-		
-		//System.out.println(this + " vs " + inventoryCrafting1);
-		
-		for(int i2 = 0; i2 <= 3 - this.recipeWidth; ++i2) {
-			for(int i3 = 0; i3 <= 3 - this.recipeHeight; ++i3) {
-				if(this.checkMatch(inventoryCrafting1, i2, i3, true)) {
+	public boolean matches(InventoryCrafting ic) {
+		for(int w = 0; w <= 3 - this.recipeWidth; ++w) {
+			for(int h = 0; h <= 3 - this.recipeHeight; ++h) {
+				if(this.checkMatch(ic, w, h, true)) {
 					return true;
 				}
 
-				if(this.checkMatch(inventoryCrafting1, i2, i3, false)) {
+				if(this.checkMatch(ic, w, h, false)) {
 					return true;
 				}
 			}
@@ -49,40 +46,42 @@ public class ShapedRecipes implements IRecipe {
 		return false;
 	}
 
-	private boolean checkMatch(InventoryCrafting inventoryCrafting1, int i2, int i3, boolean z4) {
-		for(int i5 = 0; i5 < 3; ++i5) {
-			for(int i6 = 0; i6 < 3; ++i6) {
-				int i7 = i5 - i2;
-				int i8 = i6 - i3;
-				ItemStack itemStack9 = null;
-				if(i7 >= 0 && i8 >= 0 && i7 < this.recipeWidth && i8 < this.recipeHeight) {
-					if(z4) {
-						itemStack9 = this.recipeItems[this.recipeWidth - i7 - 1 + i8 * this.recipeWidth];
+	private boolean checkMatch(InventoryCrafting ic, int w, int h, boolean mirrored) {
+		for(int x = 0; x < 3; ++x) {
+			for(int y = 0; y < 3; ++y) {
+				int xRe = x - w;
+				int yRe = y - h;
+				
+				ItemStack recipeStack = null;
+				if(xRe >= 0 && yRe >= 0 && xRe < this.recipeWidth && yRe < this.recipeHeight) {
+					if(mirrored) {
+						recipeStack = this.recipeItems[this.recipeWidth - xRe - 1 + yRe * this.recipeWidth];
 					} else {
-						itemStack9 = this.recipeItems[i7 + i8 * this.recipeWidth];
+						recipeStack = this.recipeItems[xRe + yRe * this.recipeWidth];
 					}
 				}
 
-				ItemStack itemStack10 = inventoryCrafting1.getStackInRowAndColumn(i5, i6);
-				if(itemStack10 != null || itemStack9 != null) {
-					if(itemStack10 == null && itemStack9 != null || itemStack10 != null && itemStack9 == null) {
+				ItemStack craftingStack = ic.getStackInRowAndColumn(x, y);
+				if(craftingStack != null || recipeStack != null) {
+					if(craftingStack == null && recipeStack != null || craftingStack != null && recipeStack == null) {
 						return false;
 					}
 
-					if(itemStack9.itemID != itemStack10.itemID) {
+					if(recipeStack.itemID != craftingStack.itemID) {
 						return false;
 					}
 
-					if(itemStack9.getItemDamage() != -1 && itemStack9.getItemDamage() != itemStack10.getItemDamage()) {
+					if(recipeStack.getItemDamage() != -1 && recipeStack.getItemDamage() != craftingStack.getItemDamage()) {
 						return false;
 					}
 				}
 			}
 		}
+		
 		return true;
 	}
 
-	public ItemStack getCraftingResult(InventoryCrafting inventoryCrafting1) {
+	public ItemStack getCraftingResult(InventoryCrafting ic) {
 		return new ItemStack(this.recipeOutput.itemID, this.recipeOutput.stackSize, this.recipeOutput.getItemDamage());
 	}
 

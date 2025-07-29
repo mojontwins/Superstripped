@@ -2,7 +2,10 @@ package net.minecraft.src;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
+
+import com.mojontwins.minecraft.commands.ComplexCommand;
 
 class ServerGuiCommandListener implements ActionListener {
 	final JTextField texts_field;
@@ -16,7 +19,7 @@ class ServerGuiCommandListener implements ActionListener {
 	public void actionPerformed(ActionEvent actionEvent1) {
 		String string2 = this.texts_field.getText().trim();
 		if(string2.length() > 0) {
-			ServerGUI.getMinecraftServer(this.mcServerGui).addCommand(string2, this.mcServerGui);
+			ServerGUI.getMinecraftServer(this.mcServerGui).addCommand(new ComplexCommand(string2, null), this.mcServerGui);
 		}
 
 		this.texts_field.setText("");

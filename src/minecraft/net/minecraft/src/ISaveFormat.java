@@ -20,4 +20,8 @@ public interface ISaveFormat {
 	boolean isOldMapFormat(String string1);
 
 	boolean convertMapFormat(String string1, IProgressUpdate iProgressUpdate2);
+	
+	public int getSaveVersion(String levelName);
+
+	public void converMapToMCRegion(String saveName, IProgressUpdate loadingScreen);
 }

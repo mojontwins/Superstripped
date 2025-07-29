@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityClassicSkeleton extends EntityArmoredMob {
 	public EntityClassicSkeleton(World world1) {
 		super(world1);

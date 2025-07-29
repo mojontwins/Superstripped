@@ -5,12 +5,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mojang.nbt.NBTTagCompound;
+
 import net.minecraft.src.CraftingManager;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.ShapedRecipes;
 import net.minecraft.src.ShapelessRecipes;
 
@@ -133,20 +134,12 @@ public class InventoryRecipeBook implements IInventory {
 		ItemStack[] ret = new ItemStack[10];
 		int o;
 		if(recipe instanceof ShapedRecipes) {
-			/*
-			int temp = ((Integer)ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, 0)).intValue();
-			o = ((Integer)ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, 1)).intValue();
-			*/
 			int temp = ((ShapedRecipes) recipe).getRecipeWidth();
 			o = ((ShapedRecipes) recipe).getRecipeHeight();
 			if(temp * o > 9) {
 				return null;
 			}
 
-			/*
-			ItemStack[] temp1 = (ItemStack[])ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, 2);
-			ret[0] = (ItemStack)ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, 3);
-			*/
 			ItemStack[] temp1 = ((ShapedRecipes) recipe).getRecipeItems();
 			ret[0] = recipe.getRecipeOutput();
 			
@@ -155,14 +148,13 @@ public class InventoryRecipeBook implements IInventory {
 				int y = o1 / temp;
 				ret[x + y * 3 + 1] = temp1[o1];
 			}
+			
 		} else if(recipe instanceof ShapelessRecipes) {
-			//List list9 = (List)ModLoader.getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, 1);
 			List<?> list9 = ((ShapelessRecipes) recipe).getRecipeItems();
 			if(list9.size() > 9) {
 				return null;
 			}
 
-			//ret[0] = (ItemStack)ModLoader.getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, 0);
 			ret[0] = ((ShapelessRecipes) recipe).getRecipeOutput();
 
 			for(o = 0; o < list9.size(); ++o) {

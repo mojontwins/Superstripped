@@ -3,7 +3,7 @@ package com.risugami.recipebook;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.src.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainer;
 
 public class GuiRecipeBook extends GuiContainer {
 	private InventoryRecipeBook recipes;

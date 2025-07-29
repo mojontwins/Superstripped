@@ -3,6 +3,9 @@ package net.minecraft.src;
 import java.util.List;
 import java.util.Random;
 
+import com.mojang.nbt.NBTTagCompound;
+import com.mojang.nbt.NBTTagList;
+
 public abstract class EntityLiving extends Entity {
 	public int heartsHalvesLife = 20;
 	public float field_9365_p;

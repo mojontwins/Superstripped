@@ -6,6 +6,7 @@ public class GameRule {
 	private boolean value;
 	private int intValue;
 	private boolean intRule = false;
+	private String category;
 	
 	private int id;
 	
@@ -82,5 +83,18 @@ public class GameRule {
 
 	public void setIntValue(int intValue) {
 		this.intValue = intValue;
+	}
+	
+	public GameRule category(String category) {
+		this.category = category;
+		return this;
+	}
+	
+	public String getCategory() {
+		return this.category;
+	}
+	
+	public void toggle() {
+		this.setValue(!this.getValue());
 	}
 }

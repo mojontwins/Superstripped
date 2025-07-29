@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.mojang.nbt.NBTTagCompound;
+
 import ca.spottedleaf.starlight.StarlightEngine;
 
 public class World implements IBlockAccess {
@@ -51,7 +53,7 @@ public class World implements IBlockAccess {
 	public List<IWorldAccess> worldAccesses = new ArrayList<IWorldAccess>();
 	protected IChunkProvider chunkProvider;
 	protected final ISaveHandler saveHandler;
-	protected WorldInfo worldInfo;
+	public WorldInfo worldInfo;
 	public boolean findingSpawnPoint;
 	private ArrayList<AxisAlignedBB> collidingBoundingBoxes = new ArrayList<AxisAlignedBB>();
 	private boolean scanningTileEntities;
@@ -205,7 +207,7 @@ public class World implements IBlockAccess {
 				// Mid winter
 				Seasons.dayOfTheYear = 3;
 			} else {
-		// Start in mid spring to mid summer
+				// Start in mid spring to mid summer
 				Seasons.dayOfTheYear = this.rand.nextInt(Seasons.SEASON_DURATION) + Seasons.SEASON_DURATION + (Seasons.SEASON_DURATION >> 1);
 			}
 		}
@@ -2253,7 +2255,11 @@ public class World implements IBlockAccess {
 				}
 
 				if(this.canSnowAt(x + x0, y, z + z0, false, biomeGen)) {
-					this.setBlockWithNotify(x + x0, y, z + z0, Block.snow.blockID);
+					if(GameRules.boolRule("snowPilesUp")) {
+						
+					} else {
+						this.setBlockWithNotify(x + x0, y, z + z0, Block.snow.blockID);
+					}
 				}
 				
 				if(this.canMeltSnow(x + x0, y, z + z0, biomeGen)) {
@@ -2351,16 +2357,15 @@ public class World implements IBlockAccess {
 		if(!force && Weather.particleDecide(biomeGen, this) != Weather.SNOW) return false;
 
 		if(y >= 0 && y < 256 && this.getSavedLightValue(EnumSkyBlock.Block, x, y, z) < 10) {
-			int i6 = this.getBlockId(x, y - 1, z);
-			int i7 = this.getBlockId(x, y, z);
-			if(i7 == 0 && Block.snow.canPlaceBlockAt(this, x, y, z) && i6 != 0 && i6 != Block.ice.blockID && Block.blocksList[i6].blockMaterial.blocksMovement()) {
+			int belowID = this.getBlockId(x, y - 1, z);
+			if(Block.snow.canPlaceBlockAt(this, x, y, z) && belowID != 0 && belowID != Block.ice.blockID && Block.blocksList[belowID].blockMaterial.blocksMovement()) {
 				return true;
 			}
 		}
 
 		return false;
 	}
-
+	
 	public boolean canMeltSnow(int x, int y, int z, BiomeGenBase biomeGen) {
 		if(this.worldInfo.isEnableSeasons()) {
 			if(biomeGen.weather != Weather.cold && (Seasons.currentSeason != Seasons.WINTER || biomeGen.weather == Weather.desert)) {

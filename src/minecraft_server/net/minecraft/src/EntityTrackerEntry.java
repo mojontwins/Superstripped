@@ -210,6 +210,8 @@ public class EntityTrackerEntry {
 	}
 
 	private Packet getSpawnPacket() {
+		Packet23VehicleSpawn packet23VehicleSpawn2;
+		
 		if(this.trackedEntity.isDead) {
 			System.out.println("Fetching addPacket for removed entity");
 		}
@@ -221,97 +223,89 @@ public class EntityTrackerEntry {
 			entityItem7.posY = (double)packet21PickupSpawn8.yPosition / 32.0D;
 			entityItem7.posZ = (double)packet21PickupSpawn8.zPosition / 32.0D;
 			return packet21PickupSpawn8;
+			
 		} else if(this.trackedEntity instanceof EntityPlayerMP) {
 			return new Packet20NamedEntitySpawn((EntityPlayer)this.trackedEntity);
-		} else {
-			if(this.trackedEntity instanceof EntityMinecart) {
-				EntityMinecart entityMinecart1 = (EntityMinecart)this.trackedEntity;
-				if(entityMinecart1.minecartType == 0) {
-					return new Packet23VehicleSpawn(this.trackedEntity, 10);
-				}
-
-				if(entityMinecart1.minecartType == 1) {
-					return new Packet23VehicleSpawn(this.trackedEntity, 11);
-				}
-
-				if(entityMinecart1.minecartType == 2) {
-					return new Packet23VehicleSpawn(this.trackedEntity, 12);
-				}
-			}
-
-			if(this.trackedEntity instanceof EntityBoat) {
-				return new Packet23VehicleSpawn(this.trackedEntity, 1);
-				
-			} else if(this.trackedEntity instanceof IAnimals) {
-				return new Packet24MobSpawn((EntityLiving)this.trackedEntity);
-				
-			} else if(this.trackedEntity instanceof EntityFishHook) {
-				return new Packet23VehicleSpawn(this.trackedEntity, 90);
-				
-			} else if(this.trackedEntity instanceof EntityArrow) {
-				Entity entity6 = ((EntityArrow)this.trackedEntity).shootingEntity;
-				return new Packet23VehicleSpawn(this.trackedEntity, 60, entity6 != null ? entity6.entityId : this.trackedEntity.entityId);
 			
-			} else if(this.trackedEntity instanceof EntitySnowball) {
-				return new Packet23VehicleSpawn(this.trackedEntity, 61); 
+		} else if(this.trackedEntity instanceof EntityMinecart) {
+			EntityMinecart entityMinecart1 = (EntityMinecart)this.trackedEntity;
+			if(entityMinecart1.minecartType == 0) {
+				return new Packet23VehicleSpawn(this.trackedEntity, 10);
+			} else if(entityMinecart1.minecartType == 1) {
+				return new Packet23VehicleSpawn(this.trackedEntity, 11);
+			} else if(entityMinecart1.minecartType == 2) {
+				return new Packet23VehicleSpawn(this.trackedEntity, 12);
+			} else return null;
 			
+		} else if(this.trackedEntity instanceof EntityBoat) {
+			return new Packet23VehicleSpawn(this.trackedEntity, 1);
+			
+		} else if(this.trackedEntity instanceof EntityArmoredMob) {
+			return new Packet90ArmoredMobSpawn((EntityArmoredMob)this.trackedEntity);
+			
+		} else if(this.trackedEntity instanceof IAnimals) {
+			return new Packet24MobSpawn((EntityLiving)this.trackedEntity);
+			
+		} else if(this.trackedEntity instanceof EntityFishHook) {
+			return new Packet23VehicleSpawn(this.trackedEntity, 90);
+			
+		} else if(this.trackedEntity instanceof EntityArrow) {
+			Entity entity6 = ((EntityArrow)this.trackedEntity).shootingEntity;
+			return new Packet23VehicleSpawn(this.trackedEntity, 60, entity6 != null ? entity6.entityId : this.trackedEntity.entityId);
+		
+		} else if(this.trackedEntity instanceof EntitySnowball) {
+			return new Packet23VehicleSpawn(this.trackedEntity, 61); 
+			
+		} else if(this.trackedEntity instanceof EntitySmallFireball) {
+			EntitySmallFireball entitySmallFireball5 = (EntitySmallFireball)this.trackedEntity;
+			packet23VehicleSpawn2 = null;
+			if(entitySmallFireball5.shootingEntity != null) {
+				packet23VehicleSpawn2 = new Packet23VehicleSpawn(this.trackedEntity, 64, entitySmallFireball5.shootingEntity.entityId);
 			} else {
-				Packet23VehicleSpawn packet23VehicleSpawn2;
-				if(this.trackedEntity instanceof EntitySmallFireball) {
-					EntitySmallFireball entitySmallFireball5 = (EntitySmallFireball)this.trackedEntity;
-					packet23VehicleSpawn2 = null;
-					if(entitySmallFireball5.shootingEntity != null) {
-						packet23VehicleSpawn2 = new Packet23VehicleSpawn(this.trackedEntity, 64, entitySmallFireball5.shootingEntity.entityId);
-					} else {
-						packet23VehicleSpawn2 = new Packet23VehicleSpawn(this.trackedEntity, 64, 0);
-					}
-
-					packet23VehicleSpawn2.speedX = (int)(entitySmallFireball5.accelerationX * 8000.0D);
-					packet23VehicleSpawn2.speedY = (int)(entitySmallFireball5.accelerationY * 8000.0D);
-					packet23VehicleSpawn2.speedZ = (int)(entitySmallFireball5.accelerationZ * 8000.0D);
-					return packet23VehicleSpawn2;
-				
-				} else if(this.trackedEntity instanceof EntityFireball) {
-					EntityFireball entityFireball4 = (EntityFireball)this.trackedEntity;
-					packet23VehicleSpawn2 = null;
-					if(entityFireball4.shootingEntity != null) {
-						packet23VehicleSpawn2 = new Packet23VehicleSpawn(this.trackedEntity, 63, ((EntityFireball)this.trackedEntity).shootingEntity.entityId);
-					} else {
-						packet23VehicleSpawn2 = new Packet23VehicleSpawn(this.trackedEntity, 63, 0);
-					}
-
-					packet23VehicleSpawn2.speedX = (int)(entityFireball4.accelerationX * 8000.0D);
-					packet23VehicleSpawn2.speedY = (int)(entityFireball4.accelerationY * 8000.0D);
-					packet23VehicleSpawn2.speedZ = (int)(entityFireball4.accelerationZ * 8000.0D);
-					return packet23VehicleSpawn2;
-				
-				} else if(this.trackedEntity instanceof EntityEgg) {
-					return new Packet23VehicleSpawn(this.trackedEntity, 62);
-				
-				} else if(this.trackedEntity instanceof EntityTNTPrimed) {
-					return new Packet23VehicleSpawn(this.trackedEntity, 50);
-				
-				} else {
-					if(this.trackedEntity instanceof EntityFallingSand) {
-						EntityFallingSand entityFallingSand3 = (EntityFallingSand)this.trackedEntity;
-						if(entityFallingSand3.blockID == Block.sand.blockID) {
-							return new Packet23VehicleSpawn(this.trackedEntity, 70);
-						}
-
-						if(entityFallingSand3.blockID == Block.gravel.blockID) {
-							return new Packet23VehicleSpawn(this.trackedEntity, 71);
-						}
-
-					}
-
-					if(this.trackedEntity instanceof EntityPainting) {
-						return new Packet25EntityPainting((EntityPainting)this.trackedEntity);
-					} else {
-						throw new IllegalArgumentException("Don\'t know how to add " + this.trackedEntity.getClass() + "!");
-					}
-				} 
+				packet23VehicleSpawn2 = new Packet23VehicleSpawn(this.trackedEntity, 64, 0);
 			}
-		}
+	
+			packet23VehicleSpawn2.speedX = (int)(entitySmallFireball5.accelerationX * 8000.0D);
+			packet23VehicleSpawn2.speedY = (int)(entitySmallFireball5.accelerationY * 8000.0D);
+			packet23VehicleSpawn2.speedZ = (int)(entitySmallFireball5.accelerationZ * 8000.0D);
+			return packet23VehicleSpawn2;
+		
+		} else if(this.trackedEntity instanceof EntityFireball) {
+			EntityFireball entityFireball4 = (EntityFireball)this.trackedEntity;
+			packet23VehicleSpawn2 = null;
+			if(entityFireball4.shootingEntity != null) {
+				packet23VehicleSpawn2 = new Packet23VehicleSpawn(this.trackedEntity, 63, ((EntityFireball)this.trackedEntity).shootingEntity.entityId);
+			} else {
+				packet23VehicleSpawn2 = new Packet23VehicleSpawn(this.trackedEntity, 63, 0);
+			}
+	
+			packet23VehicleSpawn2.speedX = (int)(entityFireball4.accelerationX * 8000.0D);
+			packet23VehicleSpawn2.speedY = (int)(entityFireball4.accelerationY * 8000.0D);
+			packet23VehicleSpawn2.speedZ = (int)(entityFireball4.accelerationZ * 8000.0D);
+			return packet23VehicleSpawn2;
+		
+		} else if(this.trackedEntity instanceof EntityEgg) {
+			return new Packet23VehicleSpawn(this.trackedEntity, 62);
+		
+		} else if(this.trackedEntity instanceof EntityTNTPrimed) {
+			return new Packet23VehicleSpawn(this.trackedEntity, 50);
+		
+		} else if(this.trackedEntity instanceof EntityFallingSand) {
+			EntityFallingSand entityFallingSand3 = (EntityFallingSand)this.trackedEntity;
+			if(entityFallingSand3.blockID == Block.sand.blockID) {
+				return new Packet23VehicleSpawn(this.trackedEntity, 70);
+				
+			} else if(entityFallingSand3.blockID == Block.gravel.blockID) {
+				return new Packet23VehicleSpawn(this.trackedEntity, 71);
+				
+			} else return null;
+	
+		} else if(this.trackedEntity instanceof EntityPainting) {
+			return new Packet25EntityPainting((EntityPainting)this.trackedEntity);
+			
+		} else {
+			throw new IllegalArgumentException("Don\'t know how to add " + this.trackedEntity.getClass() + "!");
+		} 
 	}
 
 	public void removeTrackedPlayerSymmetric(EntityPlayerMP entityPlayerMP1) {

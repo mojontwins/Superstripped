@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.mojontwins.minecraft.commands.ComplexCommand;
+
 import net.minecraft.server.MinecraftServer;
 
 public class ThreadCommandReader extends Thread {
@@ -19,7 +21,7 @@ public class ThreadCommandReader extends Thread {
 
 		try {
 			while(!this.mcServer.serverStopped && MinecraftServer.isServerRunning(this.mcServer) && (string2 = bufferedReader1.readLine()) != null) {
-				this.mcServer.addCommand(string2, this.mcServer);
+				this.mcServer.addCommand(new ComplexCommand(string2, null), this.mcServer);
 			}
 		} catch (IOException iOException4) {
 			iOException4.printStackTrace();

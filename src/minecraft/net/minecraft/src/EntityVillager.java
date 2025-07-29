@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.mojang.nbt.NBTTagCompound;
+
 public class EntityVillager extends EntityAgeable {
 	//private int randomTickDivider;
 	private boolean isMatingFlag;

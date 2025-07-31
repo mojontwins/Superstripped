@@ -8,14 +8,14 @@ public class ExtendedBlockStorage {
 	private int tickRefCount;
 	private byte[] blockLSBArray;
 	private NibbleArray blockMSBArray;
-	private NibbleArray blockMetadataArray;
+	private byte[] blockMetadataArray;
 	private NibbleArray blocklightArray;
 	private NibbleArray skylightArray;
 
 	public ExtendedBlockStorage(int yBase) {
 		this.yBase = yBase;
-		this.blockLSBArray = new byte[4096];
-		this.blockMetadataArray = new NibbleArray(this.blockLSBArray.length, 4);
+		this.blockLSBArray = new byte[4096]; 	// 16 * 16 * 16
+		this.blockMetadataArray = new byte[4096]; // new NibbleArray(this.blockLSBArray.length, 4);
 		this.skylightArray = new NibbleArray(this.blockLSBArray.length, 4);
 		this.blocklightArray = new NibbleArray(this.blockLSBArray.length, 4);
 	}
@@ -65,11 +65,11 @@ public class ExtendedBlockStorage {
 	}
 
 	public int getExtBlockMetadata(int x, int y, int z) {
-		return this.blockMetadataArray.get(x, y, z);
+		return this.blockMetadataArray[x << 8 | z << 4 | y] & 255;
 	}
 
 	public void setExtBlockMetadata(int x, int y, int z, int id) {
-		this.blockMetadataArray.set(x, y, z, id);
+		this.blockMetadataArray[x << 8 | z << 4 | y] = (byte)(id & 255);
 	}
 
 	public boolean getIsEmpty() {
@@ -146,7 +146,7 @@ public class ExtendedBlockStorage {
 		return this.blockMSBArray;
 	}
 
-	public NibbleArray getMetadataArray() {
+	public byte[] getMetadataArray() {
 		return this.blockMetadataArray;
 	}
 
@@ -166,8 +166,8 @@ public class ExtendedBlockStorage {
 		this.blockMSBArray = nibbleArray;
 	}
 
-	public void setBlockMetadataArray(NibbleArray nibbleArray) {
-		this.blockMetadataArray = nibbleArray;
+	public void setBlockMetadataArray(byte[] byteArray) {
+		this.blockMetadataArray = byteArray;
 	}
 
 	public void setBlocklightArray(NibbleArray nibbleArray) {

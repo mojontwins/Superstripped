@@ -41,13 +41,14 @@ public class Packet15Place extends Packet {
 		this.xWithinFace = dataInputStream1.readFloat();
 		this.yWithinFace = dataInputStream1.readFloat();
 		this.zWithinFace = dataInputStream1.readFloat();
-		this.itemStack = this.readItemStack(dataInputStream1);
 		this.keyPressed = dataInputStream1.readBoolean();
+		
+		this.itemStack = this.readItemStack(dataInputStream1);
 	}
 
 	public void writePacketData(DataOutputStream dataOutputStream1) throws IOException {
 		dataOutputStream1.writeInt(this.xPosition);
-		dataOutputStream1.write(this.yPosition);
+		dataOutputStream1.write(this.yPosition); 
 		dataOutputStream1.writeInt(this.zPosition);
 		dataOutputStream1.write(this.direction);
 		dataOutputStream1.writeFloat(this.xWithinFace);
@@ -63,6 +64,7 @@ public class Packet15Place extends Packet {
 	}
 
 	public int getPacketSize() {
-		return 16;
+		// 4 + 1 + 4 + 1 + 4 + 4 + 4 + 1 = 23
+		return 23;
 	}
 }

@@ -30,6 +30,7 @@ public class GameRules {
 	// Fixed (soft locked)
 	public static boolean oldSelectWorldScreen = true;
 	public static boolean genlayerWorldChunkManager = false;
+	public static boolean rampBasedTemperature = false;
 
 	public static final boolean debug = false;
 	

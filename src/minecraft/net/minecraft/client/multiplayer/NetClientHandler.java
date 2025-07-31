@@ -73,7 +73,7 @@ import net.minecraft.network.packet.Packet5PlayerInventory;
 import net.minecraft.network.packet.Packet60Explosion;
 import net.minecraft.network.packet.Packet61DoorChange;
 import net.minecraft.network.packet.Packet6SpawnPosition;
-import net.minecraft.network.packet.Packet70Bed;
+import net.minecraft.network.packet.Packet70GameEvent;
 import net.minecraft.network.packet.Packet71Weather;
 import net.minecraft.network.packet.Packet89SetArmor;
 import net.minecraft.network.packet.Packet8UpdateHealth;
@@ -400,51 +400,54 @@ public class NetClientHandler extends NetHandler {
 		this.worldClient.doPreChunk(packet50PreChunk1.xPosition, packet50PreChunk1.yPosition, packet50PreChunk1.mode);
 	}
 
-	public void handleMultiBlockChange(Packet52MultiBlockChange packet52MultiBlockChange1) {
-		int i2 = packet52MultiBlockChange1.xPosition * 16;
-		int i3 = packet52MultiBlockChange1.zPosition * 16;
-		if(packet52MultiBlockChange1.metadataArray != null) {
-			DataInputStream dataInputStream4 = new DataInputStream(new ByteArrayInputStream(packet52MultiBlockChange1.metadataArray));
+	public void handleMultiBlockChange(Packet52MultiBlockChange packet) {
+		int chunkX = packet.xPosition * 16;
+		int chunkZ = packet.zPosition * 16;
 
+		if(packet.encodedData != null) {
+			DataInputStream stream = new DataInputStream(new ByteArrayInputStream(packet.encodedData));
+
+			// Read data byte by byte and decode
 			try {
-				for(int i5 = 0; i5 < packet52MultiBlockChange1.size; ++i5) {
-					short s6 = dataInputStream4.readShort();
-					short s7 = dataInputStream4.readShort();
-					int i8 = (s7 & 4095) >> 4;
-					int i9 = s7 & 15;
-					int i10 = s6 >> 12 & 15;
-					int i11 = s6 >> 8 & 15;
-					int i12 = s6 & 255;
-					this.worldClient.setBlockAndMetadataAndInvalidate(i10 + i2, i12, i11 + i3, i8, i9);
+				for(int i = 0; i < packet.size; ++i) {
+					short coord = stream.readShort();
+					int blockID = stream.readShort() & 4095;
+					int meta = stream.readByte() & 255;
+
+					int x = coord >> 12 & 15;
+					int z = coord >> 8 & 15;
+					int y = coord & 255;
+					this.worldClient.setBlockAndMetadataAndInvalidate(x + chunkX, y, z + chunkZ, blockID, meta);
 				}
-			} catch (IOException iOException13) {
+			} catch (IOException e) {
 			}
 
 		}
 	}
 
-	public void handleMapChunk(Packet51MapChunk packet51MapChunk1) {
-		this.worldClient.invalidateBlockReceiveRegion(packet51MapChunk1.xCh << 4, 0, packet51MapChunk1.zCh << 4, (packet51MapChunk1.xCh << 4) + 15, 256, (packet51MapChunk1.zCh << 4) + 15);
-		Chunk chunk2 = this.worldClient.getChunkFromChunkCoords(packet51MapChunk1.xCh, packet51MapChunk1.zCh);
-		if(packet51MapChunk1.includeInitialize && chunk2 == null) {
-			this.worldClient.doPreChunk(packet51MapChunk1.xCh, packet51MapChunk1.zCh, true);
-			chunk2 = this.worldClient.getChunkFromChunkCoords(packet51MapChunk1.xCh, packet51MapChunk1.zCh);
+	public void handleMapChunk(Packet51MapChunk packet) {
+		this.worldClient.invalidateBlockReceiveRegion(packet.chunkX << 4, 0, packet.chunkZ << 4, (packet.chunkX << 4) + 15, 256, (packet.chunkZ << 4) + 15);
+		Chunk chunk2 = this.worldClient.getChunkFromChunkCoords(packet.chunkX, packet.chunkZ);
+		if(packet.includeInitialize && chunk2 == null) {
+			this.worldClient.doPreChunk(packet.chunkX, packet.chunkZ, true);
+			chunk2 = this.worldClient.getChunkFromChunkCoords(packet.chunkX, packet.chunkZ);
 		}
 
 		if(chunk2 != null) {
-			chunk2.setChunkData(packet51MapChunk1.chunkData, packet51MapChunk1.yChMin, packet51MapChunk1.yChMax, packet51MapChunk1.includeInitialize);
-			this.worldClient.markBlocksDirty(packet51MapChunk1.xCh << 4, 0, packet51MapChunk1.zCh << 4, (packet51MapChunk1.xCh << 4) + 15, 256, (packet51MapChunk1.zCh << 4) + 15);
-			if(!packet51MapChunk1.includeInitialize || !(this.worldClient.worldProvider instanceof WorldProviderSurface)) {
+			chunk2.setChunkData(packet.chunkData, packet.usedSubchunks, packet.blockMSBSubchunks, packet.includeInitialize);
+			this.worldClient.markBlocksDirty(packet.chunkX << 4, 0, packet.chunkZ << 4, (packet.chunkX << 4) + 15, 256, (packet.chunkZ << 4) + 15);
+			if(!packet.includeInitialize || !(this.worldClient.worldProvider instanceof WorldProviderSurface)) {
 				//chunk2.resetRelightChecks();
 			}
 		}
 
 	}
 
-	public void handleBlockChange(Packet53BlockChange packet53BlockChange1) {
-		this.worldClient.setBlockAndMetadataAndInvalidate(packet53BlockChange1.xPosition, 
-				packet53BlockChange1.yPosition, packet53BlockChange1.zPosition, packet53BlockChange1.type, 
-				packet53BlockChange1.metadata);
+	public void handleBlockChange(Packet53BlockChange packet) {
+		this.worldClient.setBlockAndMetadataAndInvalidate(
+				packet.xPosition, packet.yPosition, packet.zPosition, 
+				packet.type, packet.metadata
+			);
 	}
 
 	public void handleKickDisconnect(Packet255KickDisconnect packet255KickDisconnect1) {
@@ -873,21 +876,27 @@ public class NetClientHandler extends NetHandler {
 		this.mc.theWorld.playNoteAt(packet54PlayNoteBlock1.xLocation, packet54PlayNoteBlock1.yLocation, packet54PlayNoteBlock1.zLocation, packet54PlayNoteBlock1.instrumentType, packet54PlayNoteBlock1.pitch);
 	}
 
-	public void handleBed(Packet70Bed packet70Bed1) {
-		EntityPlayerSP entityPlayerSP2 = this.mc.thePlayer;
-		int i3 = packet70Bed1.bedState;
-		if(i3 >= 0 && i3 < Packet70Bed.bedChat.length && Packet70Bed.bedChat[i3] != null) {
-			entityPlayerSP2.addChatMessage(Packet70Bed.bedChat[i3]);
+	public void handleBed(Packet70GameEvent packet) {
+		EntityPlayerSP thePlayer = this.mc.thePlayer;
+		int statusID = packet.bedState;
+		
+		if(statusID >= 0 && statusID < Packet70GameEvent.bedChat.length && Packet70GameEvent.bedChat[statusID] != null) {
+			thePlayer.addChatMessage(Packet70GameEvent.bedChat[statusID]);
 		}
 
 		// This is encoded differently to vanilla
-		if (i3 == 1) {
-			this.worldClient.getWorldInfo().setRaining(packet70Bed1.raining);
-			this.worldClient.setRainStrength(packet70Bed1.raining ? 1.0F : 0.0F);
-			this.worldClient.getWorldInfo().setSnowing(packet70Bed1.snowing);
-			this.worldClient.setSnowingStrength(packet70Bed1.snowing ? 1.0F : 0.0F);
-			this.worldClient.getWorldInfo().setThundering(packet70Bed1.thundering);
-			this.worldClient.setThunderingStrength(packet70Bed1.thundering ? 1.0F : 0.0F);
+		if (statusID == 1) {
+			this.worldClient.getWorldInfo().setRaining(packet.raining);
+			this.worldClient.setRainStrength(packet.raining ? 1.0F : 0.0F);
+			this.worldClient.getWorldInfo().setSnowing(packet.snowing);
+			this.worldClient.setSnowingStrength(packet.snowing ? 1.0F : 0.0F);
+			this.worldClient.getWorldInfo().setThundering(packet.thundering);
+			this.worldClient.setThunderingStrength(packet.thundering ? 1.0F : 0.0F);
+		}
+		
+		// Game mode
+		if (statusID == 3) {
+			((PlayerControllerMP)this.mc.playerController).setCreative(packet.gameMode == 1);
 		}
 	}
 

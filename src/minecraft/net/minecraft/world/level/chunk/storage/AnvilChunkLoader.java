@@ -184,8 +184,9 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader {
 					nbtSection.setByteArray("Add", ebs.getBlockMSBArray().data);
 				}
 
-				// Save metadata. TODO: expand to 8 bit
-				nbtSection.setByteArray("Data", ebs.getMetadataArray().data);
+				// Save metadata. 8 bit but keeping bw compatibility
+				nbtSection.setByteArray("Data", NibbleArray.byteArrayToLowerNibbleArray(ebs.getMetadataArray()).data);
+				nbtSection.setByteArray("DataUpper", NibbleArray.byteArrayToUpperNibbleArray(ebs.getMetadataArray()).data);
 
 				// Save light
 				nbtSection.setByteArray("SkyLight", ebs.getSkylightArray().data);
@@ -280,8 +281,21 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader {
 				ebs.setBlockMSBArray(new NibbleArray(nbtSection.getByteArray("Add"), 4));
 			}
 
-			// Read metadata. TODO: Modify this to read 8 bits!
-			ebs.setBlockMetadataArray(new NibbleArray(nbtSection.getByteArray("Data"), 4));
+			// Read metadata. Combine two nibble arrays into a byte array.
+			NibbleArray lower = new NibbleArray(nbtSection.getByteArray("Data"), 4);
+			NibbleArray upper = null;
+			if(nbtSection.hasKey("DataUpper")) {
+				upper = new NibbleArray(nbtSection.getByteArray("DataUpper"), 4);
+				ebs.setBlockMetadataArray(
+						NibbleArray.combineTwo(
+								lower,
+								upper
+						)
+				);
+			} else {
+				byte[] meta = lower.asByteArray();
+				ebs.setBlockMetadataArray(meta);
+			}
 
 			// Read skylight and block light
 			ebs.setSkylightArray(new NibbleArray(nbtSection.getByteArray("SkyLight"), 4));

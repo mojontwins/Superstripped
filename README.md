@@ -49,7 +49,7 @@
 * [X] Put all redstone logic back in.
 * [X] The "good" command parser.
 * [X] Sponges.
-* [ ] 8 bit metadata? Snowlogged shit needs this.
+* [X] 8 bit metadata? Snowlogged shit needs this.
 
 	* [X] Before: Make this able to read old alpha worlds!
 
@@ -61,6 +61,9 @@
 
 	1.- Deobfuscate encoder/decoder, think of a different encoder/decoder.
 	2.- Modify Packet51MapChunk Packet52MultiBlockChange NetClientHandler.handleMultiBlockChange.
+
+	- Original encoding used 2 shorts, one for XYZ and another for ID/META. I can't store ID/META together anymore so I will not encoding ID and having META in a separate byte array.
+
 	3.- Modify getChunkData setChunkData 
 	4.- Modify ExtendedBlockStorage
 	5.- Test.
@@ -172,12 +175,12 @@
 
 	Let me first hook it "basic mode", and then some. Done!
 
-* [ ] Cleanup the command parser a bit so different stuff is on different files that only exist in the client or in the server.
 
 * [X] Check alpha chunk generator with NSSS's --> I get chunk borders on imported a1.1.2 worlds and that's a bug.
 * [X] Edit signs with feathers.
-* [ ] Study all rules. Some rules need special setters so they do extra stuff i.e. make food stackable which has to edit food classes.
+* [ ] Cleanup the command parser a bit so different stuff is on different files that only exist in the client or in the server.
 * [ ] Examine/study how you "deawt" minecraft.
+* [ ] Packet88GameRules -> Server sends game rules to the active multiplayer session.
 
 ## Diverge -> turn this into b1.6.6 *strict* (but with the goodies).
 
@@ -209,7 +212,18 @@
 * [X] Air hud wrong place (too low, overwriting hearts).
 * [X] Armor hud reversed icons.
 * [X] Recipe book breaks on one of the recipes involving cloth? with an out of bounds meta/damage when trying to find tint color?
-	[ ] Crarfting recipe for painting shows whool as "black whool"  and needs meta = -1, this is the cause! I think I introduced this meaning "any meta" for crafting? Check and fix at recipe book.
+	[X] Crarfting recipe for painting shows whool as "black whool"  and needs meta = -1, this is the cause! I think I introduced this meaning "any meta" for crafting? Check and fix at recipe book.
+
+### More bugs and how I solved them
+
+* [X] In SMP, gamemode X doesn't update the client.
+	[X] But now it updates it wierdly. Gamemode 1 -> gamemode 0 leaves the client in an odd state, where stuff you break is not really broken on the server. I think this has to be with the lack of real support. It's time to check more recent versions i.e. 1.3.2 or 1.5.2 for clues. i.e. Packet30Bed with status 3 (change gamemode) does nothing in NetServerHandler in 1.2.5, so...
+
+	* Right so, the packet is now called Packet70GameEvent (more apt), and there's a call to playerController.setGameType(EnumGameType.getById(gamemode)); which I will ahve to backport.
+
+	Aw this is going to be harder than expected due to the fact that 1.3.2 uses an interna server and this is handled differently. There's just 1 PlayeControllerMP rather than three different classes.
+
+	Oh! But I have a setCreative in PlayerControllerMP.. WHEW..
 
 ### Morning fog design
 

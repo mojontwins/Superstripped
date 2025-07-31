@@ -129,7 +129,7 @@ public class Chunk {
 				for(int y = 0; y < height; ++y) {
 					int index = x << 11 | z << 7 | y;
 					int id = ids[index] & 255;
-					int meta = metadata[index] & 15;
+					int meta = metadata[index] & 255; // & 15;
 					if(id != 0) {
 						int chunkY = y >> 4;
 						if(this.storageArrays[chunkY] == null) {
@@ -566,7 +566,7 @@ public class Chunk {
 			short element = column[i];
 			if(element != -1) {
 				int blockID = (int)(element & 0xff);
-				int metadata = (int)((element >> 8) & 0xf);
+				int metadata = (int)((element >> 8) & 0xff);
 
 				ExtendedBlockStorage blockStorage = this.storageArrays[y >> 4];
 				if(blockStorage == null) {
@@ -983,6 +983,7 @@ public class Chunk {
 	public void setChunkData(byte[] b1, int i2, int i3, boolean z4) {
 		int i5 = 0;
 
+		// Block lsb byte array
 		int i6;
 		for(i6 = 0; i6 < this.storageArrays.length; ++i6) {
 			if((i2 & 1 << i6) != 0) {
@@ -998,15 +999,18 @@ public class Chunk {
 			}
 		}
 
-		NibbleArray nibbleArray8;
+		
+		// Block meta byte array
 		for(i6 = 0; i6 < this.storageArrays.length; ++i6) {
 			if((i2 & 1 << i6) != 0 && this.storageArrays[i6] != null) {
-				nibbleArray8 = this.storageArrays[i6].getMetadataArray();
-				System.arraycopy(b1, i5, nibbleArray8.data, 0, nibbleArray8.data.length);
-				i5 += nibbleArray8.data.length;
+				byte[] meta = this.storageArrays[i6].getMetadataArray();
+				System.arraycopy(b1, i5, meta, 0, meta.length);
+				i5 += meta.length;
 			}
 		}
 
+		// Block light nibble array
+		NibbleArray nibbleArray8;
 		for(i6 = 0; i6 < this.storageArrays.length; ++i6) {
 			if((i2 & 1 << i6) != 0 && this.storageArrays[i6] != null) {
 				nibbleArray8 = this.storageArrays[i6].getBlocklightArray();
@@ -1015,6 +1019,7 @@ public class Chunk {
 			}
 		}
 
+		// Sky light nibble array
 		for(i6 = 0; i6 < this.storageArrays.length; ++i6) {
 			if((i2 & 1 << i6) != 0 && this.storageArrays[i6] != null) {
 				nibbleArray8 = this.storageArrays[i6].getSkylightArray();
@@ -1023,6 +1028,7 @@ public class Chunk {
 			}
 		}
 
+		// Block msb byte array
 		for(i6 = 0; i6 < this.storageArrays.length; ++i6) {
 			if((i3 & 1 << i6) != 0) {
 				if(this.storageArrays[i6] == null) {

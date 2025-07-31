@@ -27,7 +27,6 @@ import net.minecraft.world.inventory.InventoryPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Seasons;
-import net.minecraft.world.level.chunk.Chunk;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.tile.Block;
 
@@ -363,9 +362,9 @@ public class GuiIngame extends Gui {
 				fontRenderer8.drawStringWithShadow("Time: You have no clock!", 2, 52, 0xFFFFFF);
 			}
 			
-			i45 = MathHelper.floor_double(this.mc.thePlayer.posX);
-			i22 = MathHelper.floor_double(this.mc.thePlayer.posY);
-			armorValue = MathHelper.floor_double(this.mc.thePlayer.posZ);
+			int x = MathHelper.floor_double(this.mc.thePlayer.posX);
+			int y = MathHelper.floor_double(this.mc.thePlayer.posY);
+			int z = MathHelper.floor_double(this.mc.thePlayer.posZ);
 			
 			if(!this.mc.theWorld.isRemote) {
 				
@@ -373,9 +372,8 @@ public class GuiIngame extends Gui {
 				this.drawString(fontRenderer8, string21, i6 - fontRenderer8.getStringWidth(string21) - 2, 32, 14737632);
 			}
 			
-			if(this.mc.theWorld != null && this.mc.theWorld.blockExists(i45, i22, armorValue)) {
-				Chunk chunk48 = this.mc.theWorld.getChunkFromBlockCoords(i45, armorValue);
-				string21 = "Biome: " + chunk48.getBiomeForCoords(i45 & 15, armorValue & 15, this.mc.theWorld.getWorldChunkManager()).biomeName ;
+			if(this.mc.theWorld != null && this.mc.theWorld.blockExists(x, y, z)) {
+				string21 = "Biome: " + this.mc.theWorld.getBiomeGenForCoords(x, z).biomeName;
 				this.drawString(fontRenderer8, string21, i6 - fontRenderer8.getStringWidth(string21) - 2, 42, 14737632);
 			}
 			

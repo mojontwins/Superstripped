@@ -1560,3 +1560,21 @@ java.lang.ArrayIndexOutOfBoundsException
 2025-07-31 11:57:53 [INFO] Saving chunks
 2025-07-31 11:57:53 [INFO] Saving chunks
 2025-07-31 11:57:53 [INFO] Saving chunks
+2025-08-03 16:59:23 [INFO] Starting minecraft server version a1.1.3
+2025-08-03 16:59:24 [INFO] Loading properties
+2025-08-03 16:59:24 [INFO] Starting Minecraft server on *:25565
+2025-08-03 16:59:24 [WARNING] **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+2025-08-03 16:59:24 [WARNING] The server will make no attempt to authenticate usernames. Beware.
+2025-08-03 16:59:24 [WARNING] While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+2025-08-03 16:59:24 [WARNING] To change this, set "online-mode" to "true" in the server.settings file.
+2025-08-03 16:59:24 [INFO] Configured level type: sky
+2025-08-03 16:59:24 [INFO] Available level types: ALPHA, INFDEV, SKY
+2025-08-03 16:59:24 [INFO] Preparing level "world"
+2025-08-03 16:59:24 [INFO] Default game type: 0
+2025-08-03 16:59:24 [INFO] Preparing start region for level 0
+2025-08-03 16:59:25 [INFO] Preparing spawn area: 32%
+2025-08-03 16:59:26 [INFO] Preparing spawn area: 97%
+2025-08-03 16:59:26 [INFO] Done (2,193s)! For help, type "help" or "?"
+2025-08-03 16:59:33 [INFO] /127.0.0.1:64387 lost connection
+2025-08-03 16:59:34 [INFO] Popoch [/127.0.0.1:64388] logged in with entity id 186 at (86.05458977944963, 81.0, 87.46477402401085)
+2025-08-03 16:59:42 [INFO] Popoch lost connection: disconnect.genericReason

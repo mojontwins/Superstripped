@@ -35,7 +35,7 @@ public class Packet51MapChunk extends Packet {
 		// 16K high data
 		// 16K meta
 		// 32K lights
-
+		
 		// Now it is 
 		// 32K low data
 		// 16K high data
@@ -88,7 +88,7 @@ public class Packet51MapChunk extends Packet {
 				totalSize += data.length;
 			}
 		}
-
+		
 		for(i = 0; i < subChunks.length; ++i) {
 			if(subChunks[i] != null && (!isNewChunk || !subChunks[i].getIsEmpty()) && (updateHash & 1 << i) != 0) {
 				byte[] data = subChunks[i].getMetadataArray();

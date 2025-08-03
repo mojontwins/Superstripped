@@ -2541,14 +2541,6 @@ public class RenderBlocks {
 		this.renderTorchAtAngle(block1, (double)i2 + d15, (double)i3 + d9, (double)i4 + d17, 0.0D, 0.0D);
 		int i19 = block1.getBlockTextureFromSide(1);
 		
-		/*
-		int i20 = (i19 & 15) << 4;
-		int i21 = i19 & 0xff0;
-		double u1 = (double)((float)i20 / 256F);
-		double u2 = (double)(((float)i20 + 15.99F) / 256F);
-		double v1 = (double)((float)i21 / 256F);
-		double v2 = (double)(((float)i21 + 15.99F) / 256F);
-		*/
 		Idx2uvF.calc(i19);
 		double u1 = Idx2uvF.u1;
 		double u2 = Idx2uvF.u2;

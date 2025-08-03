@@ -562,14 +562,13 @@ public class GameRenderer {
 
 			long j8;
 			if(this.mc.theWorld != null) {
-				//Profiler.startSection("level");
+
 				if(GameSettingsValues.limitFramerate == 0) {
 					this.renderWorld(f1, 0L);
 				} else {
 					this.renderWorld(f1, this.renderEndNanoTime + (long)(1000000000 / s18));
 				}
 
-				//Profiler.endStartSection("sleep");
 				if(GameSettingsValues.limitFramerate == 2) {
 					j8 = (this.renderEndNanoTime + (long)(1000000000 / s18) - System.nanoTime()) / 1000000L;
 					if(j8 > 0L && j8 < 500L) {
@@ -582,12 +581,11 @@ public class GameRenderer {
 				}
 
 				this.renderEndNanoTime = System.nanoTime();
-				//Profiler.endStartSection("gui");
+
 				if(!GameSettingsValues.hideGUI || this.mc.currentScreen != null) {
 					this.mc.ingameGUI.renderGameOverlay(f1, this.mc.currentScreen != null, i16, i17);
 				}
 
-				//Profiler.endSection();
 			} else {
 				GL11.glViewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
 				GL11.glMatrixMode(GL11.GL_PROJECTION);

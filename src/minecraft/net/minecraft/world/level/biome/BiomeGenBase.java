@@ -133,7 +133,7 @@ public abstract class BiomeGenBase {
 	}
 
 	public BiomeGenBase setDisableRain() {
-		this.enableRain = false;
+		this.setEnableRain(false);
 		return this;
 	}
 
@@ -196,7 +196,7 @@ public abstract class BiomeGenBase {
 	}
 
 	public boolean canSpawnLightningBolt() {
-		return this.enableSnow ? false : this.enableRain;
+		return this.enableSnow ? false : this.isEnableRain();
 	}
 
 	public boolean isHighHumidity() {
@@ -395,5 +395,13 @@ public abstract class BiomeGenBase {
 
 	public int getPreferedSpawnerChanceOffset() {
 		return 0;
+	}
+
+	public boolean isEnableRain() {
+		return enableRain;
+	}
+
+	public void setEnableRain(boolean enableRain) {
+		this.enableRain = enableRain;
 	}
 }

@@ -1,4 +1,4 @@
-# SuperStripped
+ # SuperStripped
 
 ## Make Infhell / early alpha (refined)
 
@@ -181,6 +181,7 @@
 * [ ] Cleanup the command parser a bit so different stuff is on different files that only exist in the client or in the server.
 * [ ] Examine/study how you "deawt" minecraft.
 * [ ] Packet88GameRules -> Server sends game rules to the active multiplayer session.
+* [ ] Remember previous commands like Infhell
 
 ## Diverge -> turn this into b1.6.6 *strict* (but with the goodies).
 

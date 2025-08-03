@@ -106,7 +106,7 @@ public class Block implements ITextureProvider {
 	public static final Block obsidian = (new BlockObsidian(49, 37)).setHardness(50.0F).setResistance(2000.0F).setStepSound(soundStoneFootstep).setBlockName("obsidian");
 	public static final Block torchWood = (new BlockTorch(50, 80)).setHardness(0.0F).setLightValue(0.9375F).setStepSound(soundWoodFootstep).setBlockName("torch").setRequiresSelfNotify();
 	public static final BlockFire fire = (BlockFire)(new BlockFire(51, 31)).setHardness(0.0F).setLightValue(1.0F).setStepSound(soundWoodFootstep).setBlockName("fire").disableStats();
-	public static final Block mobSpawner = (new BlockMobSpawner(52, 65, false)).setHardness(5.0F).setStepSound(soundMetalFootstep).setBlockName("mobSpawner").disableStats();
+	public static final Block mobSpawner = (new BlockMobSpawner(52, 65, false)).setHardness(5.0F).setStepSound(soundMetalFootstep).setBlockName("mobSpawner").setCreativeTab(CreativeTabs.tabMisc).disableStats();
 	public static final Block stairCompactPlanks = (new BlockStairs(53, planks)).setBlockName("stairsWood").setRequiresSelfNotify();
 	public static final Block chest = (new BlockChest(54)).setHardness(2.5F).setStepSound(soundWoodFootstep).setBlockName("chest").setRequiresSelfNotify();
 	public static final Block redstoneWire = (new BlockRedstoneWire(55, 164)).setHardness(0.0F).setStepSound(soundPowderFootstep).setBlockName("redstoneDust").disableStats().setRequiresSelfNotify();
@@ -881,7 +881,7 @@ public class Block implements ITextureProvider {
 		return false;
 	}
 	
-	public boolean supportsRedstone(int meta) {
+	public boolean hasSolidTop(int meta) {
 		return this.isBlockNormalCube(meta);
 	}
 	

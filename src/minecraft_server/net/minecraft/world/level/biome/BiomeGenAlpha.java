@@ -16,7 +16,7 @@ public class BiomeGenAlpha extends BiomeGenBase {
 		super(i1);
 
 		this.biomeDecorator.grassPerChunk = 0;
-		this.biomeDecorator.pumpkinChance = 0;
+		this.biomeDecorator.pumpkinChance = 512;
 		
 		this.biomeDecorator.cactiPerChunk = 1;
 		this.biomeDecorator.mushroomsPerChunk = 2;

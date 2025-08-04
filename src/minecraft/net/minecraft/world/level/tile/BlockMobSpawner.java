@@ -2,10 +2,6 @@ package net.minecraft.world.level.tile;
 
 import java.util.Random;
 
-import net.minecraft.world.entity.EntityList;
-import net.minecraft.world.entity.player.EntityPlayer;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.tile.entity.TileEntity;
@@ -46,29 +42,5 @@ public class BlockMobSpawner extends BlockContainer {
 	public boolean isOpaqueCube() {
 		return false;
 	}
-	
-	@Override
-	public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer) {
-		ItemStack equippedStack = entityPlayer.getCurrentEquippedItem();
-		if (equippedStack != null && equippedStack.itemID == Item.monsterPlacer.shiftedIndex) {
-			TileEntityMobSpawner spawner;
-			if(this.oneShot) {
-				spawner = (TileEntityMobSpawnerOneshot)world.getBlockTileEntity(x, y, z);
-			} else {
-				spawner = (TileEntityMobSpawner)world.getBlockTileEntity(x, y, z);
-			}
-			
-			if(spawner != null) {
-				int damage = equippedStack.itemDamage;
-				if(EntityList.entityEggs.containsKey(damage)) {
-					spawner.setMobID(EntityList.entityEggs.get(damage).mobName);
-				}
-				
-			}
-			
-			return true;
-		} 
-		
-		return false;
-	}
+
 }

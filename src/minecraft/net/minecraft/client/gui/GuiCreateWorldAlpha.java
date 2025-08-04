@@ -25,6 +25,16 @@ public class GuiCreateWorldAlpha extends GuiScreen {
 	private boolean enableSeasons = true;
 	private int worldTypeId = 0;
 	
+	private GuiButton btnWorldOptions;
+	private GuiButton btnGameRules;
+	
+	private GuiButton btnGameMode;
+	private GuiButton btnEnableCheats;
+	private GuiButton btnWorldType;
+	private GuiButton btnEnableSeasons;
+	
+	private boolean moreOptions = false;
+	
 	private String worldTypeStrings[] = new String[] {
 			"Alpha", "Alpha cold", "Infdev", "Sky", "Ocean"
 	};
@@ -34,6 +44,7 @@ public class GuiCreateWorldAlpha extends GuiScreen {
     	this.slot = slot;
     	this.enableCheats = false;
     	this.isCreative = false;
+    	this.enableSeasons = true;
     	this.levelName = "World " + slot;
 	}
     
@@ -43,53 +54,68 @@ public class GuiCreateWorldAlpha extends GuiScreen {
     }
     
     public void initGui() {
+    	//this.seed = "" + new Random().nextLong();
     	this.controlList.clear();
+    	int baseBtn = 160;
     	
-    	textboxWorldName = new GuiTextField(this, this.fontRenderer, width / 2 - 144, 50, 140, 20);
+    	// PRINCIPAL SCREEN
+    	
+    	// World name
+    	textboxWorldName = new GuiTextField(this, this.fontRenderer, this.width / 2 - 100, 82, 200, 20);
     	textboxWorldName.setFocused(true);
     	textboxWorldName.setText(this.levelName);
-    	textboxWorldName.setMaxStringLength(16);
+    	textboxWorldName.setMaxStringLength(40);
     	
-        textboxSeed = new GuiTextField(this, this.fontRenderer, width / 2 + 4, 50, 140, 20);
+    	// Button: World options
+    	this.controlList.add(this.btnWorldOptions = new GuiButton(50, this.width / 2 - 75, baseBtn+10, 150, 20, "World options"));
+    	
+    	// Button: Important game rules
+    	this.controlList.add(this.btnGameRules = new GuiButton(200, this.width / 2 - 75, baseBtn - 24, 150, 20, "Important game rules!"));
+    	
+    	// WORLD OPTIONS
+    	
+    	// World seed
+        textboxSeed = new GuiTextField(this, this.fontRenderer, this.width / 2 - 100, 82, 200, 20);
         textboxSeed.setText(this.seed);
         textboxSeed.drawTextBox();
         
-        this.controlList.add(new GuiButton(100, this.width / 2 - 104, 80, 208, 20, this.getOptionDisplayStringAlpha(100)));
-        this.controlList.add(new GuiButton(101, this.width / 2 - 104, 102, 208, 20, this.getOptionDisplayStringAlpha(101)));
-        this.controlList.add(new GuiButton(102, this.width / 2 - 104, 124, 208, 20, this.getOptionDisplayStringAlpha(102)));
-        this.controlList.add(new GuiButton(103, this.width / 2 - 104, 146, 208, 20, this.getOptionDisplayStringAlpha(103)));
-        this.controlList.add(new GuiButton(200, this.width / 2 - 104, 168, 208, 20, this.getOptionDisplayStringAlpha(200)));
-                
-        this.controlList.add(new GuiButton(0, this.width / 2 - 104, 198, 102, 20, "Create"));
-        this.controlList.add(new GuiButton(1, this.width / 2 + 2, 198, 102, 20, "Cancel"));
+    	this.controlList.add(this.btnGameMode = new GuiButton(100, this.width / 2 - 122, baseBtn - 48, 120, 20, ""));    
+    	this.controlList.add(this.btnEnableCheats = new GuiCheckButton(101, this.width / 2 + 2, baseBtn - 48, 120, 20, ""));
+        this.controlList.add(this.btnWorldType = new GuiButton(102, this.width / 2 - 122, baseBtn - 24, 120, 20, ""));
+        this.controlList.add(this.btnEnableSeasons = new GuiCheckButton(103, this.width / 2 + 2, baseBtn - 24, 120, 20, ""));
+        
+        this.btnGameMode.drawButton = false;
+        this.btnEnableCheats.drawButton = false;
+        this.btnWorldType.drawButton = false;
+        this.btnEnableSeasons.drawButton = false;
+        
+        this.updateOptionButtons(); 
+        
+        this.controlList.add(new GuiButton(0, this.width / 2 - 155, this.height - 28, 150, 20, "Create"));
+        this.controlList.add(new GuiButton(1, this.width / 2 + 5, this.height - 28, 150, 20, "Cancel"));
     }
 
 	protected void keyTyped(char var1, int var2) {
-		if(this.textboxWorldName.getIsFocused()) {
+		if(this.textboxWorldName.getIsFocused() && !this.moreOptions) {
 			this.textboxWorldName.textboxKeyTyped(var1, var2);
-		} else {
+		} else if(this.moreOptions){
 			this.textboxSeed.textboxKeyTyped(var1, var2);
-		}
-		
-		if(var1 == 9) {
-			if (this.textboxWorldName.getIsFocused()) {
-				this.textboxWorldName.setFocused(false);
-				this.textboxSeed.setFocused(true);
-			} else if(this.textboxSeed.getIsFocused()) {
-				this.textboxSeed.setFocused(false);
-				this.textboxWorldName.setFocused(true);
-			}
 		}
 
 		if(var1 == 13) {
 			this.actionPerformed((GuiButton)this.controlList.get(0));
 		}
+
+		((GuiButton)this.controlList.get(0)).enabled = this.textboxWorldName.getText().length() > 0;
 	}
 	
 	protected void mouseClicked(int var1, int var2, int var3) {
 		super.mouseClicked(var1, var2, var3);
-		this.textboxWorldName.mouseClicked(var1, var2, var3);
-		this.textboxSeed.mouseClicked(var1, var2, var3);
+		if(!this.moreOptions) {
+			this.textboxWorldName.mouseClicked(var1, var2, var3);
+		} else {
+			this.textboxSeed.mouseClicked(var1, var2, var3);
+		}
 	}
    
 	protected void actionPerformed(GuiButton var1) {
@@ -127,13 +153,15 @@ public class GuiCreateWorldAlpha extends GuiScreen {
 				case 1:
 					this.mc.displayGuiScreen(this.parentGuiScreen);
 					break;
+				case 50:
+					this.toggleOptions();
+					break;
 				case 100:
 				case 101:
 				case 102:
 				case 103:
-				case 104:
 					this.setOptionValueAlpha(var1.id, 0);
-					var1.displayString = this.getOptionDisplayStringAlpha(var1.id);
+					updateOptionButtons();
 					break;
 				case 200:
 					this.mc.displayGuiScreen(new GuiGameRules(this, false));
@@ -142,25 +170,45 @@ public class GuiCreateWorldAlpha extends GuiScreen {
 		}
 	}
 	
+	private void toggleOptions() {
+		this.moreOptions = !this.moreOptions;
+
+		this.btnGameRules.drawButton = !this.moreOptions;
+		this.btnEnableCheats.drawButton = this.moreOptions;
+		this.btnEnableSeasons.drawButton = this.moreOptions;
+		this.btnGameMode.drawButton = this.moreOptions;
+		this.btnWorldType.drawButton = this.moreOptions;
+
+		if(this.moreOptions) {
+			this.btnWorldOptions.displayString = "Done!";
+		} else {
+			this.btnWorldOptions.displayString = "World options";
+		}
+	}
+	
 	private String sanitizedWorldName() {
 		if ("".equals(this.textboxWorldName.getText())) return "World " + this.slot;
 		return this.textboxWorldName.getText().trim();
 	}
 	
-	public String getOptionDisplayStringAlpha(int i) {
-		switch (i) {
-			case 100: return "Game mode: " + (this.isCreative ? "Creative" : "Survival");
-			case 101: return "Enable cheats: " + (this.enableCheats ? "ON" : "OFF");
-			case 102: return "Type: " + this.worldTypeStrings[this.worldTypeId];
-			case 103: return "Enable seasons: " + (this.enableSeasons ? "ON" : "OFF");
-			case 200: return "Important game rules";
-		}
-		return null;
+	public void updateOptionButtons() {
+		this.btnGameMode.displayString = "Game mode: " + (this.isCreative ? "Creative" : "Survival");
+		this.btnWorldType.displayString = "World type: " + this.worldTypeStrings[this.worldTypeId];
+		this.btnEnableCheats.displayString = "Enable cheats";
+		this.btnEnableCheats.forcedOn = this.enableCheats;
+		this.btnEnableSeasons.displayString = "Enable seasons";
+		this.btnEnableSeasons.forcedOn = this.enableSeasons;
 	}
 	
 	public void setOptionValueAlpha(int i1, int i2) {
 		if (i1 == 100) {
 			this.isCreative = !this.isCreative;
+			if(this.isCreative) {
+				this.enableCheats = true;
+				this.btnEnableCheats.enabled = false;
+			} else {
+				this.btnEnableCheats.enabled = true;
+			}
 		}
 		
 		if (i1 == 101) {
@@ -179,15 +227,17 @@ public class GuiCreateWorldAlpha extends GuiScreen {
     
 	public void drawScreen(int i, int j, float f) {
 		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 20, 16777215);
-		//this.drawCenteredString(this.fontRenderer, "Enter a name for your world and a seed!", this.width/2, 50, 0xEEEEEE);
-		//this.drawCenteredString(this.fontRenderer, "If left blank, default values will be used.", this.width/2, 60, 0xEEEEEE);
-    	
-    	this.drawString(this.fontRenderer, "Name", this.width / 2 - 144, 40, 0xCCCCCC);
-    	this.drawString(this.fontRenderer, "Seed:", this.width / 2 + 4, 40, 0xCCCCCC);
-    	
-    	this.textboxWorldName.drawTextBox();
-		this.textboxSeed.drawTextBox();
+		this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 40, 16777215);
+		
+    	if(!this.moreOptions) {
+    		this.drawString(this.fontRenderer, "World name:", this.width / 2 - 100, 70, 0xCCCCCC);
+        	this.textboxWorldName.drawTextBox();
+        	this.drawString(this.fontRenderer, "Will be saved in: " + "saves/World" + this.slot, this.width / 2 - 100, 108, 10526880);
+			
+    	} else {
+    		this.drawString(this.fontRenderer, "Seed:", this.width / 2 - 100, 70, 0xCCCCCC);
+        	this.textboxSeed.drawTextBox();
+    	}
     	
 		super.drawScreen(i, j, f);
 	}    

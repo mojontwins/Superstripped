@@ -1,10 +1,11 @@
-package net.minecraft.world.level.levelgen.feature;
+package net.minecraft.world.level.levelgen.feature.trees;
 
 import java.util.Random;
 
 import com.mojontwins.utils.BlockUtils;
 
 import net.minecraft.world.level.World;
+import net.minecraft.world.level.levelgen.feature.WorldGenerator;
 import net.minecraft.world.level.tile.Block;
 
 public class WorldGenTrees extends WorldGenerator {

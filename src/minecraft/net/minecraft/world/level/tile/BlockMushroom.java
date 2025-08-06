@@ -3,7 +3,7 @@ package net.minecraft.world.level.tile;
 import java.util.Random;
 
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.levelgen.feature.WorldGenBigMushroom;
+import net.minecraft.world.level.levelgen.feature.trees.WorldGenBigMushroom;
 
 public class BlockMushroom extends BlockFlower {
 	protected BlockMushroom(int i1, int i2) {

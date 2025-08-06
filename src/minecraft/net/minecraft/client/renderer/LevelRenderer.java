@@ -439,8 +439,6 @@ public class LevelRenderer implements IWorldAccess {
 	}
 
 	public int sortAndRender(EntityLiving entityLiving1, int i2, double d3) {
-		//Profiler.startSection("sortchunks");
-
 		for(int i5 = 0; i5 < 10; ++i5) {
 			this.worldRenderersCheckIndex = (this.worldRenderersCheckIndex + 1) % this.worldRenderers.length;
 			WorldRenderer worldRenderer6 = this.worldRenderers[this.worldRenderersCheckIndex];
@@ -504,27 +502,26 @@ public class LevelRenderer implements IWorldAccess {
 				GL11.glDisable(GL11.GL_FOG);
 				GL11.glColorMask(false, false, false, false);
 				GL11.glDepthMask(false);
-				//Profiler.startSection("check");
+
 				this.checkOcclusionQueryResult(i35, i19);
-				//Profiler.endSection();
 				GL11.glPushMatrix();
 				float f36 = 0.0F;
 				float f21 = 0.0F;
 				float f22 = 0.0F;
 
-				for(int armorValue = i35; armorValue < i19; ++armorValue) {
-					if(this.sortedWorldRenderers[armorValue].skipAllRenderPasses()) {
-						this.sortedWorldRenderers[armorValue].isInFrustum = false;
+				for(int i23 = i35; i23 < i19; ++i23) {
+					if(this.sortedWorldRenderers[i23].skipAllRenderPasses()) {
+						this.sortedWorldRenderers[i23].isInFrustum = false;
 					} else {
-						if(!this.sortedWorldRenderers[armorValue].isInFrustum) {
-							this.sortedWorldRenderers[armorValue].isVisible = true;
+						if(!this.sortedWorldRenderers[i23].isInFrustum) {
+							this.sortedWorldRenderers[i23].isVisible = true;
 						}
 
-						if(this.sortedWorldRenderers[armorValue].isInFrustum && !this.sortedWorldRenderers[armorValue].isWaitingOnOcclusionQuery) {
-							float f24 = MathHelper.sqrt_float(this.sortedWorldRenderers[armorValue].distanceToEntitySquared(entityLiving1));
+						if(this.sortedWorldRenderers[i23].isInFrustum && !this.sortedWorldRenderers[i23].isWaitingOnOcclusionQuery) {
+							float f24 = MathHelper.sqrt_float(this.sortedWorldRenderers[i23].distanceToEntitySquared(entityLiving1));
 							int i25 = (int)(1.0F + f24 / 128.0F);
-							if(this.cloudOffsetX % i25 == armorValue % i25) {
-								WorldRenderer worldRenderer26 = this.sortedWorldRenderers[armorValue];
+							if(this.cloudOffsetX % i25 == i23 % i25) {
+								WorldRenderer worldRenderer26 = this.sortedWorldRenderers[i23];
 								float f27 = (float)((double)worldRenderer26.posXMinus - d33);
 								float f28 = (float)((double)worldRenderer26.posYMinus - d7);
 								float f29 = (float)((double)worldRenderer26.posZMinus - d9);
@@ -538,32 +535,31 @@ public class LevelRenderer implements IWorldAccess {
 									f22 += f32;
 								}
 
-								//Profiler.startSection("bb");
-								ARBOcclusionQuery.glBeginQueryARB(GL15.GL_SAMPLES_PASSED, this.sortedWorldRenderers[armorValue].glOcclusionQuery);
-								this.sortedWorldRenderers[armorValue].callOcclusionQueryList();
+
+								ARBOcclusionQuery.glBeginQueryARB(GL15.GL_SAMPLES_PASSED, this.sortedWorldRenderers[i23].glOcclusionQuery);
+								this.sortedWorldRenderers[i23].callOcclusionQueryList();
 								ARBOcclusionQuery.glEndQueryARB(GL15.GL_SAMPLES_PASSED);
-								//Profiler.endSection();
-								this.sortedWorldRenderers[armorValue].isWaitingOnOcclusionQuery = true;
+
+								this.sortedWorldRenderers[i23].isWaitingOnOcclusionQuery = true;
 							}
 						}
 					}
 				}
 
 				GL11.glPopMatrix();
+				GL11.glColorMask(true, true, true, true);
 
 				GL11.glDepthMask(true);
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				GL11.glEnable(GL11.GL_ALPHA_TEST);
 				GL11.glEnable(GL11.GL_FOG);
-				//Profiler.endStartSection("render");
+
 				i34 += this.renderSortedRenderers(i35, i19, i2, d3);
 			} while(i19 < this.sortedWorldRenderers.length);
 		} else {
-			//Profiler.endStartSection("render");
 			i34 = b17 + this.renderSortedRenderers(0, this.sortedWorldRenderers.length, i2, d3);
 		}
 
-		//Profiler.endSection();
 		return i34;
 	}
 
@@ -657,7 +653,7 @@ public class LevelRenderer implements IWorldAccess {
 		++this.cloudOffsetX;
 	}
 
-	public void renderSky(float f1) {
+	public void renderSky(float renderPartialTick) {
 		if(this.mc.theWorld.worldProvider.worldType == 1) {
 			GL11.glDisable(GL11.GL_FOG);
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -705,18 +701,18 @@ public class LevelRenderer implements IWorldAccess {
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
 		} else if(this.mc.theWorld.worldProvider.canSleepHere() && !this.mc.theWorld.worldProvider.noCelestials()) {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			Vec3D vec3D2 = this.worldObj.getSkyColor(this.mc.renderViewEntity, f1);
-			float f3 = (float)vec3D2.xCoord;
-			float f4 = (float)vec3D2.yCoord;
-			float f5 = (float)vec3D2.zCoord;
+			Vec3D vec3D2 = this.worldObj.getSkyColor(this.mc.renderViewEntity, renderPartialTick);
+			float r = (float)vec3D2.xCoord;
+			float g = (float)vec3D2.yCoord;
+			float b = (float)vec3D2.zCoord;
 			float f7;
 			float f8;
 
-			GL11.glColor3f(f3, f4, f5);
+			GL11.glColor3f(r, g, b);
 			Tessellator tessellator21 = Tessellator.instance;
 			GL11.glDepthMask(false);
 			GL11.glEnable(GL11.GL_FOG);
-			GL11.glColor3f(f3, f4, f5);
+			GL11.glColor3f(r, g, b);
 			GL11.glCallList(this.glSkyList);
 			GL11.glDisable(GL11.GL_FOG);
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -733,13 +729,13 @@ public class LevelRenderer implements IWorldAccess {
 			int i25;
 			
 			if(GameRules.boolRule("hasSunriseSunset")) {
-				float[] f22 = this.worldObj.worldProvider.calcSunriseSunsetColors(this.worldObj.getCelestialAngle(f1), f1);
+				float[] f22 = this.worldObj.worldProvider.calcSunriseSunsetColors(this.worldObj.getCelestialAngle(renderPartialTick), renderPartialTick);
 				if(f22 != null) {
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
 					GL11.glShadeModel(GL11.GL_SMOOTH);
 					GL11.glPushMatrix();
 					GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-					GL11.glRotatef(MathHelper.sin(this.worldObj.getCelestialAngleRadians(f1)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
+					GL11.glRotatef(MathHelper.sin(this.worldObj.getCelestialAngleRadians(renderPartialTick)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
 					GL11.glRotatef(90.0F, 0.0F, 0.0F, 1.0F);
 					f8 = f22[0];
 					f9 = f22[1];
@@ -768,14 +764,14 @@ public class LevelRenderer implements IWorldAccess {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			GL11.glPushMatrix();
-			f7 = 1.0F - this.worldObj.getRainStrength(f1) - this.worldObj.getSandstormingStrength(f1);
+			f7 = 1.0F - this.worldObj.getRainStrength(renderPartialTick) - this.worldObj.getSandstormingStrength(renderPartialTick);
 			f8 = 0.0F;
 			f9 = 0.0F;
 			f10 = 0.0F;
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, f7);
 			GL11.glTranslatef(f8, f9, f10);
 			GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(this.worldObj.getCelestialAngle(f1) * 360.0F, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(this.worldObj.getCelestialAngle(renderPartialTick) * 360.0F, 1.0F, 0.0F, 0.0F);
 			f11 = 30.0F;
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.renderEngine.getTexture("/terrain/sun.png"));
 			tessellator21.startDrawingQuads();
@@ -786,7 +782,7 @@ public class LevelRenderer implements IWorldAccess {
 			tessellator21.draw();
 			f11 = 20.0F;
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.renderEngine.getTexture("/terrain/moon_phases.png"));
-			i25 = this.worldObj.getMoonPhase(f1);
+			i25 = this.worldObj.getMoonPhase(renderPartialTick);
 			int i26 = i25 % 4;
 			int i27 = i25 / 4 % 2;
 			f15 = (float)(i26 + 0) / 4.0F;
@@ -800,7 +796,7 @@ public class LevelRenderer implements IWorldAccess {
 			tessellator21.addVertexWithUV((double)(-f11), -100.0D, (double)(-f11), (double)f17, (double)f16);
 			tessellator21.draw();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			f12 = this.worldObj.getStarBrightness(f1) * f7;
+			f12 = this.worldObj.getStarBrightness(renderPartialTick) * f7;
 			if(f12 > 0.0F) {
 				GL11.glColor4f(f12, f12, f12, f12);
 				GL11.glCallList(this.starGLCallList);
@@ -814,12 +810,12 @@ public class LevelRenderer implements IWorldAccess {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			
 			if (GameRules.boolRule("colouredWater")) {
-				this.setBottomOfTheWorldColours(f3, f4, f5, f1);
+				this.setBottomOfTheWorldColours(r, g, b, renderPartialTick);
 			} else {
 				GL11.glColor3f(0.0F, 0.0F, 0.0F);
 			}
 						
-			double d23 = this.mc.thePlayer.getCurrentNodeVec3d(f1).yCoord - this.worldObj.getSeaLevelForRendering();
+			double d23 = this.mc.thePlayer.getCurrentNodeVec3d(renderPartialTick).yCoord - this.worldObj.getSeaLevelForRendering();
 			if(d23 < 0.0D) {
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.0F, 12.0F, 0.0F);
@@ -853,7 +849,7 @@ public class LevelRenderer implements IWorldAccess {
 				tessellator21.draw();
 			}
 
-			this.setBottomOfTheWorldColours(f3, f4, f5, f1);
+			this.setBottomOfTheWorldColours(r, g, b, renderPartialTick);
 
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.0F, -((float)(d23 - 16.0D)), 0.0F);
@@ -864,15 +860,13 @@ public class LevelRenderer implements IWorldAccess {
 		}
 	}
 	
-	public void setBottomOfTheWorldColours(float f3, float f4, float f5, float f1) {
+	public void setBottomOfTheWorldColours(float r, float g, float b, float renderPartialTick) {
 		if(this.worldObj.worldProvider.isSkyColored()) {
-			//GL11.glColor3f(f3 * 0.2F + 0.04F, f4 * 0.2F + 0.04F, f5 * 0.6F + 0.1F);
-
-			Vec3D vec3D = this.worldObj.getSkyColorBottom(this.mc.renderViewEntity, f1);
+			Vec3D vec3D = this.worldObj.getSkyColorBottom(this.mc.renderViewEntity, renderPartialTick);
 			
 			GL11.glColor3d(vec3D.xCoord, vec3D.yCoord, vec3D.zCoord);
 		} else {
-			GL11.glColor3f(f3, f4, f5);
+			GL11.glColor3f(r, g, b);
 		}
 	}
 
@@ -910,11 +904,11 @@ public class LevelRenderer implements IWorldAccess {
 				tessellator5.setColorRGBA_F(f7, f8, f9, 0.8F);
 
 				for(int i22 = -b3 * i4; i22 < b3 * i4; i22 += b3) {
-					for(int armorValue = -b3 * i4; armorValue < b3 * i4; armorValue += b3) {
-						tessellator5.addVertexWithUV((double)(i22 + 0), (double)f19, (double)(armorValue + b3), (double)((float)(i22 + 0) * f10 + f20), (double)((float)(armorValue + b3) * f10 + f21));
-						tessellator5.addVertexWithUV((double)(i22 + b3), (double)f19, (double)(armorValue + b3), (double)((float)(i22 + b3) * f10 + f20), (double)((float)(armorValue + b3) * f10 + f21));
-						tessellator5.addVertexWithUV((double)(i22 + b3), (double)f19, (double)(armorValue + 0), (double)((float)(i22 + b3) * f10 + f20), (double)((float)(armorValue + 0) * f10 + f21));
-						tessellator5.addVertexWithUV((double)(i22 + 0), (double)f19, (double)(armorValue + 0), (double)((float)(i22 + 0) * f10 + f20), (double)((float)(armorValue + 0) * f10 + f21));
+					for(int i23 = -b3 * i4; i23 < b3 * i4; i23 += b3) {
+						tessellator5.addVertexWithUV((double)(i22 + 0), (double)f19, (double)(i23 + b3), (double)((float)(i22 + 0) * f10 + f20), (double)((float)(i23 + b3) * f10 + f21));
+						tessellator5.addVertexWithUV((double)(i22 + b3), (double)f19, (double)(i23 + b3), (double)((float)(i22 + b3) * f10 + f20), (double)((float)(i23 + b3) * f10 + f21));
+						tessellator5.addVertexWithUV((double)(i22 + b3), (double)f19, (double)(i23 + 0), (double)((float)(i22 + b3) * f10 + f20), (double)((float)(i23 + 0) * f10 + f21));
+						tessellator5.addVertexWithUV((double)(i22 + 0), (double)f19, (double)(i23 + 0), (double)((float)(i22 + 0) * f10 + f20), (double)((float)(i23 + 0) * f10 + f21));
 					}
 				}
 
@@ -1195,7 +1189,7 @@ public class LevelRenderer implements IWorldAccess {
 	}
 
 	public void drawBlockBreaking(EntityPlayer entityPlayer1, MovingObjectPosition movingObjectPosition2, int i3, ItemStack itemStack4, float f5) {
-		Tessellator tessellator6 = Tessellator.instance;
+		Tessellator tes = Tessellator.instance;
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
@@ -1221,12 +1215,12 @@ public class LevelRenderer implements IWorldAccess {
 				}
 
 				GL11.glEnable(GL11.GL_ALPHA_TEST);
-				tessellator6.startDrawingQuads();
-				tessellator6.setTranslation(-d10, -d12, -d14);
-				tessellator6.disableColor();
+				tes.startDrawingQuads();
+				tes.setTranslation(-d10, -d12, -d14);
+				tes.disableColor();
 				this.globalRenderBlocks.renderBlockUsingTexture(block9, movingObjectPosition2.blockX, movingObjectPosition2.blockY, movingObjectPosition2.blockZ, 240 + (int)(this.damagePartialTime * 10.0F));
-				tessellator6.draw();
-				tessellator6.setTranslation(0.0D, 0.0D, 0.0D);
+				tes.draw();
+				tes.setTranslation(0.0D, 0.0D, 0.0D);
 				GL11.glDisable(GL11.GL_ALPHA_TEST);
 				GL11.glPolygonOffset(0.0F, 0.0F);
 				GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);

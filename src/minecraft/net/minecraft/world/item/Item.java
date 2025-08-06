@@ -202,6 +202,7 @@ public class Item implements ITextureProvider {
 	public boolean isDefaultTexture = true;
 	private String currentTexture = "/gui/items.png";
 	public CreativeTabs displayOnCreativeTab;
+	public boolean softlocked = false;
 
 	protected Item(int i1) {
 		this.shiftedIndex = 256 + i1;
@@ -213,6 +214,11 @@ public class Item implements ITextureProvider {
 	}
 	
 	public Item fixForAlphaBeta() {
+		return this;
+	}
+	
+	public Item softlock() {
+		this.softlocked = true;
 		return this;
 	}
 

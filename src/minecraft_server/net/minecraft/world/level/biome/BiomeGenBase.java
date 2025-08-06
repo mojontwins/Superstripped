@@ -28,12 +28,12 @@ import net.minecraft.world.level.colorizer.ColorizerFoliage;
 import net.minecraft.world.level.colorizer.ColorizerGrass;
 import net.minecraft.world.level.colorizer.ColorizerWater;
 import net.minecraft.world.level.levelgen.ChunkProviderSky;
-import net.minecraft.world.level.levelgen.feature.WorldGenBigTree;
-import net.minecraft.world.level.levelgen.feature.WorldGenForest;
-import net.minecraft.world.level.levelgen.feature.WorldGenSwamp;
 import net.minecraft.world.level.levelgen.feature.WorldGenTallGrass;
-import net.minecraft.world.level.levelgen.feature.WorldGenTrees;
 import net.minecraft.world.level.levelgen.feature.WorldGenerator;
+import net.minecraft.world.level.levelgen.feature.trees.WorldGenBigTree;
+import net.minecraft.world.level.levelgen.feature.trees.WorldGenForest;
+import net.minecraft.world.level.levelgen.feature.trees.WorldGenSwamp;
+import net.minecraft.world.level.levelgen.feature.trees.WorldGenTrees;
 import net.minecraft.world.level.tile.Block;
 
 public abstract class BiomeGenBase {
@@ -49,6 +49,7 @@ public abstract class BiomeGenBase {
 	public byte topBlock = (byte)Block.grass.blockID;
 	public byte fillerBlock = (byte)Block.dirt.blockID;
 	public int biomeColor = 5169201;
+	public int unusedBetaGrassColor = 5169201;
 	public float minHeight = 0.1F;
 	public float maxHeight = 0.3F;
 	public float temperature = 0.5F;
@@ -163,6 +164,11 @@ public abstract class BiomeGenBase {
 	public BiomeGenBase setColor(int i1) {
 		this.biomeColor = i1;
 		this.color = i1;
+		return this;
+	}
+
+	public BiomeGenBase setGrassColor(int color) {
+		this.unusedBetaGrassColor = color;
 		return this;
 	}
 
@@ -323,7 +329,12 @@ public abstract class BiomeGenBase {
 		}
 	}
 	
-	public void replaceBlocksForBiome(IChunkProvider generator, World world, Random rand, int chunkX, int chunkZ, int x, int z, byte[] blocks, byte[] metadata, int seaLevel, double sandNoise, double gravelNoise, double stoneNoise) {
+	public void replaceBlocksForBiome(
+			IChunkProvider generator, World world, Random rand, 
+			int chunkX, int chunkZ, int x, int z, 
+			byte[] blocks, byte[] metadata, int seaLevel, 
+			double sandNoise, double gravelNoise, double stoneNoise
+	) {
 		float temperature = this.getFloatTemperature();
 		int height = (int)(stoneNoise / 3.0D + 3.0D + rand.nextDouble() * 0.25D);
 		

@@ -82,7 +82,7 @@ public class Block implements ITextureProvider {
 	// 25
 	// 26
 	public static final Block railPowered = (new BlockRail(27, 179, true)).setHardness(0.7F).setStepSound(soundMetalFootstep).setBlockName("goldenRail").setRequiresSelfNotify();
-	// 28
+	public static final Block railDetector = (new BlockDetectorRail(28, 195)).setHardness(0.7F).setStepSound(soundMetalFootstep).setBlockName("detectorRail").setRequiresSelfNotify().setCreativeTab(CreativeTabs.tabTransport);
 	// 29
 	public static final Block web = (new BlockWeb(30, 11)).setLightOpacity(1).setHardness(4.0F).setBlockName("web");
 	// 31
@@ -388,11 +388,11 @@ public class Block implements ITextureProvider {
 		return this.getBlockTextureFromSideAndMetadata(i5, iBlockAccess1.getBlockMetadata(i2, i3, i4));
 	}
 
-	public int getBlockTextureFromSideAndMetadata(int i1, int i2) {
-		return this.getBlockTextureFromSide(i1);
+	public int getBlockTextureFromSideAndMetadata(int side, int metadata) {
+		return this.getBlockTextureFromSide(side);
 	}
 
-	public int getBlockTextureFromSide(int i1) {
+	public int getBlockTextureFromSide(int side) {
 		return this.blockIndexInTexture;
 	}
 
@@ -437,7 +437,7 @@ public class Block implements ITextureProvider {
 	public void onBlockDestroyedByPlayer(World world1, int i2, int i3, int i4, int i5) {
 	}
 
-	public void onNeighborBlockChange(World world1, int i2, int i3, int i4, int i5) {
+	public void onNeighborBlockChange(World world, int x, int y, int z, int id) {
 	}
 
 	public int tickRate() {
@@ -462,7 +462,7 @@ public class Block implements ITextureProvider {
 		return this.quantityDropped(random);
 	}
 
-	public int idDropped(int i1, Random random2, int i3) {
+	public int idDropped(int meta, Random rand, int fortune) {
 		return this.blockID;
 	}
 
@@ -471,8 +471,8 @@ public class Block implements ITextureProvider {
 		return hardness < 0.0F ? 0.0F : (!entityPlayer1.canHarvestBlock(this, metadata) ? 1.0F / hardness / 100.0F : entityPlayer1.getCurrentPlayerStrVsBlock(this, metadata) / hardness / 30.0F);
 	}
 
-	public final void dropBlockAsItem(World world1, int i2, int i3, int i4, int i5, int i6) {
-		this.dropBlockAsItemWithChance(world1, i2, i3, i4, i5, 1.0F, i6);
+	public final void dropBlockAsItem(World world, int x, int y, int z, int meta, int fortune) {
+		this.dropBlockAsItemWithChance(world, x, y, z, meta, 1.0F, fortune);
 	}
 
 	/*
@@ -544,7 +544,7 @@ public class Block implements ITextureProvider {
 
 	}
 
-	public int damageDropped(int i1) {
+	public int damageDropped(int meta) {
 		return 0;
 	}
 
@@ -670,8 +670,8 @@ public class Block implements ITextureProvider {
 		return this.canPlaceBlockAt(world, x, y, z);
 	}
 
-	public boolean canPlaceBlockAt(World world1, int i2, int i3, int i4) {
-		int i5 = world1.getBlockId(i2, i3, i4);
+	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+		int i5 = world.getBlockId(x, y, z);
 		return i5 == 0 || blocksList[i5].blockMaterial.isGroundCover();
 	}
 
@@ -772,7 +772,7 @@ public class Block implements ITextureProvider {
 		return this.quantityDropped(random2);
 	}
 
-	public boolean canBlockStay(World world1, int i2, int i3, int i4) {
+	public boolean canBlockStay(World world, int x, int y, int z) {
 		return true;
 	}
 

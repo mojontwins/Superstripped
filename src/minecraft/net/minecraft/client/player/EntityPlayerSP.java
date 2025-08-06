@@ -255,7 +255,11 @@ public class EntityPlayerSP extends EntityPlayer {
 	public void displayGUIFurnace(TileEntityFurnace tileEntityFurnace1) {
 		this.mc.displayGuiScreen(new GuiFurnace(this.inventory, tileEntityFurnace1));
 	}
-	
+	/*
+	public void displayGUIDispenser(TileEntityDispenser tileEntityDispenser1) {
+		this.mc.displayGuiScreen(new GuiDispenser(this.inventory, tileEntityDispenser1));
+	}
+	*/
 	public void displayGUIRecipeBook(ItemStack itemStack) {
 		this.mc.displayGuiScreen(new GuiRecipeBook(new InventoryRecipeBook(itemStack)));
 	}

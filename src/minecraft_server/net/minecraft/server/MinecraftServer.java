@@ -44,6 +44,8 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 
 public class MinecraftServer implements Runnable, ICommandListener, IServer {
+	public static final int dimensions = 2;
+	
 	public static Logger logger = Logger.getLogger("Minecraft");
 	public static HashMap<String, Integer> s_field_6037_b = new HashMap<String, Integer>();
 	private String hostname;
@@ -51,7 +53,7 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 	public NetworkListenThread networkServer;
 	public PropertyManager propertyManagerObj;
 	public WorldServer[] worldMngr;
-	public long[] s_field_40027_f = new long[100];
+	public long[] dispTime = new long[100];
 	public long[][] s_field_40028_g;
 	public ServerConfigurationManager configManager;
 	private ConsoleCommandHandler commandHandler;
@@ -62,7 +64,7 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 	public int percentDone;
 	private List<IUpdatePlayerListBox> playersOnline = new ArrayList<IUpdatePlayerListBox>();
 	private List<ServerCommand> commands = Collections.synchronizedList(new ArrayList<ServerCommand>());
-	public EntityTracker[] entityTracker = new EntityTracker[5];
+	public EntityTracker[] entityTracker = new EntityTracker[MinecraftServer.dimensions];
 	public boolean onlineMode;
 	public boolean spawnPeacefulMobs;
 	public boolean s_field_44002_p;
@@ -70,14 +72,14 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 	public boolean allowFlight;
 	public String motd;
 	public int buildLimit;
-	private long s_field_48074_E;
-	private long s_field_48075_F;
-	private long s_field_48076_G;
-	private long s_field_48077_H;
-	public long[] s_field_48080_u = new long[100];
-	public long[] s_field_48079_v = new long[100];
-	public long[] s_field_48078_w = new long[100];
-	public long[] s_field_48082_x = new long[100];
+	private long packetsWritten;
+	private long bytesWritten;
+	private long packetsRead;
+	private long bytesRead;
+	public long[] dispPacketsWritten = new long[100];
+	public long[] dispBytesWritten = new long[100];
+	public long[] dispPacketsRead = new long[100];
+	public long[] dispBytesRead = new long[100];
 	private RConThreadQuery rconQueryThread;
 	private RConThreadMain rconMainThread;
 
@@ -146,14 +148,16 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 		// Todo: Proper DimensionManager to dehardcode this
 		this.entityTracker[0] = new EntityTracker(this, 0);
 		this.entityTracker[1] = new EntityTracker(this, -1);
+		/*
 		this.entityTracker[2] = new EntityTracker(this, 1);
 		this.entityTracker[3] = new EntityTracker(this, 7);
 		this.entityTracker[4] = new EntityTracker(this, 9);
+		*/
 
 		long nowMillis = System.nanoTime();
 		String levelName = this.propertyManagerObj.getStringProperty("level-name", "world");
 		String levelSeed = this.propertyManagerObj.getStringProperty("level-seed", "");
-		String levelType = this.propertyManagerObj.getStringProperty("level-type", "ALPHA");
+		String levelType = this.propertyManagerObj.getStringProperty("level-type", "DEFAULT");
 		
 		logger.info("Configured level type: " + levelType);
 		logger.info("Available level types: ALPHA, INFDEV, SKY");
@@ -208,7 +212,8 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 			saveManager.convertMapFormat(levelName, new ConvertProgressUpdater(this));
 		}
 
-		this.worldMngr = new WorldServer[5];
+		// Todo: Proper DimensionManager to dehardcode this
+		this.worldMngr = new WorldServer[MinecraftServer.dimensions];
 		this.s_field_40028_g = new long[this.worldMngr.length][100];
 		
 		int gameMode = this.propertyManagerObj.getIntProperty("gamemode", 0);
@@ -257,7 +262,7 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 		short radius = 196;
 		long prevTime = System.currentTimeMillis();
 
-		for(int dimension = 0; dimension < 1; ++dimension) {
+		for(int dimension = 0; dimension < MinecraftServer.dimensions; ++dimension) {
 			logger.info("Preparing start region for level " + dimension);
 			WorldServer worldServer = this.worldMngr[dimension];
 			ChunkCoordinates spawnCoords = worldServer.getSpawnPoint();
@@ -453,15 +458,15 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer {
 			logger.log(Level.WARNING, "Unexpected exception while parsing console command", exception8);
 		}
 
-		this.s_field_40027_f[this.deathTime % 100] = System.nanoTime() - millis;
-		this.s_field_48080_u[this.deathTime % 100] = Packet.field_48157_o - this.s_field_48074_E;
-		this.s_field_48074_E = Packet.field_48157_o;
-		this.s_field_48079_v[this.deathTime % 100] = Packet.field_48155_p - this.s_field_48075_F;
-		this.s_field_48075_F = Packet.field_48155_p;
-		this.s_field_48078_w[this.deathTime % 100] = Packet.field_48158_m - this.s_field_48076_G;
-		this.s_field_48076_G = Packet.field_48158_m;
-		this.s_field_48082_x[this.deathTime % 100] = Packet.field_48156_n - this.s_field_48077_H;
-		this.s_field_48077_H = Packet.field_48156_n;
+		this.dispTime[this.deathTime % 100] = System.nanoTime() - millis;
+		this.dispPacketsWritten[this.deathTime % 100] = Packet.packetsWritten - this.packetsWritten;
+		this.packetsWritten = Packet.packetsWritten;
+		this.dispBytesWritten[this.deathTime % 100] = Packet.bytesWritten - this.bytesWritten;
+		this.bytesWritten = Packet.bytesWritten;
+		this.dispPacketsRead[this.deathTime % 100] = Packet.packetsRead - this.packetsRead;
+		this.packetsRead = Packet.packetsRead;
+		this.dispBytesRead[this.deathTime % 100] = Packet.bytesRead - this.bytesRead;
+		this.bytesRead = Packet.bytesRead;
 	}
 
 	public void addCommand(ComplexCommand complexCommand, ICommandListener iCommandListener2) {

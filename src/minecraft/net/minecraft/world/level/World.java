@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
@@ -1873,10 +1874,6 @@ public class World implements IBlockAccess {
 		}
 	}
 
-	public Entity func_4085_a(Class<?> class1) {
-		return null;
-	}
-
 	public String getDebugLoadedEntities() {
 		return "All: " + this.loadedEntityList.size();
 	}
@@ -2213,14 +2210,12 @@ public class World implements IBlockAccess {
 		}
 	}
 
-	/*
-	private void clearWeather() {
+	public void clearWeather() {
 		this.worldInfo.setRainTime(0);
 		this.worldInfo.setRaining(false);
 		this.worldInfo.setThunderTime(0);
 		this.worldInfo.setThundering(false);
 	}
-	*/
 
 	public void commandToggleDownfall() {
 		this.worldInfo.setRainTime(1);
@@ -2379,9 +2374,8 @@ public class World implements IBlockAccess {
 	}
 
 	public boolean ambienceIsHot(int x, int z, BiomeGenBase biomeGen) {
-		float t = this.getWorldChunkManager().getTemperatureAt(x, z);
-		
 		if(GameRules.rampBasedTemperature) { 
+		float t = this.getWorldChunkManager().getTemperatureAt(x, z);
 			if(this.worldInfo.isEnableSeasons()) {
 				return t > .6F ||
 						t > .2 && Seasons.currentSeason != Seasons.WINTER ||
@@ -2453,22 +2447,14 @@ public class World implements IBlockAccess {
 	}
 	
 	public boolean canMeltSnow(int x, int y, int z, BiomeGenBase biomeGen) {
-		if(this.worldInfo.isEnableSeasons()) {
-			if(biomeGen.weather != Weather.cold && (Seasons.currentSeason != Seasons.WINTER || biomeGen.weather == Weather.desert)) {
+		if(!this.ambienceIsHot(x, z, biomeGen)) return false;
 				return this.getBlockId(x, y, z) == Block.snow.blockID;
 			}
-		}
-		return false;
-	}
 	
 	public boolean canMeltIce(int x, int y, int z, BiomeGenBase biomeGen) {
-		if(this.worldInfo.isEnableSeasons()) {
-			if(biomeGen.weather != Weather.cold && (Seasons.currentSeason != Seasons.WINTER || biomeGen.weather == Weather.desert)) {
+		if(!this.ambienceIsHot(x, z, biomeGen)) return false;
 				return this.getBlockId(x, y, z) == Block.ice.blockID;
 			}
-		}
-		return false;
-	}
 
 	public boolean tickUpdates(boolean z1) {
 		int i2 = this.scheduledTickTreeSet.size();
@@ -2564,22 +2550,34 @@ public class World implements IBlockAccess {
 		return this.entitiesWithinAABBExcludingEntity;
 	}
 
-	public List<Entity> getEntitiesWithinAABB(Class<?> class1, AxisAlignedBB axisAlignedBB2) {
-		int i3 = MathHelper.floor_double((axisAlignedBB2.minX - 2.0D) / 16.0D);
-		int i4 = MathHelper.floor_double((axisAlignedBB2.maxX + 2.0D) / 16.0D);
-		int i5 = MathHelper.floor_double((axisAlignedBB2.minZ - 2.0D) / 16.0D);
-		int i6 = MathHelper.floor_double((axisAlignedBB2.maxZ + 2.0D) / 16.0D);
-		ArrayList<Entity> arrayList7 = new ArrayList<Entity>();
+	public List<Entity> getEntitiesWithinAABB(Class<?> clazz, AxisAlignedBB aabb) {
+		int x1 = MathHelper.floor_double((aabb.minX - 2.0D) / 16.0D);
+		int x2 = MathHelper.floor_double((aabb.maxX + 2.0D) / 16.0D);
+		int z1 = MathHelper.floor_double((aabb.minZ - 2.0D) / 16.0D);
+		int z2 = MathHelper.floor_double((aabb.maxZ + 2.0D) / 16.0D);
+		ArrayList<Entity> list = new ArrayList<Entity>();
 
-		for(int i8 = i3; i8 <= i4; ++i8) {
-			for(int i9 = i5; i9 <= i6; ++i9) {
-				if(this.chunkExists(i8, i9)) {
-					this.getChunkFromChunkCoords(i8, i9).getEntitiesOfTypeWithinAAAB(class1, axisAlignedBB2, arrayList7);
+		for(int x = x1; x <= x2; ++x) {
+			for(int z = z1; z <= z2; ++z) {
+				if(this.chunkExists(x, z)) {
+					this.getChunkFromChunkCoords(x, z).getEntitiesOfTypeWithinAAAB(clazz, aabb, list);
 				}
 			}
 		}
 
-		return arrayList7;
+		return list;
+				}
+	
+	public List<Entity> getEntitiesWithinAABBbutNotMe(Entity entity, Class<?> clazz, AxisAlignedBB aabb) {
+		List<Entity> list = this.getEntitiesWithinAABB(clazz, aabb);
+		ListIterator<Entity> li = list.listIterator();
+		while(li.hasNext()) {
+			if(li.next().entityId == entity.entityId) {
+				li.remove();
+			}
+		}
+
+		return list;
 	}
 
 	public Entity findNearestEntityWithinAABB(Class<?> class1, AxisAlignedBB axisAlignedBB2, Entity entity3) {

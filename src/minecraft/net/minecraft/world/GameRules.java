@@ -17,6 +17,8 @@ import com.mojang.nbt.NBTTagByte;
 import com.mojang.nbt.NBTTagCompound;
 import com.mojang.nbt.NBTTagInt;
 
+import net.minecraft.world.entity.monster.EntityClassicZombie;
+import net.minecraft.world.entity.monster.EntityZombie;
 import net.minecraft.world.level.WorldType;
 import net.minecraft.world.level.levelgen.genlayer.GenLayer;
 import net.minecraft.world.level.levelgen.genlayer.GenLayerAlpha;
@@ -35,6 +37,8 @@ public class GameRules {
 	public static final boolean debug = false;
 	
 	public static HashMap<String, GameRule> gameRules = new HashMap<String, GameRule> ();
+	
+	public static boolean completelyLockSeasons = false;
 	
 	public static final String catAesthetics = "Aesthetics";
 	public static final String catMobs = "Mobs";
@@ -236,5 +240,12 @@ public class GameRules {
 		gameRules.forEach((k, v) -> {
 			((GameRule)v).refresh();
 		});
+	}
+
+	public static Class<?> getDefaultZombieClass() {
+		return GameRules.boolRule("smarterMobs") ? 
+				EntityZombie.class 
+			:
+				EntityClassicZombie.class;
 	}
 }

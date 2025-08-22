@@ -11,23 +11,23 @@ public class EntityFallingSand extends Entity {
 	public int blockID;
 	public int fallTime = 0;
 
-	public EntityFallingSand(World world1) {
-		super(world1);
+	public EntityFallingSand(World world) {
+		super(world);
 	}
 
-	public EntityFallingSand(World world1, double d2, double d4, double d6, int i8) {
-		super(world1);
-		this.blockID = i8;
+	public EntityFallingSand(World world, double x, double y, double z, int blockID) {
+		super(world);
+		this.blockID = blockID;
 		this.preventEntitySpawning = true;
 		this.setSize(0.98F, 0.98F);
 		this.yOffset = this.height / 2.0F;
-		this.setPosition(d2, d4, d6);
+		this.setPosition(x, y, z);
 		this.motionX = 0.0D;
 		this.motionY = 0.0D;
 		this.motionZ = 0.0D;
-		this.prevPosX = d2;
-		this.prevPosY = d4;
-		this.prevPosZ = d6;
+		this.prevPosX = x;
+		this.prevPosY = y;
+		this.prevPosZ = z;
 	}
 
 	protected boolean canTriggerWalking() {
@@ -84,7 +84,8 @@ public class EntityFallingSand extends Entity {
 				) {
 					this.dropItem(this.blockID, 1);
 				}
-			} else if(this.fallTime > 100 && !this.worldObj.isRemote && (y < 1 || y > 256) || this.fallTime > 600) {
+			} else if(this.fallTime > 100 && !this.worldObj.isRemote && 
+				(y < 1 || y > 256) || this.fallTime > 600) {
 				this.dropItem(this.blockID, 1);
 				this.setDead();
 			}

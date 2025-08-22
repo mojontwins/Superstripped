@@ -142,6 +142,10 @@ public class EntityList {
 		return result;
 	}
 
+	public static String getNameByClass(Class<?> clazz) {
+		return classToStringMapping.get(clazz);
+	}
+
 
 	static {
 		addMapping(EntityItem.class, "Item", 1);

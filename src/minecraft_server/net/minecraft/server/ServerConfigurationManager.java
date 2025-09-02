@@ -53,9 +53,11 @@ public class ServerConfigurationManager implements IServerConfigManager {
 		int i2 = minecraftServer1.propertyManagerObj.getIntProperty("view-distance", 10);
 		this.playerManagerObj[0] = new PlayerManager(minecraftServer1, 0, i2);
 		this.playerManagerObj[1] = new PlayerManager(minecraftServer1, -1, i2);
+		/*
 		this.playerManagerObj[2] = new PlayerManager(minecraftServer1, 1, i2);
 		this.playerManagerObj[3] = new PlayerManager(minecraftServer1, 7, i2);
 		this.playerManagerObj[4] = new PlayerManager(minecraftServer1, 9, i2);
+		*/
 		this.maxPlayers = minecraftServer1.propertyManagerObj.getIntProperty("max-players", 20);
 		this.whiteListEnforced = minecraftServer1.propertyManagerObj.getBooleanProperty("white-list", false);
 		this.readBannedPlayers();
@@ -79,9 +81,11 @@ public class ServerConfigurationManager implements IServerConfigManager {
 	public void joinNewPlayerManager(EntityPlayerMP entityPlayerMP1) {
 		this.playerManagerObj[0].removePlayer(entityPlayerMP1);
 		this.playerManagerObj[1].removePlayer(entityPlayerMP1);
+		/*
 		this.playerManagerObj[2].removePlayer(entityPlayerMP1);
 		this.playerManagerObj[3].removePlayer(entityPlayerMP1);
 		this.playerManagerObj[4].removePlayer(entityPlayerMP1);
+		*/
 		this.getPlayerManager(entityPlayerMP1.dimension).addPlayer(entityPlayerMP1);
 		WorldServer worldServer2 = this.mcServer.getWorldManager(entityPlayerMP1.dimension);
 		worldServer2.chunkProviderServer.loadChunk((int)entityPlayerMP1.posX >> 4, (int)entityPlayerMP1.posZ >> 4);
@@ -96,9 +100,11 @@ public class ServerConfigurationManager implements IServerConfigManager {
 		switch(i1) {
 		case -1: return this.playerManagerObj[1];
 		case 0: return this.playerManagerObj[0];
+		/*
 		case 1: return this.playerManagerObj[2];
 		case 7: return this.playerManagerObj[3];
 		case 9: return this.playerManagerObj[4];
+		*/
 		default: return null;
 		}
 	}
@@ -246,7 +252,7 @@ public class ServerConfigurationManager implements IServerConfigManager {
 
 	public void sendPlayerToOtherDimension(EntityPlayerMP entityPlayerMP1, int dimensionTo) {
 		// From
-		int dimensionFrom = entityPlayerMP1.dimension;
+		//int dimensionFrom = entityPlayerMP1.dimension;
 		WorldServer worldFrom = this.mcServer.getWorldManager(entityPlayerMP1.dimension);
 		
 		// To
@@ -267,7 +273,7 @@ public class ServerConfigurationManager implements IServerConfigManager {
 		// Remove player from old worldmanager
 		worldFrom.removePlayer(entityPlayerMP1);
 		entityPlayerMP1.isDead = false;
-System.out.println ("Attempt " + dimensionFrom + " to " + dimensionTo);
+
 		// Get current position in old world
 		/*
 		double x = entityPlayerMP1.posX;
@@ -663,11 +669,7 @@ System.out.println ("Attempt " + dimensionFrom + " to " + dimensionTo);
 	public void updateTimeAndWeather(EntityPlayerMP thePlayer, WorldServer world) {
 		thePlayer.playerNetServerHandler.sendPacket(new Packet4UpdateTime(world.getWorldTime()));
 		thePlayer.playerNetServerHandler.sendPacket(new Packet70GameEvent(world.isRaining(), world.isSnowing(), world.isThundering()));
-		/*
-		if(worldServer2.isRaining()) {
-			entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet70GameEvent(1, 0));
-		}
-		 */
+
 	}
 
 	public void s_func_30008_g(EntityPlayerMP entityPlayerMP1) {

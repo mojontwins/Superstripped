@@ -2,7 +2,7 @@ package net.minecraft.world.entity.item;
 
 import com.mojang.nbt.NBTTagCompound;
 
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.tile.BlockSand;
@@ -64,9 +64,9 @@ public class EntityFallingSand extends Entity {
 
 			if(this.fallTime == 1 && this.worldObj.getBlockId(x, y, z) == this.blockID) {
 				this.worldObj.setBlockWithNotify(x, y, z, 0);
-			} else if(!this.worldObj.isRemote && this.fallTime == 1) {
+			} /*else if(!this.worldObj.isRemote && this.fallTime == 1) {
 				this.setDead();
-			}
+			}*/ // <- this bit was not in beta
 
 			if(this.onGround) {
 				this.motionX *= (double)0.7F;

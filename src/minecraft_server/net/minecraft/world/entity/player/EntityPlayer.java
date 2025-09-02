@@ -6,10 +6,11 @@ import java.util.List;
 import com.mojang.nbt.NBTTagCompound;
 import com.mojang.nbt.NBTTagList;
 
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.entity.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EnumAction;
 import net.minecraft.world.entity.FoodStats;
@@ -698,6 +699,9 @@ public abstract class EntityPlayer extends EntityLiving {
 	}
 	*/
 	public void displayGUIEditSign(TileEntitySign tileEntitySign1) {
+	}
+	
+	public void displayGUIGiveName(EntityCreature entity) {
 	}
 	
 	public void useCurrentItemOnEntity(Entity entity1) {

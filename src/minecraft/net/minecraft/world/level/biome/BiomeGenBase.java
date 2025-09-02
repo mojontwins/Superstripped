@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.EnumCreatureType;
 import net.minecraft.world.entity.animal.EntityChicken;
 import net.minecraft.world.entity.animal.EntityCow;
@@ -362,7 +362,7 @@ public abstract class BiomeGenBase {
 						}
 
 						if(y < seaLevel && topBlock == 0) {
-							if(temperature < 0.15F) {
+							if(temperature < 0.2F) {
 								topBlock = (byte)Block.ice.blockID;
 							} else {
 								topBlock = (byte)Block.waterStill.blockID;

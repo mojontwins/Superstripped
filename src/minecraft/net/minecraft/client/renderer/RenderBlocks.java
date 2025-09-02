@@ -8,7 +8,7 @@ import com.mojontwins.utils.Texels;
 import com.mojontwins.utils.TextureAtlasSize;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
@@ -4077,8 +4077,19 @@ public class RenderBlocks {
 
 	}
 	
-	public static boolean renderItemIn3d(int i0) {
-		//return i0 == 0 ? true : (i0 == 13 ? true : (i0 == 10 ? true : (i0 == 11 ? true : (i0 == 27 ? true : (i0 == 22 ? true : (i0 == 21 ? true : i0 == 16))))));
-		return (i0 == 0 || i0 == 13 || i0 == 10 || i0 == 11 || i0 == 27 || i0 == 22 || i0 == 21 || i0 == 16 || i0 == 31 || i0 == 97);
+	public static boolean renderItemIn3d(int renderType) {
+		return (
+			renderType == 0 || 
+			renderType == 13 || 
+			renderType == 10 || 
+			renderType == 11 || 
+			renderType == 27 || 
+			renderType == 22 || 
+			renderType == 21 || 
+			renderType == 16 || 
+			renderType == 31 || 
+			renderType == 97 ||
+			renderType == 109
+		);
 	}
 }

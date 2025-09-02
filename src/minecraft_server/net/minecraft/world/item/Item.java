@@ -6,7 +6,7 @@ import java.util.Random;
 import com.mojontwins.minecraft.worldedit.ItemMagicWand;
 import com.risugami.recipebook.ItemRecipeBook;
 
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringTranslate;
 import net.minecraft.util.Translator;
 import net.minecraft.world.entity.Entity;
@@ -153,6 +153,7 @@ public class Item implements ITextureProvider {
 	public static Item recordWard = (new ItemRecord(2009, "ward")).setIconCoord(9, 15).setItemName("record");
 	public static Item record11 = (new ItemRecord(2010, "11")).setIconCoord(10, 15).setItemName("record");
 	
+	public static Item nametagSimple = new ItemNametagSimple(1031).setIconCoord(2,13).setItemName("nametag").setMaxStackSize(1).setCreativeTab(CreativeTabs.tabMisc);
 	
 	// Misc
 	public static Item recipeBook = (new ItemRecipeBook(400)).setIconIndex(237).setItemName("RecipeBook").setMaxStackSize(1).setCreativeTab(CreativeTabs.tabMisc);
@@ -204,13 +205,13 @@ public class Item implements ITextureProvider {
 	public CreativeTabs displayOnCreativeTab;
 	public boolean softlocked = false;
 
-	protected Item(int i1) {
-		this.shiftedIndex = 256 + i1;
-		if(itemsList[256 + i1] != null) {
-			System.out.println("CONFLICT @ " + i1);
+	protected Item(int id) {
+		this.shiftedIndex = 256 + id;
+		if(itemsList[256 + id] != null) {
+			System.out.println("CONFLICT @ " + id);
 		}
 
-		itemsList[256 + i1] = this;
+		itemsList[256 + id] = this;
 	}
 	
 	public Item fixForAlphaBeta() {

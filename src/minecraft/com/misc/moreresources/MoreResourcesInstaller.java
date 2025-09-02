@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 
 public class MoreResourcesInstaller {
 	Minecraft mc;
+	public final String resourceDirectory = "/resources/sounds";
 	
 	public MoreResourcesInstaller(Minecraft mc) {
 		this.mc = mc;
@@ -25,7 +26,7 @@ public class MoreResourcesInstaller {
 	
 	public File getFileFromResource(String fileName) throws URISyntaxException{
 
-        ClassLoader classLoader = this.getClass().getClassLoader();
+		Class<?> classLoader = this.getClass();
         java.net.URL resource = classLoader.getResource(fileName);
         if (resource == null) {
             throw new IllegalArgumentException("file not found! " + fileName);
@@ -41,7 +42,7 @@ public class MoreResourcesInstaller {
 	
 	public java.net.URL getURLfromResource(String fileName) throws URISyntaxException{
 
-        ClassLoader classLoader = this.getClass().getClassLoader();
+		Class<?> classLoader = this.getClass();
         java.net.URL resource = classLoader.getResource(fileName);
         
         if (resource == null) {

@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.EntityPlayer;
 import net.minecraft.world.item.ITextureProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemBlock;
+import net.minecraft.world.item.ItemBlockWithSubtypes;
 import net.minecraft.world.item.ItemDyeable;
 import net.minecraft.world.item.ItemLeaves;
 import net.minecraft.world.item.ItemMetadata;
@@ -471,27 +472,20 @@ public class Block implements ITextureProvider {
 		return hardness < 0.0F ? 0.0F : (!entityPlayer1.canHarvestBlock(this, metadata) ? 1.0F / hardness / 100.0F : entityPlayer1.getCurrentPlayerStrVsBlock(this, metadata) / hardness / 30.0F);
 	}
 
-	public final void dropBlockAsItem(World world, int x, int y, int z, int meta, int fortune) {
-		this.dropBlockAsItemWithChance(world, x, y, z, meta, 1.0F, fortune);
+	public ItemStack itemStackDropped(int meta, Random rand) {
+		return this.itemStackDropped(meta, rand, 0);
 	}
 
-	/*
-	public void dropBlockAsItemWithChance(World world1, int i2, int i3, int i4, int i5, float f6, int i7) {
-		if(!world1.isRemote) {
-			int i8 = this.quantityDroppedWithBonus(i7, world1.rand);
-
-			for(int i9 = 0; i9 < i8; ++i9) {
-				if(world1.rand.nextFloat() <= f6) {
-					int i10 = this.idDropped(i5, world1.rand, i7);
-					if(i10 > 0) {
-						this.dropBlockAsItem_do(world1, i2, i3, i4, new ItemStack(i10, 1, this.damageDropped(i5)));
-					} 
-				}
+	public ItemStack itemStackDropped(int meta, Random rand, int fortune) {
+		ItemStack stack = null;
+		int idDropped = this.idDropped(meta, rand, fortune);
+		if(idDropped > 0) stack = new ItemStack(idDropped, 1, this.damageDropped(meta));
+		return stack;
 			}
 
+	public final void dropBlockAsItem(World world, int x, int y, int z, int meta, int fortune) {
+		this.dropBlockAsItemWithChance(world, x, y, z, meta, 1.0F, fortune);
 		}
-	}
-	*/
 	
 	// Reimplement this logic the forge / 1.3.2 way
 	/**
@@ -518,11 +512,15 @@ public class Block implements ITextureProvider {
 		int quantityDropped = this.quantityDropped(meta, fortune, world.rand);
 
 		for (int i = 0; i < quantityDropped; ++i) {
+			/*
 			int idDropped = this.idDropped(meta, world.rand, 0);
 
 			if (idDropped > 0) {
 				itemsToDrop.add(new ItemStack(idDropped, 1, this.damageDropped(meta)));
 			}
+			*/
+			ItemStack stack = this.itemStackDropped(meta, world.rand, fortune);
+			if(stack != null) itemsToDrop.add(stack);
 		}
 
 		return itemsToDrop;
@@ -840,33 +838,40 @@ public class Block implements ITextureProvider {
 		Item.itemsList[sapling.blockID] = (new ItemSapling(sapling.blockID - 256)).setItemName("sapling");
 		Item.itemsList[leaves.blockID] = (new ItemLeaves(leaves.blockID - 256)).setItemName("leaves");
 		
-		for(int i0 = 0; i0 < 4096; ++i0) {
-			if(blocksList[i0] != null) {
-				if(Item.itemsList[i0] == null) {
-					Item.itemsList[i0] = new ItemBlock(i0 - 256);
-					blocksList[i0].initializeBlock();
-				} else if(!(Item.itemsList[i0] instanceof ItemBlock)) {
-					throw new Error("Item id " + (i0 - 256) + "(shifted index " + i0 + ") is overlapping with block id " + i0);
+		for(int id = 0; id < 4096; ++id) {
+			if(blocksList[id] instanceof IBlockWithSubtypes) {
+				// Automaticly assign the special ItemBlockWithSubTypes to
+				// blocks that implement the IBlockWithSubtypes interface
+
+				Item.itemsList[id] = new ItemBlockWithSubtypes((IBlockWithSubtypes)blocksList[id], id);
+				blocksList[id].initializeBlock();
+
+			} else if(blocksList[id] != null) {
+				if(Item.itemsList[id] == null) {
+					Item.itemsList[id] = new ItemBlock(id - 256);
+					blocksList[id].initializeBlock();
+				} else if(!(Item.itemsList[id] instanceof ItemBlock)) {
+					throw new Error("Item id " + (id - 256) + "(shifted index " + id + ") is overlapping with block id " + id);
 				}
 
 				boolean z1 = false;
-				if(i0 > 0 && blocksList[i0].getRenderType() == 10) {
+				if(id > 0 && blocksList[id].getRenderType() == 10) {
 					z1 = true;
 				}
 
-				if(i0 > 0 && blocksList[i0] instanceof BlockStep) {
+				if(id > 0 && blocksList[id] instanceof BlockStep) {
 					z1 = true;
 				}
 
-				if(i0 == tilledField.blockID) {
+				if(id == tilledField.blockID) {
 					z1 = true;
 				}
 
-				if(canBlockGrass[i0]) {
+				if(canBlockGrass[id]) {
 					z1 = true;
 				}
 
-				useNeighborBrightness[i0] = z1;
+				useNeighborBrightness[id] = z1;
 			}
 		}
 

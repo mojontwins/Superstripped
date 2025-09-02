@@ -15,7 +15,6 @@ import net.minecraft.world.level.creative.CreativeTabs;
 import net.minecraft.world.level.material.Material;
 
 public class BlockLeaves extends BlockLeavesBase {
-	private int baseIndexInPNG;
 	int[] surroundings;
 	
 	public static int decays = 0;
@@ -25,10 +24,13 @@ public class BlockLeaves extends BlockLeavesBase {
 	public static final int BirchMetadata = 2;
 	public static final int JungleMetadata = 3;
 
+	public int textureId[] = new int[] {
+			52, 132, 52, 257
+	};
+
 	protected BlockLeaves(int blockID, int blockIndexInTexture) {
 		super(blockID, blockIndexInTexture, Material.leaves, false);
 		
-		this.baseIndexInPNG = blockIndexInTexture;
 		this.setTickRandomly(true);
 	}
 
@@ -38,12 +40,12 @@ public class BlockLeaves extends BlockLeavesBase {
 		return ColorizerFoliage.getFoliageColor(d1, d3);
 	}
 
-	public int getRenderColor(int i1) {
+	public int getRenderColor(int meta) {
 		if(Seasons.activated()) return Seasons.getLeavesColorForToday();
-		return (i1 & 3) == 1 ? ColorizerFoliage.getFoliageColorPine() : ((i1 & 3) == 2 ? ColorizerFoliage.getFoliageColorBirch() : 0x5BFB3B);
+		return (meta & 3) == 1 ? ColorizerFoliage.getFoliageColorPine() : ((meta & 3) == 2 ? ColorizerFoliage.getFoliageColorBirch() : 0x5BFB3B);
 	}
 
-	public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
+	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
 		/*
 		int i5 = blockAccess.getBlockMetadata(x, y, z);
 
@@ -69,15 +71,15 @@ public class BlockLeaves extends BlockLeavesBase {
 		}
 		*/
 		
-		return this.getRenderColor(blockAccess.getBlockMetadata(x, y, z));
+		return this.getRenderColor(world.getBlockMetadata(x, y, z));
 	}
 
 	public void onBlockRemoval(World world, int x, int y, int z) {
-		int blockID = world.getBlockId(x, y, z);
+		Block block = world.getBlock(x, y, z);
 
 		// Small optimization: When replaced with leaves or wood, surrounding leaves are
 		// NOT affected
-		if (blockID == Block.wood.blockID || blockID == Block.leaves.blockID)
+		if (block instanceof BlockLog || block instanceof BlockLeaves)
 			return;
 		
 		this.onBlockRemovalDo(world, x, y, z);
@@ -227,34 +229,25 @@ public class BlockLeaves extends BlockLeavesBase {
 
 	}
 
-	public void harvestBlock(World world1, EntityPlayer entityPlayer2, int i3, int i4, int i5, int i6) {
-		if(!world1.isRemote && entityPlayer2.getCurrentEquippedItem() != null && entityPlayer2.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex) {
-			this.dropBlockAsItem_do(world1, i3, i4, i5, new ItemStack(Block.leaves.blockID, 1, i6 & 3));
+	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
+		if(!world.isRemote && player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex) {
+			this.dropBlockAsItem_do(world, x, y, z, new ItemStack(world.getBlock(x, y, z), 1, meta & 3));
 		} else {
-			super.harvestBlock(world1, entityPlayer2, i3, i4, i5, i6);
+			super.harvestBlock(world, player, x, y, z, meta);
 		}
 
 	}
 
-	public int damageDropped(int i1) {
-		return i1 & 3;
+	public int damageDropped(int meta) {
+		return meta & 3;
 	}
 
 	public boolean isOpaqueCube() {
-		return !this.graphicsLevel;
+		return !BlockLeavesBase.graphicsLevel;
 	}
 
-	public int getBlockTextureFromSideAndMetadata(int i1, int i2) {
-		switch (i2 & 3) {
-		case 1: return 132;
-		case 2: return 52;
-		default: return this.blockIndexInTexture;
-		}
-	}
-
-	public void setGraphicsLevel(boolean z1) {
-		this.graphicsLevel = z1;
-		this.blockIndexInTexture = this.baseIndexInPNG + (z1 ? 0 : 1);
+	public int getBlockTextureFromSideAndMetadata(int side, int meta) {
+		return this.textureId[meta & 3] + (BlockLeavesBase.graphicsLevel ? 0 : 1);
 	}
 
 	public void onEntityWalking(World world1, int i2, int i3, int i4, Entity entity5) {

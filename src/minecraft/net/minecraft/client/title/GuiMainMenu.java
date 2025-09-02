@@ -23,7 +23,7 @@ import net.minecraft.client.gui.GuiTexturePacks;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringTranslate;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.Version;

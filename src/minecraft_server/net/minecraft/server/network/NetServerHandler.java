@@ -31,16 +31,18 @@ import net.minecraft.network.packet.Packet3Chat;
 import net.minecraft.network.packet.Packet53BlockChange;
 import net.minecraft.network.packet.Packet7UseEntity;
 import net.minecraft.network.packet.Packet91UpdateCommandBlock;
+import net.minecraft.network.packet.Packet93UpdateAnimalName;
 import net.minecraft.network.packet.Packet9Respawn;
 import net.minecraft.server.ICommandListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldServer;
 import net.minecraft.server.player.EntityPlayerMP;
-import net.minecraft.src.MathHelper;
 import net.minecraft.util.ChatAllowedCharacters;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IntHashMap;
 import net.minecraft.world.entity.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.inventory.InventoryPlayer;
 import net.minecraft.world.inventory.Slot;
@@ -730,6 +732,16 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 			}
 		}
 
+	}
+	
+	public void handleUpdateAnimalName(Packet93UpdateAnimalName packet) {
+		WorldServer worldServer = this.mcServer.getWorldManager(this.playerEntity.dimension);
+		Entity entity = worldServer.getEntityById(packet.entityId);
+		if(entity == null || !(entity instanceof EntityCreature)) {
+			System.out.println ("Received name " + packet.name + " for non existing creature " + packet.entityId);
+		} else {
+			((EntityCreature) entity).setName(packet.name);
+		}
 	}
 
 	public void handleKeepAlive(Packet0KeepAlive packet0KeepAlive1) {

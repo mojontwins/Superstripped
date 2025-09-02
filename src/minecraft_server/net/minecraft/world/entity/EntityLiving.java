@@ -6,7 +6,7 @@ import java.util.Random;
 import com.mojang.nbt.NBTTagCompound;
 import com.mojang.nbt.NBTTagList;
 
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.entity.ai.EntityAITasks;
 import net.minecraft.world.entity.animal.EntityWolf;
@@ -42,7 +42,7 @@ public abstract class EntityLiving extends Entity {
 	protected float field_9360_w;
 	protected float field_9359_x;
 	protected boolean field_9358_y = true;
-	protected String texture = "/mob/char.png";
+	public String texture = "/mob/char.png";
 	protected boolean field_9355_A = true;
 	protected float field_9353_B = 0.0F;
 	protected String entityType = null;

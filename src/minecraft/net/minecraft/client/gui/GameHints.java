@@ -16,7 +16,9 @@ public class GameHints {
 		"Wool can be dyed!",
 		"Sheep can be dyed!",
 		"CTRL+click to place logs straight",
-		"Right click spawners with placer eggs"
+		"Right click spawners with placer eggs",
+		"Right click with a name tag to give name",
+		"Named entities never despawn naturally"
 	};
 	
 	public static String getRandomHint() {

@@ -41,7 +41,7 @@ import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.EntitySorter;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
@@ -53,6 +53,7 @@ import net.minecraft.world.level.IWorldAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.tile.Block;
+import net.minecraft.world.level.tile.BlockLeavesBase;
 import net.minecraft.world.level.tile.entity.TileEntity;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.EnumMovingObjectType;
@@ -236,7 +237,7 @@ public class LevelRenderer implements IWorldAccess {
 
 	public void loadRenderers() {
 		if(this.worldObj != null) {
-			Block.leaves.setGraphicsLevel(GameSettingsValues.fancyGraphics);
+			BlockLeavesBase.graphicsLevel = GameSettingsValues.fancyGraphics;
 			
 			this.renderDistance = GameSettingsValues.renderDistance;
 			int i1;
